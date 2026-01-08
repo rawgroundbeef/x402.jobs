@@ -1,4 +1,4 @@
-import { http } from './http'
+import type { HttpClient } from './http'
 import type {
   Resource,
   ResourceSearchOptions,
@@ -8,49 +8,42 @@ import type {
 
 type GetInput = string | { id: string }
 
-async function list(): Promise<Resource[]> {
-  return http.get<Resource[]>('/resources')
-}
+export class ResourcesAPI {
+  constructor(private http: HttpClient) {}
 
-async function get(input: GetInput): Promise<Resource> {
-  if (typeof input === 'string') {
-    // Treat string as URL
-    return http.get<Resource>('/resources', { url: input })
+  async list(): Promise<Resource[]> {
+    return this.http.get<Resource[]>('/resources')
   }
-  // Get by ID
-  return http.get<Resource>(`/resources/${input.id}`)
-}
 
-async function search(options: ResourceSearchOptions = {}): Promise<Resource[]> {
-  const params: Record<string, string | number | undefined> = {}
+  async get(input: GetInput): Promise<Resource> {
+    if (typeof input === 'string') {
+      return this.http.get<Resource>('/resources', { url: input })
+    }
+    return this.http.get<Resource>(`/resources/${input.id}`)
+  }
 
-  if (options.query) params['q'] = options.query
-  if (options.category) params['category'] = options.category
-  if (options.minSuccessRate !== undefined) params['min_success_rate'] = options.minSuccessRate
-  if (options.minCalls !== undefined) params['min_calls'] = options.minCalls
-  if (options.limit !== undefined) params['limit'] = options.limit
-  if (options.offset !== undefined) params['offset'] = options.offset
+  async search(options: ResourceSearchOptions = {}): Promise<Resource[]> {
+    const params: Record<string, string | number | undefined> = {}
 
-  return http.get<Resource[]>('/resources/search', params)
-}
+    if (options.query) params['q'] = options.query
+    if (options.category) params['category'] = options.category
+    if (options.minSuccessRate !== undefined) params['min_success_rate'] = options.minSuccessRate
+    if (options.minCalls !== undefined) params['min_calls'] = options.minCalls
+    if (options.limit !== undefined) params['limit'] = options.limit
+    if (options.offset !== undefined) params['offset'] = options.offset
 
-async function register(input: ResourceCreateInput): Promise<Resource> {
-  return http.post<Resource>('/resources', input)
-}
+    return this.http.get<Resource[]>('/resources/search', params)
+  }
 
-async function update(id: string, input: ResourceUpdateInput): Promise<Resource> {
-  return http.patch<Resource>(`/resources/${id}`, input)
-}
+  async register(input: ResourceCreateInput): Promise<Resource> {
+    return this.http.post<Resource>('/resources', input)
+  }
 
-async function remove(id: string): Promise<void> {
-  await http.delete(`/resources/${id}`)
-}
+  async update(id: string, input: ResourceUpdateInput): Promise<Resource> {
+    return this.http.patch<Resource>(`/resources/${id}`, input)
+  }
 
-export const resources = {
-  list,
-  get,
-  search,
-  register,
-  update,
-  delete: remove,
+  async delete(id: string): Promise<void> {
+    await this.http.delete(`/resources/${id}`)
+  }
 }

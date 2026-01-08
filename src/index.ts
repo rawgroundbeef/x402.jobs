@@ -1,7 +1,7 @@
-// Main exports
-export { check } from './check'
-export { resources } from './resources'
-export { configure } from './config'
+// Main export
+export { X402Jobs } from './client'
+
+// Error class
 export { X402Error } from './errors'
 
 // Type exports
@@ -12,7 +12,7 @@ export type {
   ResourceSearchOptions,
   ResourceCreateInput,
   ResourceUpdateInput,
-  ConfigOptions,
+  ClientOptions,
   WalletConfig,
   ErrorCode,
 } from './types'

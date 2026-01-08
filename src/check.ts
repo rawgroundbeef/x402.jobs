@@ -1,35 +1,31 @@
-import { http } from './http'
+import type { HttpClient } from './http'
 import type { Score, TopOptions } from './types'
 
-async function checkUrl(url: string): Promise<Score> {
-  return http.get<Score>('/resources/score', { url })
+export interface CheckAPI {
+  (url: string): Promise<Score>
+  many(urls: string[]): Promise<Score[]>
+  exists(url: string): Promise<boolean>
+  top(options?: TopOptions): Promise<Score[]>
 }
 
-async function checkMany(urls: string[]): Promise<Score[]> {
-  // Phase 2: Use batch endpoint when available
-  // For now, run checks in parallel
-  return Promise.all(urls.map((url) => checkUrl(url)))
-}
+export function createCheckAPI(http: HttpClient): CheckAPI {
+  const check = async (url: string): Promise<Score> => {
+    return http.get<Score>('/resources/score', { url })
+  }
 
-async function checkExists(url: string): Promise<boolean> {
-  const result = await http.get<{ exists: boolean }>('/resources/exists', { url })
-  return result.exists
-}
+  check.many = async (urls: string[]): Promise<Score[]> => {
+    return Promise.all(urls.map((url) => check(url)))
+  }
 
-async function checkTop(options: TopOptions = {}): Promise<Score[]> {
-  const { limit = 20, category } = options
-  return http.get<Score[]>('/resources/top', { limit, category })
-}
+  check.exists = async (url: string): Promise<boolean> => {
+    const result = await http.get<{ exists: boolean }>('/resources/exists', { url })
+    return result.exists
+  }
 
-// Create the check function with additional methods attached
-type CheckFunction = typeof checkUrl & {
-  many: typeof checkMany
-  exists: typeof checkExists
-  top: typeof checkTop
-}
+  check.top = async (options: TopOptions = {}): Promise<Score[]> => {
+    const { limit = 20, category } = options
+    return http.get<Score[]>('/resources/top', { limit, category })
+  }
 
-export const check: CheckFunction = Object.assign(checkUrl, {
-  many: checkMany,
-  exists: checkExists,
-  top: checkTop,
-})
+  return check
+}

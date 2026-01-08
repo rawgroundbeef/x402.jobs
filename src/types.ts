@@ -59,14 +59,14 @@ export interface ResourceUpdateInput {
   icon_url?: string
 }
 
-// ============ Config Types ============
+// ============ Client Types ============
 
 export interface WalletConfig {
   // TBD based on x402 payment implementation
   [key: string]: unknown
 }
 
-export interface ConfigOptions {
+export interface ClientOptions {
   apiKey?: string
   baseUrl?: string
   wallet?: WalletConfig

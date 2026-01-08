@@ -10,12 +10,16 @@ npm install @x402jobs/sdk
 
 ## Quick Start
 
+```javascript
+import { X402Jobs } from '@x402jobs/sdk'
+
+const x402 = new X402Jobs({ apiKey: 'your-api-key' })
+```
+
 ### Check if a resource is reliable
 
 ```javascript
-import { check } from '@x402jobs/sdk'
-
-const score = await check('https://api.example.com/resource')
+const score = await x402.check('https://api.example.com/resource')
 // {
 //   url: "https://api.example.com/resource",
 //   success_rate: 0.94,
@@ -28,17 +32,13 @@ const score = await check('https://api.example.com/resource')
 ### Browse top resources
 
 ```javascript
-import { check } from '@x402jobs/sdk'
-
-const top = await check.top({ limit: 20 })
+const top = await x402.check.top({ limit: 20 })
 ```
 
 ### Search resources
 
 ```javascript
-import { resources } from '@x402jobs/sdk'
-
-const results = await resources.search({
+const results = await x402.resources.search({
   query: 'image generation',
   minSuccessRate: 0.9
 })
@@ -47,11 +47,7 @@ const results = await resources.search({
 ### Register your resource
 
 ```javascript
-import { resources, configure } from '@x402jobs/sdk'
-
-configure({ apiKey: 'your-api-key' })
-
-await resources.register({
+await x402.resources.register({
   url: 'https://my-api.com/endpoint',
   name: 'My API',
   price: '$0.01'
@@ -68,19 +64,28 @@ We ran the transactions. We paid the fees. Now you get the data.
 
 ## API Reference
 
-### Trust / Verification
+### Constructor
 
-| Function | Description |
-|----------|-------------|
+```javascript
+const x402 = new X402Jobs({
+  apiKey: 'sk_...',           // API key for authenticated access
+  baseUrl: 'https://...',     // Custom API URL (optional)
+})
+```
+
+### Trust / Verification (`x402.check`)
+
+| Method | Description |
+|--------|-------------|
 | `check(url)` | Get reliability score for a resource |
 | `check.many(urls)` | Check multiple resources |
 | `check.exists(url)` | Check if resource is indexed |
 | `check.top(options)` | Get top-ranked resources |
 
-### Resources
+### Resources (`x402.resources`)
 
-| Function | Description |
-|----------|-------------|
+| Method | Description |
+|--------|-------------|
 | `resources.list()` | Get all resources |
 | `resources.get(url)` | Get single resource |
 | `resources.search(options)` | Search resources |
@@ -88,20 +93,15 @@ We ran the transactions. We paid the fees. Now you get the data.
 | `resources.update(id, input)` | Update resource |
 | `resources.delete(id)` | Delete resource |
 
-### Configuration
-
-| Function | Description |
-|----------|-------------|
-| `configure({ apiKey })` | Set API key for unlimited access |
-| `configure({ baseUrl })` | Set custom API URL |
-
 ## Error Handling
 
 ```javascript
-import { X402Error } from '@x402jobs/sdk'
+import { X402Jobs, X402Error } from '@x402jobs/sdk'
+
+const x402 = new X402Jobs({ apiKey: 'sk_...' })
 
 try {
-  const score = await check(url)
+  const score = await x402.check(url)
 } catch (err) {
   if (err instanceof X402Error) {
     console.log(err.code)     // Error code
@@ -128,11 +128,8 @@ try {
 Full TypeScript support with exported types:
 
 ```typescript
-import type {
-  Score,
-  Resource,
-  ResourceSearchOptions
-} from '@x402jobs/sdk'
+import { X402Jobs } from '@x402jobs/sdk'
+import type { Score, Resource, ClientOptions } from '@x402jobs/sdk'
 ```
 
 ## Docs
