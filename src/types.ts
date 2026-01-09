@@ -17,20 +17,26 @@ export interface TopOptions {
 
 export interface Resource {
   id: string
-  url: string
   name: string
-  description: string
-  icon_url: string | null
-  category: string
-  price: string
-  owner_id: string
-  created_at: string
-  updated_at: string
-  // Trust data (included)
-  success_rate: number | null
-  calls: number
-  value_processed: string
-  last_called: string | null
+  description?: string
+  resource_url: string
+  network?: string
+  category?: string
+  price?: string
+  icon_url?: string | null
+  owner_id?: string
+  created_at?: string
+  updated_at?: string
+  // Trust data (when included)
+  success_rate?: number | null
+  calls?: number
+  value_processed?: string
+  last_called?: string | null
+}
+
+export interface ResourceListOptions {
+  limit?: number
+  sort?: 'popular' | 'recent' | 'name'
 }
 
 export interface ResourceSearchOptions {

@@ -9,6 +9,7 @@ export type {
   Score,
   TopOptions,
   Resource,
+  ResourceListOptions,
   ResourceSearchOptions,
   ResourceCreateInput,
   ResourceUpdateInput,

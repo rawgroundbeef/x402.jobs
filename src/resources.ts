@@ -1,6 +1,7 @@
 import type { HttpClient } from './http'
 import type {
   Resource,
+  ResourceListOptions,
   ResourceSearchOptions,
   ResourceCreateInput,
   ResourceUpdateInput,
@@ -11,8 +12,12 @@ type GetInput = string | { id: string }
 export class ResourcesAPI {
   constructor(private http: HttpClient) {}
 
-  async list(): Promise<Resource[]> {
-    return this.http.get<Resource[]>('/resources')
+  async list(options: ResourceListOptions = {}): Promise<Resource[]> {
+    const params: Record<string, string | number | undefined> = {}
+    if (options.limit !== undefined) params['limit'] = options.limit
+    if (options.sort) params['sort'] = options.sort
+    const response = await this.http.get<{ resources: Resource[] }>('/resources', params)
+    return response.resources
   }
 
   async get(input: GetInput): Promise<Resource> {

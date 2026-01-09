@@ -9,7 +9,7 @@ interface RequestOptions {
   params?: Record<string, string | number | boolean | undefined>
 }
 
-const DEFAULT_BASE_URL = 'https://x402.jobs/api/v1'
+const DEFAULT_BASE_URL = 'https://api.x402.jobs/api/v1'
 
 export class HttpClient {
   private baseUrl: string
