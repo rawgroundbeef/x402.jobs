@@ -21,7 +21,10 @@ export class HttpClient {
   }
 
   private buildUrl(path: string, params?: RequestOptions['params']): string {
-    const url = new URL(path, this.baseUrl)
+    // Concatenate baseUrl + path (don't use URL constructor's relative resolution)
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`
+    const fullUrl = `${this.baseUrl}${normalizedPath}`
+    const url = new URL(fullUrl)
 
     if (params) {
       for (const [key, value] of Object.entries(params)) {
