@@ -66,6 +66,11 @@ describe('toBaseUnits', () => {
   it('handles whole numbers without decimals', () => {
     expect(toBaseUnits('100', 'STX')).toBe('100000000')
   })
+
+  it('handles edge cases', () => {
+    expect(toBaseUnits('.5', 'STX')).toBe('500000') // Leading decimal
+    expect(toBaseUnits('0', 'STX')).toBe('0')
+  })
 })
 
 describe('fromBaseUnits', () => {
@@ -131,6 +136,8 @@ describe('isValidStacksAddress', () => {
 
   it('validates testnet addresses', () => {
     expect(isValidStacksAddress('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM')).toBe(true)
+    // SN prefix for multi-sig testnet
+    expect(isValidStacksAddress('SN1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM')).toBe(true)
   })
 
   it('validates contract addresses', () => {
@@ -165,7 +172,7 @@ describe('getExplorerUrl', () => {
 
   it('returns testnet explorer URL', () => {
     const url = getExplorerUrl('0xdef456', 'testnet')
-    expect(url).toBe('https://explorer.hiro.so/?chain=testnet/txid/0xdef456')
+    expect(url).toBe('https://explorer.hiro.so/txid/0xdef456?chain=testnet')
   })
 
   it('handles txid with 0x prefix', () => {

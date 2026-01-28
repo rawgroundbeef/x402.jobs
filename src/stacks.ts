@@ -58,8 +58,8 @@ export function toBaseUnits(amount: string | number, token: StacksTokenType): st
   const decimals = STACKS_DECIMALS[token]
   const multiplier = BigInt(10 ** decimals)
   const parts = String(amount).split('.')
-  const whole = parts[0] ?? '0'
-  const fraction = parts[1] ?? ''
+  const whole = parts[0] || '0'
+  const fraction = parts[1] || ''
   const paddedFraction = fraction.padEnd(decimals, '0').slice(0, decimals)
   const baseUnits = BigInt(whole) * multiplier + BigInt(paddedFraction || '0')
   return baseUnits.toString()
@@ -151,9 +151,9 @@ export function createPaymentRequirements(
  * Contract: includes a dot separator
  */
 export function isValidStacksAddress(address: string): boolean {
-  // Standard addresses: SP/ST/SM/SN followed by 38+ alphanumeric chars
-  // Contract addresses: address.contract-name
-  return /^S[PTMN][A-Z0-9]{38,}(\.[a-z][a-z0-9-]*)?$/i.test(address)
+  // Standard addresses: SP/ST/SM/SN followed by 38+ Base58Check chars
+  // Contract addresses: address.contract-name (lowercase)
+  return /^S[PTMN][A-Za-z0-9]{38,}(\.[a-z][a-z0-9-]*)?$/.test(address)
 }
 
 /**
@@ -173,9 +173,8 @@ export function isAddressForNetwork(address: string, network: StacksNetwork): bo
  * Get Stacks explorer URL for a transaction
  */
 export function getExplorerUrl(txid: string, network: StacksNetwork): string {
-  const base = network === 'mainnet'
-    ? 'https://explorer.hiro.so'
-    : 'https://explorer.hiro.so/?chain=testnet'
   const cleanTxid = txid.startsWith('0x') ? txid : `0x${txid}`
-  return `${base}/txid/${cleanTxid}`
+  const base = 'https://explorer.hiro.so'
+  const suffix = network === 'testnet' ? '?chain=testnet' : ''
+  return `${base}/txid/${cleanTxid}${suffix}`
 }
