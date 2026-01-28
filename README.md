@@ -62,6 +62,64 @@ x402jobs gives you reliability scores backed by real paid usage — not syntheti
 
 We ran the transactions. We paid the fees. Now you get the data.
 
+## Stacks Support
+
+The SDK includes built-in support for Stacks blockchain payments (STX, sBTC, USDCx).
+
+### Create payment requirements
+
+```typescript
+import { createPaymentRequirements } from '@x402jobs/sdk'
+
+const requirements = createPaymentRequirements({
+  payTo: 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9',
+  amount: '0.001', // Human-readable (0.001 STX)
+  token: 'STX',
+  network: 'mainnet',
+})
+// Returns x402 v2 payment requirements ready for use with OpenFacilitator
+```
+
+### Amount conversion helpers
+
+```typescript
+import { toBaseUnits, fromBaseUnits } from '@x402jobs/sdk'
+
+// Convert to base units for transactions
+toBaseUnits('1.5', 'STX')   // "1500000" (microSTX)
+toBaseUnits('0.001', 'sBTC') // "100000" (satoshis)
+
+// Convert from base units for display
+fromBaseUnits('1000000', 'STX') // "1.0"
+```
+
+### Use with OpenFacilitator
+
+```typescript
+import { OpenFacilitator } from '@openfacilitator/sdk'
+import { createPaymentRequirements } from '@x402jobs/sdk'
+
+const facilitator = new OpenFacilitator()
+
+const requirements = createPaymentRequirements({
+  payTo: 'SP...',
+  amount: '0.001',
+  token: 'STX',
+  network: 'mainnet',
+})
+
+// Settlement happens via OpenFacilitator
+const result = await facilitator.settle(paymentPayload, requirements)
+```
+
+### Token contracts
+
+| Token | Mainnet | Testnet |
+|-------|---------|---------|
+| STX | Native | Native |
+| sBTC | `SM3V...sbtc-token` | `ST1F...sbtc-token` |
+| USDCx | `SP120...usdcx` | `ST1N...token-susdc` |
+
 ## API Reference
 
 ### Constructor
@@ -130,6 +188,14 @@ Full TypeScript support with exported types:
 ```typescript
 import { X402Jobs } from '@x402jobs/sdk'
 import type { Score, Resource, ClientOptions } from '@x402jobs/sdk'
+
+// Stacks types
+import type {
+  StacksNetwork,
+  StacksTokenType,
+  StacksPaymentConfig,
+  StacksPaymentRequirements,
+} from '@x402jobs/sdk'
 ```
 
 ## Docs

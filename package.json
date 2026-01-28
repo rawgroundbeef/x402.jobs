@@ -31,7 +31,10 @@
     "api",
     "resources",
     "micropayments",
-    "verification"
+    "verification",
+    "stacks",
+    "bitcoin",
+    "sbtc"
   ],
   "author": "x402jobs",
   "license": "MIT",
@@ -40,6 +43,14 @@
     "url": "https://github.com/x402jobs/sdk"
   },
   "homepage": "https://x402.jobs",
+  "peerDependencies": {
+    "@openfacilitator/sdk": ">=0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@openfacilitator/sdk": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "tsup": "^8.0.0",

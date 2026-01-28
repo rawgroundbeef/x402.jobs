@@ -67,10 +67,24 @@ export interface ResourceUpdateInput {
 
 // ============ Client Types ============
 
-export interface WalletConfig {
-  // TBD based on x402 payment implementation
-  [key: string]: unknown
+/**
+ * Stacks wallet configuration for x402 payments.
+ * Used with @openfacilitator/sdk for settlement.
+ */
+export interface StacksWalletConfig {
+  /** Wallet type discriminator */
+  type: 'stacks'
+  /** Network: mainnet or testnet */
+  network: 'mainnet' | 'testnet'
+  /** Wallet address (SP... for mainnet, ST... for testnet) */
+  address: string
 }
+
+/**
+ * Wallet configuration for x402 payments.
+ * Currently supports Stacks; extensible for future chains.
+ */
+export type WalletConfig = StacksWalletConfig
 
 export interface ClientOptions {
   apiKey?: string
