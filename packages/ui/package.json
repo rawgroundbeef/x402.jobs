@@ -1,0 +1,57 @@
+{
+  "name": "@x402jobs/ui",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./button": "./src/button.tsx",
+    "./card": "./src/card.tsx",
+    "./input": "./src/input.tsx",
+    "./label": "./src/label.tsx",
+    "./select": "./src/select.tsx",
+    "./badge": "./src/badge.tsx",
+    "./alert": "./src/alert.tsx",
+    "./dialog": "./src/dialog.tsx",
+    "./divider": "./src/divider.tsx",
+    "./dropdown": "./src/dropdown.tsx",
+    "./textarea": "./src/textarea.tsx",
+    "./text-field": "./src/text-field.tsx",
+    "./switch": "./src/switch.tsx",
+    "./table": "./src/table.tsx",
+    "./spinner": "./src/spinner.tsx",
+    "./mobile-drawer": "./src/mobile-drawer.tsx",
+    "./tabs": "./src/tabs.tsx",
+    "./tooltip": "./src/tooltip.tsx",
+    "./copy-button": "./src/copy-button.tsx",
+    "./combobox": "./src/combobox.tsx",
+    "./chat-input": "./src/chat-input.tsx",
+    "./toast": "./src/toast.tsx",
+    "./progress": "./src/progress.tsx",
+    "./utils": "./src/lib/utils.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "eslint": "^9.31.0",
+    "typescript": "5.8.2",
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.26.0",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.468.0",
+    "tailwind-merge": "^2.5.5"
+  },
+  "peerDependencies": {
+    "react": ">=18 || ^19.0.0",
+    "react-dom": ">=18 || ^19.0.0"
+  }
+}

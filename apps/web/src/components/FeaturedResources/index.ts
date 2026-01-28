@@ -1,0 +1,1 @@
+export { FeaturedResources } from "./FeaturedResources";

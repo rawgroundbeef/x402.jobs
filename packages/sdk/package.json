@@ -1,0 +1,52 @@
+{
+  "name": "@x402jobs/sdk",
+  "version": "0.2.2",
+  "description": "The official SDK for x402.jobs — trust, discovery, and resource management for x402",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "x402",
+    "trust",
+    "reliability",
+    "api",
+    "resources",
+    "micropayments",
+    "verification"
+  ],
+  "author": "x402jobs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/x402jobs/sdk"
+  },
+  "homepage": "https://x402.jobs",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

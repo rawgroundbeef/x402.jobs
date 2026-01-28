@@ -1,140 +1,50 @@
-# @x402jobs/sdk
+# x402.jobs
 
-The official SDK for [x402.jobs](https://x402.jobs) — trust, discovery, and resource management for the x402 ecosystem.
+Open-source monorepo for [x402.jobs](https://x402.jobs) - Chain X402 resources into automated workflows.
 
-## Install
+## Structure
+
+```
+x402jobs/
+├── apps/
+│   └── web/          # Next.js frontend
+├── packages/
+│   ├── sdk/          # @x402jobs/sdk - npm package
+│   └── ui/           # @x402jobs/ui - shared UI components
+├── turbo.json
+└── package.json
+```
+
+## Getting Started
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development servers
+pnpm dev
+
+# Build all packages
+pnpm build
+```
+
+## Packages
+
+### @x402jobs/sdk
+
+The official SDK for x402.jobs - trust, discovery, and resource management for x402.
 
 ```bash
 npm install @x402jobs/sdk
 ```
 
-## Quick Start
+### @x402jobs/web
 
-```javascript
-import { X402Jobs } from '@x402jobs/sdk'
+The x402.jobs web application.
 
-const x402 = new X402Jobs({ apiKey: 'your-api-key' })
-```
+### @x402jobs/ui
 
-### Check if a resource is reliable
-
-```javascript
-const score = await x402.check('https://api.example.com/resource')
-// {
-//   url: "https://api.example.com/resource",
-//   success_rate: 0.94,
-//   calls: 1240,
-//   value_processed: "$12.4k",
-//   last_called: "2m ago"
-// }
-```
-
-### Browse top resources
-
-```javascript
-const top = await x402.check.top({ limit: 20 })
-```
-
-### Search resources
-
-```javascript
-const results = await x402.resources.search({
-  query: 'image generation',
-  minSuccessRate: 0.9
-})
-```
-
-### Register your resource
-
-```javascript
-await x402.resources.register({
-  url: 'https://my-api.com/endpoint',
-  name: 'My API',
-  price: '$0.01'
-})
-```
-
-## Why?
-
-You can index x402 endpoints all day. Doesn't mean they work.
-
-x402jobs gives you reliability scores backed by real paid usage — not synthetic pings.
-
-We ran the transactions. We paid the fees. Now you get the data.
-
-## API Reference
-
-### Constructor
-
-```javascript
-const x402 = new X402Jobs({
-  apiKey: 'sk_...',           // API key for authenticated access
-  baseUrl: 'https://...',     // Custom API URL (optional)
-})
-```
-
-### Trust / Verification (`x402.check`)
-
-| Method | Description |
-|--------|-------------|
-| `check(url)` | Get reliability score for a resource |
-| `check.many(urls)` | Check multiple resources |
-| `check.exists(url)` | Check if resource is indexed |
-| `check.top(options)` | Get top-ranked resources |
-
-### Resources (`x402.resources`)
-
-| Method | Description |
-|--------|-------------|
-| `resources.list()` | Get all resources |
-| `resources.get(url)` | Get single resource |
-| `resources.search(options)` | Search resources |
-| `resources.register(input)` | Register new resource |
-| `resources.update(id, input)` | Update resource |
-| `resources.delete(id)` | Delete resource |
-
-## Error Handling
-
-```javascript
-import { X402Jobs, X402Error } from '@x402jobs/sdk'
-
-const x402 = new X402Jobs({ apiKey: 'sk_...' })
-
-try {
-  const score = await x402.check(url)
-} catch (err) {
-  if (err instanceof X402Error) {
-    console.log(err.code)     // Error code
-    console.log(err.message)  // Human readable
-    console.log(err.status)   // HTTP status
-  }
-}
-```
-
-### Error Codes
-
-| Code | Description |
-|------|-------------|
-| `NOT_FOUND` | Resource not indexed |
-| `PAYMENT_REQUIRED` | x402 payment failed |
-| `RATE_LIMITED` | Too many requests |
-| `UNAUTHORIZED` | Invalid or missing API key |
-| `FORBIDDEN` | Not allowed |
-| `VALIDATION_ERROR` | Invalid input |
-| `SERVER_ERROR` | x402jobs API error |
-
-## TypeScript
-
-Full TypeScript support with exported types:
-
-```typescript
-import { X402Jobs } from '@x402jobs/sdk'
-import type { Score, Resource, ClientOptions } from '@x402jobs/sdk'
-```
-
-## Docs
-
-Full documentation at [x402.jobs/docs](https://x402.jobs/docs)
+Shared UI components (internal package).
 
 ## License
 
