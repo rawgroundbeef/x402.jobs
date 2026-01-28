@@ -6,6 +6,8 @@ import {
   getStacksNetworkId,
   toBaseUnits,
   fromBaseUnits,
+  createPaymentOption,
+  createStacksTokenOptions,
   createPaymentRequirements,
   isValidStacksAddress,
   isAddressForNetwork,
@@ -87,6 +89,75 @@ describe('fromBaseUnits', () => {
 
   it('accepts bigint input', () => {
     expect(fromBaseUnits(BigInt('1000000'), 'STX')).toBe('1.0')
+  })
+})
+
+describe('createPaymentOption', () => {
+  it('creates a PaymentOption for the accepts array', () => {
+    const option = createPaymentOption({
+      payTo: 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9',
+      amount: '0.001',
+      token: 'STX',
+      network: 'mainnet',
+    })
+
+    expect(option.scheme).toBe('exact')
+    expect(option.network).toBe('stacks:1')
+    expect(option.asset).toBe('STX')
+    expect(option.amount).toBe('1000')
+    expect(option.payTo).toBe('SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9')
+    expect(option.maxTimeoutSeconds).toBe(300)
+    expect(option.extra.facilitator).toBe('https://pay.openfacilitator.io')
+    expect(option.extra.tokenType).toBe('STX')
+  })
+
+  it('uses custom facilitator URL and timeout', () => {
+    const option = createPaymentOption({
+      payTo: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      amount: '0.01',
+      token: 'sBTC',
+      network: 'testnet',
+      maxTimeoutSeconds: 600,
+      facilitatorUrl: 'https://custom.io',
+    })
+
+    expect(option.maxTimeoutSeconds).toBe(600)
+    expect(option.extra.facilitator).toBe('https://custom.io')
+  })
+})
+
+describe('createStacksTokenOptions', () => {
+  it('creates options for all three Stacks tokens', () => {
+    const options = createStacksTokenOptions({
+      payTo: 'SP2PABAF9FTAJYNFZH93XENAJ8FVY99RRM50D2JG9',
+      stxAmount: '0.001',
+      sbtcAmount: '0.000001',
+      usdcxAmount: '0.001',
+      network: 'mainnet',
+    })
+
+    expect(options).toHaveLength(3)
+    expect(options[0].asset).toBe('STX')
+    expect(options[0].extra.tokenType).toBe('STX')
+    expect(options[1].asset).toMatch(/sbtc-token$/)
+    expect(options[1].extra.tokenType).toBe('sBTC')
+    expect(options[2].asset).toMatch(/usdcx$/)
+    expect(options[2].extra.tokenType).toBe('USDCx')
+  })
+
+  it('all options share the same payTo and network', () => {
+    const options = createStacksTokenOptions({
+      payTo: 'ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM',
+      stxAmount: '1',
+      sbtcAmount: '0.0001',
+      usdcxAmount: '1',
+      network: 'testnet',
+    })
+
+    for (const opt of options) {
+      expect(opt.payTo).toBe('ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM')
+      expect(opt.network).toBe('stacks:2147483648')
+    }
   })
 })
 

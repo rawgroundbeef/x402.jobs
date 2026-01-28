@@ -12,6 +12,8 @@ export {
   getStacksNetworkId,
   toBaseUnits,
   fromBaseUnits,
+  createPaymentOption,
+  createStacksTokenOptions,
   createPaymentRequirements,
   isValidStacksAddress,
   isAddressForNetwork,
@@ -31,11 +33,17 @@ export type {
   WalletConfig,
   StacksWalletConfig,
   ErrorCode,
+  // Payment types (x402 v2)
+  PaymentOption,
+  PaymentResource,
+  PaymentRequiredV2,
+  PaymentPayloadV2,
 } from './types'
 
 export type {
   StacksNetwork,
   StacksTokenType,
+  StacksPaymentOptionConfig,
   StacksPaymentConfig,
   StacksPaymentRequirements,
 } from './stacks'

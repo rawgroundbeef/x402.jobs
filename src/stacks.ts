@@ -5,6 +5,13 @@
  * Works with @openfacilitator/sdk for settlement.
  */
 
+import type { PaymentOption } from './types'
+
+// ============ Constants ============
+
+const DEFAULT_FACILITATOR = 'https://pay.openfacilitator.io'
+const DEFAULT_TIMEOUT = 300
+
 // ============ Network Constants ============
 
 /** CAIP-2 network identifiers for Stacks */
@@ -83,7 +90,71 @@ export function fromBaseUnits(baseUnits: string | bigint, token: StacksTokenType
   return `${whole}.${trimmedFraction}`
 }
 
-// ============ Payment Requirements ============
+// ============ Payment Options (for accepts array) ============
+
+export interface StacksPaymentOptionConfig {
+  /** Recipient address */
+  payTo: string
+  /** Amount in human-readable units (e.g., "0.001") */
+  amount: string
+  /** Token type */
+  token: StacksTokenType
+  /** Network */
+  network: StacksNetwork
+  /** Timeout in seconds (default: 300) */
+  maxTimeoutSeconds?: number
+  /** Facilitator URL (default: OpenFacilitator public endpoint) */
+  facilitatorUrl?: string
+}
+
+/**
+ * Create a payment option for the `accepts` array.
+ * Use this when registering resources that accept Stacks payments.
+ */
+export function createPaymentOption(config: StacksPaymentOptionConfig): PaymentOption {
+  const { payTo, amount, token, network, maxTimeoutSeconds, facilitatorUrl } = config
+
+  return {
+    scheme: 'exact',
+    network: getStacksNetworkId(network),
+    asset: STACKS_TOKENS[network][token],
+    amount: toBaseUnits(amount, token),
+    payTo,
+    maxTimeoutSeconds: maxTimeoutSeconds ?? DEFAULT_TIMEOUT,
+    extra: {
+      facilitator: facilitatorUrl ?? DEFAULT_FACILITATOR,
+      tokenType: token,
+    },
+  }
+}
+
+/**
+ * Create payment options for all three Stacks tokens (STX, sBTC, USDCx).
+ * Convenience helper for resources that accept all Stacks token types.
+ */
+export function createStacksTokenOptions(config: {
+  payTo: string
+  /** Amount in STX (will be converted to equivalent for other tokens) */
+  stxAmount: string
+  /** Amount in sBTC */
+  sbtcAmount: string
+  /** Amount in USDCx */
+  usdcxAmount: string
+  network: StacksNetwork
+  maxTimeoutSeconds?: number
+  facilitatorUrl?: string
+}): PaymentOption[] {
+  const { payTo, stxAmount, sbtcAmount, usdcxAmount, network, maxTimeoutSeconds, facilitatorUrl } =
+    config
+
+  return [
+    createPaymentOption({ payTo, amount: stxAmount, token: 'STX', network, maxTimeoutSeconds, facilitatorUrl }),
+    createPaymentOption({ payTo, amount: sbtcAmount, token: 'sBTC', network, maxTimeoutSeconds, facilitatorUrl }),
+    createPaymentOption({ payTo, amount: usdcxAmount, token: 'USDCx', network, maxTimeoutSeconds, facilitatorUrl }),
+  ]
+}
+
+// ============ Payment Requirements (legacy) ============
 
 export interface StacksPaymentConfig {
   /** Recipient address */
@@ -116,9 +187,6 @@ export interface StacksPaymentRequirements {
     tokenType: StacksTokenType
   }
 }
-
-const DEFAULT_FACILITATOR = 'https://pay.openfacilitator.io'
-const DEFAULT_TIMEOUT = 300
 
 /**
  * Create payment requirements for a Stacks payment
