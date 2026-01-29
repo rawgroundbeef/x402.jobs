@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 // Set this to true to enable maintenance mode
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 // localStorage key to bypass maintenance mode
 const BYPASS_KEY = "x402_maintenance_bypass";
