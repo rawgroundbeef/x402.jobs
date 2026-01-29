@@ -1,6 +1,6 @@
 {
   "version": 2,
   "installCommand": "npm install -g pnpm@9.12.1 && pnpm install --frozen-lockfile",
-  "buildCommand": "turbo run build --filter=x402-jobs..."
+  "buildCommand": "turbo run build --filter=@x402jobs/web..."
 }
 
