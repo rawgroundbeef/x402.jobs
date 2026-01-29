@@ -102,10 +102,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log("[X OAuth] Cleared existing session");
 
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: "x",
+        provider: "twitter",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
-          scopes: "tweet.read users.read offline.access",
         },
       });
 
