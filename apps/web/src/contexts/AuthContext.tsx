@@ -105,6 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         provider: "x",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          scopes: "tweet.read users.read offline.access",
         },
       });
 
