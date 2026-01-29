@@ -93,24 +93,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithTwitter = async () => {
     try {
-      console.log("[X OAuth] Starting sign in...");
-      console.log("[X OAuth] Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
-      console.log("[X OAuth] Redirect URL:", `${window.location.origin}/auth/callback`);
-
       // Clear any existing session to prevent OAuth conflicts
       await supabase.auth.signOut();
-      console.log("[X OAuth] Cleared existing session");
 
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "twitter",
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-
-      console.log("[X OAuth] Response data:", data);
-      console.log("[X OAuth] Full OAuth URL:", data?.url);
-      console.log("[X OAuth] Response error:", error);
 
       if (error) {
         console.error("Twitter sign in error:", error);

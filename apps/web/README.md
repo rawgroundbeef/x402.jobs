@@ -28,8 +28,8 @@ The app runs on `http://localhost:3010`.
 - **Framework**: Next.js 15 with App Router
 - **Workflow Builder**: XYFlow (React Flow)
 - **Styling**: Tailwind CSS
-- **Database**: Supabase (shared with memeputer)
-- **Auth**: Supabase Auth (shared)
+- **Database**: Supabase
+- **Auth**: Supabase Auth
 
 ## Database Tables
 
@@ -68,4 +68,4 @@ The app runs on `http://localhost:3010`.
 
 ## License
 
-Proprietary - memeputer company
+MIT

@@ -13,10 +13,7 @@ import {
 import { Button } from "@x402jobs/ui/button";
 import { AddResourceModalButton } from "@/components/AddResourceModalButton";
 
-const DOCS_BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3008"
-    : "https://docs.memeputer.com";
+const DOCS_BASE_URL = "https://x402.jobs/docs";
 
 interface DocsPanelProps {
   isOpen: boolean;
