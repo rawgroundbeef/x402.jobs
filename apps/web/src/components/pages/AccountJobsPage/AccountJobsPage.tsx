@@ -83,7 +83,7 @@ export default function AccountJobsPage() {
   const [chain, setChain] = useState<ChainFilter>("all");
   const [search, setSearch] = useState("");
 
-  const jobs = data?.jobs || [];
+  const jobs = useMemo(() => data?.jobs || [], [data?.jobs]);
   const stats = data?.stats || {
     totalEarnings: 0,
     totalRuns: 0,

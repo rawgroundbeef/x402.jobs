@@ -34,7 +34,6 @@ import {
   RefreshCw,
   Plus,
   Trash2,
-  Network,
 } from "lucide-react";
 import { Switch } from "@x402jobs/ui/switch";
 import { Alert, AlertDescription } from "@x402jobs/ui/alert";
@@ -294,7 +293,6 @@ export function CreateResourceModal({
   );
 
   // Proxy form (for create mode)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const proxyForm = useForm<ProxyFormData>({
     resolver: zodResolver(proxyFormSchema as any),
     defaultValues: {
@@ -313,7 +311,6 @@ export function CreateResourceModal({
   });
 
   // Edit form (for edit mode)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const editForm = useForm<EditFormData>({
     resolver: zodResolver(editFormSchema as any),
     defaultValues: {
@@ -325,7 +322,6 @@ export function CreateResourceModal({
   });
 
   // Prompt template form (for create mode)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const promptTemplateForm = useForm<CreatePromptTemplateInput>({
     resolver: zodResolver(createPromptTemplateSchema as any),
     defaultValues: {
@@ -354,7 +350,6 @@ export function CreateResourceModal({
   });
 
   // OpenRouter form (for create mode)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openrouterForm = useForm<CreateOpenRouterResourceInput>({
     resolver: zodResolver(createOpenRouterResourceSchema as any),
     defaultValues: {

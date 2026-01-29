@@ -169,6 +169,7 @@ export function CreateWorkflowDialog({
     if (open && initialPrompt && messages.length === 0) {
       handleSendMessage(initialPrompt);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialPrompt]);
 
   // Reset state when dialog closes

@@ -333,6 +333,7 @@ export function useConversationFlow() {
       // No parameters to configure, go straight to review
       handleFinalizeParameters();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addUserMessage, addAssistantMessage, setParameters, setStep]);
 
   // Handle finalizing parameters

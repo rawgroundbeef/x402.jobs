@@ -147,7 +147,7 @@ export default function JobCanvas({ initialJob }: JobCanvasProps) {
   >(null);
 
   // Helper to get panel type from key
-  const getPanelType = (key: PanelKey): string => key.split(":")[0];
+  const getPanelType = useCallback((key: PanelKey): string => key.split(":")[0], []);
 
   // Open a panel - adds to top, evicts oldest if stack > 2
   const openPanel = useCallback((panelKey: PanelKey) => {
