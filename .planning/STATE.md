@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 19 - Wizard Shell & Type Selection (1 of 7 v2.0 phases)
-**Plan:** 19-01 of 2 complete
+**Phase:** 20 - Shared Details & Review (2 of 7 v2.0 phases)
+**Plan:** 20-01 of 2 complete
 **Status:** In progress
-**Last activity:** 2026-01-31 -- Completed 19-01-PLAN.md (wizard infrastructure)
+**Last activity:** 2026-01-31 -- Completed 20-01-PLAN.md (shared details form)
 
 ```
-v2.0 Progress: [█------] 1/14 plans (7%)
-Phase 19:      [█-] 1/2 plans (50%)
+v2.0 Progress: [██-----] 2/14 plans (14%)
+Phase 20:      [█-] 1/2 plans (50%)
 ```
 
 ## Milestone History
@@ -74,6 +74,9 @@ Phase 19:      [█-] 1/2 plans (50%)
 | Session storage key x402jobs:newResource | Consistent with project naming convention             | 2026-01-31 |
 | Type-only draft not meaningful       | User can easily re-select, only ask confirmation for name+ | 2026-01-31 |
 | Confirmation dialog as div overlay   | Lightweight implementation vs importing Radix Dialog      | 2026-01-31 |
+| Category required                    | Per research recommendation, improves discoverability     | 2026-01-31 |
+| 4-step wizard (details + review)     | Details and review are now separate visible steps         | 2026-01-31 |
+| Minimum price $0.01                  | Matches plan requirement, enforced in Zod schema          | 2026-01-31 |
 
 ## Remaining Manual Tasks
 
@@ -94,9 +97,9 @@ Phase 19:      [█-] 1/2 plans (50%)
 
 ## Session Continuity
 
-**Last session:** 2026-01-31T03:46:56Z
-**Stopped at:** Completed 19-01-PLAN.md (wizard infrastructure)
-**Resume with:** `/gsd:execute-phase 19` (continue with 19-02-PLAN.md)
+**Last session:** 2026-01-31T22:32:56Z
+**Stopped at:** Completed 20-01-PLAN.md (shared details form)
+**Resume with:** `/gsd:execute-phase 20` (continue with 20-02-PLAN.md)
 
 ---
 
@@ -109,3 +112,4 @@ _v1.4 complete: 2026-01-28_
 _v2.0 started: 2026-01-30_
 _v2.0 roadmap created: 2026-01-30_
 _v2.0 19-01 complete: 2026-01-31_
+_v2.0 20-01 complete: 2026-01-31_
