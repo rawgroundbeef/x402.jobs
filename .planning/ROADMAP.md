@@ -54,6 +54,12 @@ Plans:
 
 **Dependencies:** Phase 19 (needs wizard shell and routing)
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 20-01-PLAN.md -- Shared details form (name, slug, description, image, category, price, network) with validation and slug auto-generation
+- [ ] 20-02-PLAN.md -- Review summary page with edit links and publish-to-backend functionality
+
 **Requirements:**
 
 - DETL-01: Name field (required)
@@ -202,7 +208,7 @@ Plans:
 | Phase                              | Status  | Plans | Requirements             |
 | ---------------------------------- | ------- | ----- | ------------------------ |
 | 19 - Wizard Shell & Type Selection | Planned | 2     | WIZD-01..08, TYPE-01..04 |
-| 20 - Shared Details & Review       | Pending | 0/?   | DETL-01..08, REVW-01..05 |
+| 20 - Shared Details & Review       | Planned | 2     | DETL-01..08, REVW-01..05 |
 | 21 - Link Existing Path            | Pending | 0/?   | LINK-01..08              |
 | 22 - Proxy Path                    | Pending | 0/?   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Pending | 0/?   | CLPT-01..05              |
