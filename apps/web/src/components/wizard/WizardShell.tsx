@@ -11,6 +11,7 @@ interface WizardShellProps {
   step: number;
   totalSteps: number;
   title: string;
+  description?: string;
   onBack?: () => void;
   backHref?: string;
   showBack?: boolean;
@@ -23,6 +24,7 @@ export function WizardShell({
   step,
   totalSteps,
   title,
+  description,
   onBack,
   backHref,
   showBack = step > 1,
@@ -46,52 +48,53 @@ export function WizardShell({
     if (hasUnsavedChanges()) {
       setShowCancelConfirm(true);
     } else {
-      router.push("/resources");
+      router.push("/dashboard/resources");
     }
   };
 
   const handleDiscard = () => {
     clearDraft();
-    router.push("/resources");
+    router.push("/dashboard/resources");
   };
 
   return (
     <>
-      <div className="min-h-[calc(100vh-64px)] bg-[#0a0f14] py-8">
-        <div className="max-w-[800px] mx-auto px-4">
-          <div className="bg-[#111820] border border-[#252d3a] rounded-xl p-6 sm:p-8">
-            {/* Step indicator */}
-            <div className="text-sm text-[#5c6670] mb-6">
-              Step {step} of {totalSteps}
-            </div>
+      <div className="py-6 px-6">
+        {/* Page header — title left, step counter right */}
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+          <span className="text-sm text-muted-foreground">Step {step} of {totalSteps}</span>
+        </div>
+        <hr className="border-t border-border mb-6" />
 
-            {/* Title */}
-            <h1 className="text-2xl font-semibold text-white mb-6">{title}</h1>
+        {/* Description */}
+        {description && (
+          <p className="text-[15px] text-muted-foreground mb-6">{description}</p>
+        )}
 
-            {/* Content */}
-            <div>{children}</div>
+        {/* Content — left-aligned, max-width constrained */}
+        <div className="max-w-[720px]">{children}</div>
 
-            {/* Navigation footer */}
-            <div className="flex justify-between items-center pt-6 border-t border-[#252d3a] mt-8">
-              {/* Back button */}
-              {showBack && (
-                <Button variant="ghost" onClick={handleBack}>
-                  <ArrowLeft className="w-4 h-4" />
-                  Back
-                </Button>
-              )}
-              {!showBack && <div />}
+        {/* Footer */}
+        <div className="max-w-[720px] flex items-center justify-between mt-8 pt-6 border-t border-border">
+          {/* Back button */}
+          {showBack ? (
+            <Button variant="ghost" onClick={handleBack}>
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+          ) : (
+            <div />
+          )}
 
-              {/* Custom footer or Cancel button */}
-              <div className="flex items-center gap-3">
-                {footer}
-                {showCancel && (
-                  <Button variant="outline" onClick={handleCancel}>
-                    Cancel
-                  </Button>
-                )}
-              </div>
-            </div>
+          {/* Right side: custom footer + cancel */}
+          <div className="flex items-center gap-3">
+            {footer}
+            {showCancel && (
+              <Button variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -99,11 +102,11 @@ export function WizardShell({
       {/* Cancel confirmation dialog */}
       {showCancelConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-[#111820] border border-[#252d3a] rounded-xl p-6 max-w-md mx-4">
-            <h2 className="text-xl font-semibold text-white mb-2">
+          <div className="bg-card border border-border rounded-xl p-6 max-w-md mx-4">
+            <h2 className="text-xl font-semibold text-card-foreground mb-2">
               Discard this resource?
             </h2>
-            <p className="text-[#5c6670] mb-6">Your progress will be lost.</p>
+            <p className="text-muted-foreground mb-6">Your progress will be lost.</p>
             <div className="flex justify-end gap-3">
               <Button
                 variant="outline"

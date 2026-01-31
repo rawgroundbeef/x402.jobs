@@ -92,35 +92,8 @@ export function hasUnsavedChanges(): boolean {
   const draft = getDraft();
   if (!draft) return false;
 
-  // Destructure to check all fields except updatedAt and type
-  const {
-    updatedAt,
-    type,
-    name,
-    description,
-    slug,
-    linkConfig,
-    proxyConfig,
-    claudeConfig,
-    openrouterConfig,
-    imageUrl,
-    category,
-    price,
-    network,
-  } = draft;
-
   // Meaningful = has name, or any config field, or description, slug, price, etc.
-  return !!(
-    name ||
-    description ||
-    slug ||
-    linkConfig ||
-    proxyConfig ||
-    claudeConfig ||
-    openrouterConfig ||
-    imageUrl ||
-    category ||
-    price ||
-    network
-  );
+  // A draft with only type selected is not considered meaningful (easily re-selected)
+  const { updatedAt: _, type: __, ...rest } = draft;
+  return Object.values(rest).some(Boolean);
 }

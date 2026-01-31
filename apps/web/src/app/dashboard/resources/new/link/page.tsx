@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { getDraft } from "@/lib/wizard-draft";
 import { WizardShell } from "@/components/wizard/WizardShell";
 
-export default function OpenRouterConfigPage() {
+export default function LinkConfigPage() {
   const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const draft = getDraft();
     if (!draft?.type) {
-      router.replace("/resources/new");
+      router.replace("/dashboard/resources/new");
       return;
     }
     setIsLoaded(true);
@@ -24,11 +24,11 @@ export default function OpenRouterConfigPage() {
     <WizardShell
       step={2}
       totalSteps={3}
-      title="Configure Model"
-      backHref="/resources/new"
+      title="Configure Endpoint"
+      backHref="/dashboard/resources/new"
     >
       <div className="text-center py-12 text-[#5c6670]">
-        <p className="text-lg mb-2">Coming in Phase 23</p>
+        <p className="text-lg mb-2">Coming in Phase 21</p>
         <p className="text-sm">This step will be implemented in a future phase.</p>
       </div>
     </WizardShell>

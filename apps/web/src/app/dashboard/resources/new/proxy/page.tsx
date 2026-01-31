@@ -12,7 +12,7 @@ export default function ProxyConfigPage() {
   useEffect(() => {
     const draft = getDraft();
     if (!draft?.type) {
-      router.replace("/resources/new");
+      router.replace("/dashboard/resources/new");
       return;
     }
     setIsLoaded(true);
@@ -25,10 +25,10 @@ export default function ProxyConfigPage() {
       step={2}
       totalSteps={3}
       title="Configure Proxy"
-      backHref="/resources/new"
+      backHref="/dashboard/resources/new"
     >
       <div className="text-center py-12 text-[#5c6670]">
-        <p className="text-lg mb-2">Coming in Phase 21</p>
+        <p className="text-lg mb-2">Coming in Phase 22</p>
         <p className="text-sm">This step will be implemented in a future phase.</p>
       </div>
     </WizardShell>
