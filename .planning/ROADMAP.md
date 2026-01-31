@@ -92,6 +92,12 @@ Plans:
 
 **Dependencies:** Phase 19 (wizard shell), Phase 20 (details and review steps)
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 21-01-PLAN.md -- Link validation page with URL input, HTTP method dropdown, x402check validation, and VerifyResultDetails display
+- [ ] 21-02-PLAN.md -- Pre-fill details step (locked network/price) and link config display on review page
+
 **Requirements:**
 
 - LINK-01: URL input field with HTTP method dropdown (GET, POST, PUT, DELETE)
@@ -209,11 +215,11 @@ Plans:
 | ---------------------------------- | -------- | ----- | ------------------------ |
 | 19 - Wizard Shell & Type Selection | Planned  | 2     | WIZD-01..08, TYPE-01..04 |
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
-| 21 - Link Existing Path            | Pending | 0/?   | LINK-01..08              |
-| 22 - Proxy Path                    | Pending | 0/?   | PRXY-01..04              |
-| 23 - Claude Prompt Path            | Pending | 0/?   | CLPT-01..05              |
-| 24 - OpenRouter Path               | Pending | 0/?   | ORTR-01..07              |
-| 25 - Cleanup & Migration           | Pending | 0/?   | CLNP-01..02              |
+| 21 - Link Existing Path            | Planned  | 2     | LINK-01..08              |
+| 22 - Proxy Path                    | Pending  | 0/?   | PRXY-01..04              |
+| 23 - Claude Prompt Path            | Pending  | 0/?   | CLPT-01..05              |
+| 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
+| 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
 **Total:** 3/14 plans complete (Phases 19-25, 21% complete)
 
