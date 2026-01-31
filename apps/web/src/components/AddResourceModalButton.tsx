@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "@x402jobs/ui/button";
 import { Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useModals } from "@/contexts/ModalContext";
 
 interface AddResourceModalButtonProps {
   variant?: "ghost" | "outline" | "default" | "primary";
@@ -25,37 +24,19 @@ export function AddResourceModalButton({
   className,
   label = "Add Resource",
   onClick,
-  onSuccess,
 }: AddResourceModalButtonProps) {
   const { user } = useAuth();
-  const { openRegisterResource } = useModals();
 
-  const handleClick = () => {
-    openRegisterResource(onSuccess);
-    onClick?.();
-  };
-
-  if (!user) {
-    return (
-      <Button
-        variant={variant}
-        size={size}
-        className={className}
-        as={Link}
-        href="/login"
-      >
-        {showIcon && <Plus className="h-4 w-4" />}
-        {label}
-      </Button>
-    );
-  }
+  const href = user ? "/dashboard/resources/new" : "/login";
 
   return (
     <Button
       variant={variant}
       size={size}
       className={className}
-      onClick={handleClick}
+      as={Link}
+      href={href}
+      onClick={onClick}
     >
       {showIcon && <Plus className="h-4 w-4" />}
       {label}

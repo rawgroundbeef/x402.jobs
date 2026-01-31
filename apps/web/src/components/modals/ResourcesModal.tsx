@@ -20,7 +20,6 @@ import {
 import { authenticatedFetcher, publicFetcher } from "@/lib/api";
 import { formatPrice, formatUsd } from "@/lib/format";
 import { useAuth } from "@/contexts/AuthContext";
-import { useModals } from "@/contexts/ModalContext";
 import Link from "next/link";
 
 type TabType = "resources" | "jobs";
@@ -141,7 +140,6 @@ export function ResourcesModal({
   filterNetwork,
 }: ResourcesModalProps) {
   const { user } = useAuth();
-  const { openRegisterResource } = useModals();
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<TabType>("resources");
   const [selectedNetwork, setSelectedNetwork] = useState<NetworkType>(
@@ -663,26 +661,14 @@ export function ResourcesModal({
           {/* Footer - only show register button on resources tab */}
           {activeTab === "resources" && (
             <div className="p-4 flex justify-end">
-              {user ? (
-                <button
-                  onClick={() => {
-                    openRegisterResource();
-                    onClose();
-                  }}
-                  className="px-4 py-2 text-sm font-medium rounded bg-resource/20 hover:bg-resource/30 text-resource transition-colors flex items-center gap-2"
-                >
-                  <Plus className="w-4 h-4" />
-                  Resource
-                </button>
-              ) : (
-                <Link
-                  href="/login"
-                  className="px-4 py-2 text-sm font-medium rounded bg-resource/20 hover:bg-resource/30 text-resource transition-colors flex items-center gap-2"
-                >
-                  <LogIn className="w-4 h-4" />
-                  Sign in to Add Resource
-                </Link>
-              )}
+              <Link
+                href={user ? "/dashboard/resources/new" : "/login"}
+                onClick={onClose}
+                className="px-4 py-2 text-sm font-medium rounded bg-resource/20 hover:bg-resource/30 text-resource transition-colors flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                {user ? "Resource" : "Sign in to Add Resource"}
+              </Link>
             </div>
           )}
         </div>

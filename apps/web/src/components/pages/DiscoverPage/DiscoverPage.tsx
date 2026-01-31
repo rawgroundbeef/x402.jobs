@@ -10,7 +10,6 @@ import { Button } from "@x402jobs/ui/button";
 import { publicFetcher } from "@/lib/api";
 import { getSuccessRate, getSuccessRateColor } from "@/lib/format";
 import BaseLayout from "@/components/BaseLayout";
-import { useModals } from "@/contexts/ModalContext";
 import { cn } from "@x402jobs/ui/utils";
 
 function formatCompactUsd(value: number): string {
@@ -94,7 +93,6 @@ const fadeInUp = {
 export default function DiscoverPage() {
   const leaderboardRef = useRef<HTMLDivElement>(null);
   const pricingRef = useRef<HTMLDivElement>(null);
-  const { openRegisterResource } = useModals();
   const [showComingSoon, setShowComingSoon] = useState(false);
 
   const { data: resourcesData, isLoading: resourcesLoading } =
@@ -525,12 +523,12 @@ export default function DiscoverPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-8">
             Want to add your resource to the index? That&apos;s free.{" "}
-            <button
-              onClick={() => openRegisterResource()}
+            <Link
+              href="/dashboard/resources/new"
               className="text-primary hover:underline"
             >
               Register a resource →
-            </button>
+            </Link>
           </p>
         </motion.section>
       </main>

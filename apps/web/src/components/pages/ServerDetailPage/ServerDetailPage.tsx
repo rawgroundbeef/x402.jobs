@@ -25,7 +25,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useModals } from "@/contexts/ModalContext";
 import BaseLayout from "@/components/BaseLayout";
 import { Avatar } from "@/components/Avatar";
 import { ClaimOwnershipButton } from "@/components/ClaimOwnershipButton";
@@ -113,7 +112,6 @@ export default function ServerDetailPage({
 }: ServerDetailPageProps) {
   const router = useRouter();
   const { user, isAdmin } = useAuth();
-  const { openRegisterResource } = useModals();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -379,7 +377,8 @@ export default function ServerDetailPage({
               <Button
                 variant="primary"
                 className="h-10"
-                onClick={() => openRegisterResource()}
+                as={Link}
+                href="/dashboard/resources/new"
               >
                 <Plus className="h-4 w-4 mr-1.5" />
                 Add Resource
