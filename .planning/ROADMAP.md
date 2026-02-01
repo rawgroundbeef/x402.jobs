@@ -183,7 +183,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 24-01-PLAN.md -- OpenRouter config page with API key check, model browser, system prompt textarea, parameter definitions, temperature, max tokens, plus details preservation and review display
+- [x] 24-01-PLAN.md -- OpenRouter config page with API key check, model browser, system prompt textarea, parameter definitions, temperature, max tokens, plus details preservation and review display
 
 **Requirements:**
 
@@ -233,10 +233,10 @@ Plans:
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
-| 24 - OpenRouter Path               | Planned  | 1     | ORTR-01..07              |
+| 24 - OpenRouter Path               | Complete | 1/1   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
-**Total:** 7/14 plans complete (Phases 19-25, 50% complete)
+**Total:** 8/14 plans complete (Phases 19-25, 57% complete)
 
 ---
 

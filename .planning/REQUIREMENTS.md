@@ -53,13 +53,13 @@ Requirements for full-page wizard replacing modal-based resource creation.
 
 ### OpenRouter
 
-- [ ] **ORTR-01**: Warning banner shown if user has no OpenRouter API key configured, with link to Settings
-- [ ] **ORTR-02**: Model browser with search and filters (modality, provider, price)
-- [ ] **ORTR-03**: Curated popular models shown by default
-- [ ] **ORTR-04**: Prompt template editor with `{{param}}` syntax support
-- [ ] **ORTR-05**: Parameter definitions (name, type, description, required)
-- [ ] **ORTR-06**: Model config (temperature, max_tokens)
-- [ ] **ORTR-07**: Continue button blocked until API key configured and model selected
+- [x] **ORTR-01**: Warning banner shown if user has no OpenRouter API key configured, with link to Settings
+- [x] **ORTR-02**: Model browser with search and filters (modality, provider, price)
+- [x] **ORTR-03**: Curated popular models shown by default
+- [x] **ORTR-04**: Prompt template editor with `{param}{/param}` syntax support
+- [x] **ORTR-05**: Parameter definitions (name, description, default, required)
+- [x] **ORTR-06**: Model config (temperature, max_tokens)
+- [x] **ORTR-07**: Continue button blocked until API key configured and model selected
 
 ### Resource Details (Shared)
 
@@ -161,13 +161,13 @@ Deferred to later milestones.
 | CLPT-03     | Phase 23 | Complete |
 | CLPT-04     | Phase 23 | Complete |
 | CLPT-05     | Phase 23 | Complete |
-| ORTR-01     | Phase 24 | Pending |
-| ORTR-02     | Phase 24 | Pending |
-| ORTR-03     | Phase 24 | Pending |
-| ORTR-04     | Phase 24 | Pending |
-| ORTR-05     | Phase 24 | Pending |
-| ORTR-06     | Phase 24 | Pending |
-| ORTR-07     | Phase 24 | Pending |
+| ORTR-01     | Phase 24 | Complete |
+| ORTR-02     | Phase 24 | Complete |
+| ORTR-03     | Phase 24 | Complete |
+| ORTR-04     | Phase 24 | Complete |
+| ORTR-05     | Phase 24 | Complete |
+| ORTR-06     | Phase 24 | Complete |
+| ORTR-07     | Phase 24 | Complete |
 | CLNP-01     | Phase 25 | Pending |
 | CLNP-02     | Phase 25 | Pending |
 
