@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 23 - Claude Prompt Path (5 of 7 v2.0 phases)
-**Plan:** 23-01 of 1 complete
+**Phase:** 24 - OpenRouter Path (6 of 7 v2.0 phases)
+**Plan:** 24-01 of 1 complete
 **Status:** Phase complete, verified (9/9 must-haves)
-**Last activity:** 2026-02-01 -- Phase 23 verified and complete
+**Last activity:** 2026-02-01 -- Phase 24 complete: OpenRouter config with model browser
 
 ```
-v2.0 Progress: [███████] 7/14 plans (50%)
-Phase 23:      [█] 1/1 plan (100%)
+v2.0 Progress: [████████] 8/14 plans (57%)
+Phase 24:      [█] 1/1 plan (100%)
 ```
 
 ## Milestone History
@@ -84,6 +84,10 @@ Phase 23:      [█] 1/1 plan (100%)
 | Max tokens 1-64,000 for Claude       | Future-proof for larger context models                    | 2026-02-01 |
 | field.id as parameter key            | Proper React tracking when reordering/removing parameters | 2026-02-01 |
 | Warning banner conditional render    | Prevent flash with !isLoadingConfig && !hasApiKey check   | 2026-02-01 |
+| Store modelName in draft             | Review displays without fetch; backend ignores extra      | 2026-02-01 |
+| Collapsed model summary card         | Saves space, clear Change button                          | 2026-02-01 |
+| Progressive disclosure for OpenRouter | Hide prompt/params until model selected                   | 2026-02-01 |
+| Max tokens 1-128K for OpenRouter     | Wider range than Claude for large context models          | 2026-02-01 |
 
 ## Remaining Manual Tasks
 
@@ -105,8 +109,8 @@ Phase 23:      [█] 1/1 plan (100%)
 ## Session Continuity
 
 **Last session:** 2026-02-01
-**Stopped at:** Completed 23-01-PLAN.md
-**Resume with:** `/gsd:discuss-phase 24` (start Phase 24: OpenRouter Path)
+**Stopped at:** Completed 24-01-PLAN.md
+**Resume with:** `/gsd:discuss-phase 25` (start Phase 25: Cleanup)
 
 ---
 
@@ -125,3 +129,4 @@ _v2.0 21-01 complete: 2026-02-01_
 _v2.0 21-02 complete: 2026-02-01_
 _v2.0 22-01 complete: 2026-02-01_
 _v2.0 23-01 complete: 2026-02-01_
+_v2.0 24-01 complete: 2026-02-01_
