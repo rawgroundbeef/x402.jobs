@@ -69,12 +69,6 @@ interface ModalContextValue {
   openResourceModal: (resource: ModalResource) => void;
   closeResourceModal: () => void;
 
-  // Register Resource Modal
-  isRegisterResourceOpen: boolean;
-  registerResourceOnSuccess: (() => void) | null;
-  openRegisterResource: (onSuccess?: () => void) => void;
-  closeRegisterResource: () => void;
-
   // My Jobs Modal
   isMyJobsOpen: boolean;
   openMyJobs: () => void;
@@ -92,10 +86,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   const [isJobputerChatOpen, setIsJobputerChatOpen] = useState(false);
   const [resourceModalResource, setResourceModalResource] =
     useState<ModalResource | null>(null);
-  const [isRegisterResourceOpen, setIsRegisterResourceOpen] = useState(false);
-  const [registerResourceOnSuccess, setRegisterResourceOnSuccess] = useState<
-    (() => void) | null
-  >(null);
   const [isMyJobsOpen, setIsMyJobsOpen] = useState(false);
 
   const openSearch = useCallback((options?: SearchOptions) => {
@@ -122,15 +112,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const openRegisterResource = useCallback((onSuccess?: () => void) => {
-    setRegisterResourceOnSuccess(() => onSuccess || null);
-    setIsRegisterResourceOpen(true);
-  }, []);
-  const closeRegisterResource = useCallback(() => {
-    setIsRegisterResourceOpen(false);
-    setRegisterResourceOnSuccess(null);
-  }, []);
-
   const openMyJobs = useCallback(() => setIsMyJobsOpen(true), []);
   const closeMyJobs = useCallback(() => setIsMyJobsOpen(false), []);
 
@@ -150,10 +131,6 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         resourceModalResource,
         openResourceModal,
         closeResourceModal,
-        isRegisterResourceOpen,
-        registerResourceOnSuccess,
-        openRegisterResource,
-        closeRegisterResource,
         isMyJobsOpen,
         openMyJobs,
         closeMyJobs,
