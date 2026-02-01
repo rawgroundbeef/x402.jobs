@@ -132,6 +132,17 @@ export default function LinkConfigPage() {
       linkConfig: {
         url: verifyResponse.normalizedUrl || url,
         method: method,
+        // Fields needed for POST /resources (external registration)
+        payTo: verifyResponse.resource.payTo,
+        maxAmountRequired: verifyResponse.resource.maxAmountRequired,
+        asset: verifyResponse.resource.asset,
+        mimeType: verifyResponse.resource.mimeType,
+        maxTimeoutSeconds: verifyResponse.resource.maxTimeoutSeconds,
+        outputSchema: verifyResponse.resource.outputSchema,
+        isA2A: verifyResponse.resource.isA2A,
+        supportsRefunds: false, // x402check does not extract this; default to false
+        description: verifyResponse.resource.description,
+        avatarUrl: verifyResponse.resource.avatarUrl,
       },
     });
 
