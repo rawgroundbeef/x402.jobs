@@ -95,8 +95,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 21-01-PLAN.md -- Link validation page with URL input, HTTP method dropdown, x402check validation, and VerifyResultDetails display
-- [ ] 21-02-PLAN.md -- Pre-fill details step (locked network/price) and link config display on review page
+- [x] 21-01-PLAN.md -- Link validation page with URL input, HTTP method dropdown, x402check validation, and VerifyResultDetails display
+- [x] 21-02-PLAN.md -- Pre-fill details step (locked network/price) and link config display on review page
 
 **Requirements:**
 
@@ -215,13 +215,13 @@ Plans:
 | ---------------------------------- | -------- | ----- | ------------------------ |
 | 19 - Wizard Shell & Type Selection | Planned  | 2     | WIZD-01..08, TYPE-01..04 |
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
-| 21 - Link Existing Path            | Planned  | 2     | LINK-01..08              |
+| 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Pending  | 0/?   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Pending  | 0/?   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
-**Total:** 3/14 plans complete (Phases 19-25, 21% complete)
+**Total:** 5/14 plans complete (Phases 19-25, 36% complete)
 
 ---
 
