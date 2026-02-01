@@ -54,6 +54,47 @@ export default function ReviewPage() {
     setPublishError("");
 
     try {
+      // Link Existing uses POST /resources (external registration endpoint)
+      if (draft.type === "link") {
+        const lc = draft.linkConfig as Record<string, unknown>;
+
+        const body: Record<string, unknown> = {
+          resourceUrl: lc.url as string,
+          network: draft.network,
+          name: draft.name!.trim(),
+          payTo: lc.payTo as string,
+          description: draft.description?.trim() || (lc.description as string) || null,
+          category: draft.category,
+          avatarUrl: draft.imageUrl?.trim() || (lc.avatarUrl as string) || null,
+          maxAmountRequired: lc.maxAmountRequired as string,
+          asset: lc.asset as string | undefined,
+          mimeType: lc.mimeType as string | undefined,
+          maxTimeoutSeconds: lc.maxTimeoutSeconds as number | undefined,
+          outputSchema: lc.outputSchema as object | undefined,
+          isA2A: lc.isA2A as boolean | undefined,
+          supportsRefunds: lc.supportsRefunds as boolean | undefined,
+        };
+
+        const res = await authenticatedFetch("/resources", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error || "Failed to create resource");
+        }
+
+        // External endpoint returns { resource, server, updated }
+        // Use resource.slug for redirect (API generates the slug, we don't send one)
+        const data = await res.json();
+        clearDraft();
+        router.push(`/${username}/${data.resource.slug}`);
+        return;
+      }
+
+      // Instant types (proxy, claude, openrouter) use POST /resources/instant
       // Build the API body based on resource type
       // For now, all types share the same base fields
       // Type-specific config fields will be added by later phases (21-24)
@@ -69,13 +110,6 @@ export default function ReviewPage() {
       };
 
       // Add type-specific fields from draft config objects
-      // Link Existing: linkConfig has url, method, verification results
-      if (draft.type === "link" && draft.linkConfig) {
-        Object.assign(body, {
-          resourceUrl: draft.linkConfig.url,
-          httpMethod: draft.linkConfig.method,
-        });
-      }
       // Proxy: proxyConfig has origin URL, method, headers
       if (draft.type === "proxy" && draft.proxyConfig) {
         Object.assign(body, {
