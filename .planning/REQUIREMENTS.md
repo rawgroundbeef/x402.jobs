@@ -45,11 +45,11 @@ Requirements for full-page wizard replacing modal-based resource creation.
 
 ### Claude Prompt
 
-- [ ] **CLPT-01**: Warning banner shown if user has no Claude API key configured, with link to Settings
-- [ ] **CLPT-02**: System prompt textarea for template content
-- [ ] **CLPT-03**: Parameter definitions with `{param}{/param}` syntax support
-- [ ] **CLPT-04**: Max tokens configuration
-- [ ] **CLPT-05**: Continue button blocked until API key is configured
+- [x] **CLPT-01**: Warning banner shown if user has no Claude API key configured, with link to Settings
+- [x] **CLPT-02**: System prompt textarea for template content
+- [x] **CLPT-03**: Parameter definitions with `{param}{/param}` syntax support
+- [x] **CLPT-04**: Max tokens configuration
+- [x] **CLPT-05**: Continue button blocked until API key is configured
 
 ### OpenRouter
 
@@ -156,11 +156,11 @@ Deferred to later milestones.
 | PRXY-02     | Phase 22 | Complete |
 | PRXY-03     | Phase 22 | Complete |
 | PRXY-04     | Phase 22 | Complete |
-| CLPT-01     | Phase 23 | Pending |
-| CLPT-02     | Phase 23 | Pending |
-| CLPT-03     | Phase 23 | Pending |
-| CLPT-04     | Phase 23 | Pending |
-| CLPT-05     | Phase 23 | Pending |
+| CLPT-01     | Phase 23 | Complete |
+| CLPT-02     | Phase 23 | Complete |
+| CLPT-03     | Phase 23 | Complete |
+| CLPT-04     | Phase 23 | Complete |
+| CLPT-05     | Phase 23 | Complete |
 | ORTR-01     | Phase 24 | Pending |
 | ORTR-02     | Phase 24 | Pending |
 | ORTR-03     | Phase 24 | Pending |

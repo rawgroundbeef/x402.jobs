@@ -155,7 +155,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 23-01-PLAN.md -- Claude prompt config page with API key check, system prompt textarea, parameter definitions, max tokens, plus details preservation and review display
+- [x] 23-01-PLAN.md -- Claude prompt config page with API key check, system prompt textarea, parameter definitions, max tokens, plus details preservation and review display
 
 **Requirements:**
 
@@ -227,11 +227,11 @@ Plans:
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
-| 23 - Claude Prompt Path            | Planned  | 1     | CLPT-01..05              |
+| 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
-**Total:** 6/14 plans complete (Phases 19-25, 43% complete)
+**Total:** 7/14 plans complete (Phases 19-25, 50% complete)
 
 ---
 
