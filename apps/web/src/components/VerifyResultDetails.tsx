@@ -9,12 +9,10 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
-import type { CheckResult } from "x402check";
 import type { VerifyResponse } from "@/lib/x402-verify";
 
 interface VerifyResultDetailsProps {
   verifyResponse: VerifyResponse;
-  url: string;
 }
 
 // Inline collapsible for this component — lighter than the shared one
@@ -79,7 +77,6 @@ function formatAmount(amount: string, decimals: number | null): string {
 
 export function VerifyResultDetails({
   verifyResponse,
-  url,
 }: VerifyResultDetailsProps) {
   const cr = verifyResponse.checkResult;
 

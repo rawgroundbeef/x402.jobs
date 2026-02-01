@@ -201,7 +201,7 @@ export function CreateResourceModal({
     null,
   );
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
-  const [warnings, setWarnings] = useState<string[]>([]);
+  const [_warnings, setWarnings] = useState<string[]>([]);
 
   // Form state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -1292,7 +1292,7 @@ export function CreateResourceModal({
                       </div>
 
                       {/* Detailed validation results */}
-                      <VerifyResultDetails verifyResponse={verifyResponse} url={externalUrl} />
+                      <VerifyResultDetails verifyResponse={verifyResponse} />
 
                       {/* Only show resource preview, server, network when valid */}
                       {verified && (

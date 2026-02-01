@@ -186,8 +186,7 @@ function processProxyResponse(
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const rawConfig = result.raw as any;
+  const rawConfig = result.raw as Record<string, unknown>;
   const warnings: string[] = [];
 
   // Surface x402check warnings (advisory, non-blocking)

@@ -257,7 +257,7 @@ export default function LinkConfigPage() {
           </div>
 
           {/* Validation results component */}
-          <VerifyResultDetails verifyResponse={verifyResponse} url={url} />
+          <VerifyResultDetails verifyResponse={verifyResponse} />
         </div>
       )}
     </WizardShell>

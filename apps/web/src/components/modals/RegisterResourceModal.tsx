@@ -422,7 +422,7 @@ export function RegisterResourceModal({
                 </div>
 
                 {/* Detailed validation results */}
-                <VerifyResultDetails verifyResponse={verifyResponse} url={url} />
+                <VerifyResultDetails verifyResponse={verifyResponse} />
 
                 {/* Only show resource preview, server, network selection, etc. when valid */}
                 {verified && (

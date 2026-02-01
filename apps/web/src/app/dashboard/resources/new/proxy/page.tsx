@@ -68,7 +68,6 @@ export default function ProxyConfigPage() {
   }, [router, reset]);
 
   const method = watch("method");
-  const originUrl = watch("originUrl");
 
   const handleContinue = (data: ProxyFormData) => {
     saveDraft({
