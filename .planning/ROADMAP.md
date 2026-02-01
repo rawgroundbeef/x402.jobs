@@ -211,6 +211,11 @@ Plans:
 
 **Dependencies:** Phases 21-24 (all paths must be functional before removing old modal)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 25-01-PLAN.md -- Remove CreateResourceModal and RegisterResourceModal, clean ModalContext, switch dashboard edit to ResourceEditModal
+
 **Requirements:**
 
 - CLNP-01: Old CreateResourceModal component removed
@@ -234,7 +239,7 @@ Plans:
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Complete | 1/1   | ORTR-01..07              |
-| 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
+| 25 - Cleanup & Migration           | Planned  | 1     | CLNP-01..02              |
 
 **Total:** 8/14 plans complete (Phases 19-25, 57% complete)
 
