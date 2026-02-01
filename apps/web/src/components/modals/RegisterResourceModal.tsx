@@ -15,7 +15,6 @@ import { Input } from "@x402jobs/ui/input";
 import {
   Loader2,
   Check,
-  AlertCircle,
   Server,
   Box,
   Wrench,
@@ -25,81 +24,18 @@ import Link from "next/link";
 import { authenticatedFetch, API_URL } from "@/lib/api";
 import { formatPrice } from "@/lib/format";
 import { getNetwork } from "@/lib/networks";
+import {
+  processVerifyResponse,
+  type VerifiedResource,
+  type VerifyResponse,
+  type ServerPreview,
+} from "@/lib/x402-verify";
+import { VerifyResultDetails } from "@/components/VerifyResultDetails";
 
 interface RegisterResourceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: (serverId: string) => void;
-}
-
-interface AcceptOption {
-  network: string;
-  normalizedNetwork: string;
-  payTo: string;
-  amount: string;
-  asset?: string;
-  scheme?: string;
-  extra?: Record<string, unknown>;
-}
-
-interface VerifiedResource {
-  description?: string;
-  network?: string;
-  payTo?: string;
-  maxAmountRequired?: string;
-  asset?: string;
-  mimeType?: string;
-  maxTimeoutSeconds?: number;
-  outputSchema?: {
-    input?: {
-      type?: string;
-      method?: string;
-      bodyType?: string;
-      bodyFields?: Record<
-        string,
-        {
-          type: string;
-          required?: boolean;
-          description?: string;
-        }
-      >;
-    };
-    output?: Record<string, unknown>;
-  };
-  extra?: {
-    serviceName?: string;
-    agentName?: string;
-    avatarUrl?: string;
-    [key: string]: unknown;
-  };
-  serviceName?: string;
-  agentName?: string;
-  avatarUrl?: string;
-  isA2A?: boolean;
-}
-
-interface VerifyResponse {
-  valid: boolean;
-  x402Version?: number;
-  accepts?: AcceptOption[];
-  service?: {
-    name?: string;
-    description?: string;
-    website?: string;
-  };
-  resource: VerifiedResource;
-  server: ServerPreview;
-  warnings?: string[];
-  normalizedUrl?: string;
-}
-
-interface ServerPreview {
-  exists: boolean;
-  id: string | null;
-  name: string;
-  originUrl: string;
-  faviconUrl: string | null;
-  resourceCount: number;
 }
 
 // Extract the path from a URL to use as the resource name
@@ -131,7 +67,6 @@ export function RegisterResourceModal({
     null,
   );
   const [error, setError] = useState<string | null>(null);
-  const [warnings, setWarnings] = useState<string[]>([]);
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([]);
   const [registeredResources, setRegisteredResources] = useState<
     Array<{
@@ -163,7 +98,6 @@ export function RegisterResourceModal({
 
     setIsVerifying(true);
     setError(null);
-    setWarnings([]);
     setVerified(null);
     setVerifyResponse(null);
     setServerPreview(null);
@@ -177,32 +111,34 @@ export function RegisterResourceModal({
         body: JSON.stringify({ url }),
       });
 
-      const data: VerifyResponse = await res.json();
+      const rawData = await res.json();
 
       if (!res.ok) {
-        // Check for validation errors
-        if ((data as any).validationErrors) {
-          throw new Error((data as any).validationErrors.join(". "));
+        if (rawData.validationErrors) {
+          throw new Error(rawData.validationErrors.join(". "));
         }
-        throw new Error((data as any).error || "Verification failed");
+        throw new Error(rawData.error || "Verification failed");
       }
 
-      setVerified(data.resource);
+      const data = processVerifyResponse(rawData, url);
+
+      // Always set verifyResponse (for VerifyResultDetails display)
       setVerifyResponse(data);
       setServerPreview(data.server);
-      setWarnings(data.warnings || []);
 
-      // For v2 with multiple accepts, default to first network
-      // For v1, select the single network
-      if (data.accepts && data.accepts.length > 0) {
-        setSelectedNetworks([data.accepts[0].normalizedNetwork]);
-      } else if (data.resource.network) {
-        setSelectedNetworks([data.resource.network]);
-      }
+      // Only set verified resource when valid — gates registration
+      if (data.valid) {
+        setVerified(data.resource);
 
-      // If the server returned a normalized URL (e.g., protocol mismatch), use it
-      if (data.normalizedUrl) {
-        setUrl(data.normalizedUrl);
+        if (data.accepts && data.accepts.length > 0) {
+          setSelectedNetworks([data.accepts[0].normalizedNetwork]);
+        } else if (data.resource.network) {
+          setSelectedNetworks([data.resource.network]);
+        }
+
+        if (data.normalizedUrl) {
+          setUrl(data.normalizedUrl);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to verify URL");
@@ -301,7 +237,6 @@ export function RegisterResourceModal({
     setVerifyResponse(null);
     setServerPreview(null);
     setError(null);
-    setWarnings([]);
     setSelectedNetworks([]);
     setRegisteredResource(null);
     setRegisteredResources([]);
@@ -329,6 +264,13 @@ export function RegisterResourceModal({
     setRegisteredResources([]);
     setWasUpdated(false);
     setIsRegistering(false);
+  };
+
+  const handleChangeUrl = () => {
+    setVerified(null);
+    setVerifyResponse(null);
+    setServerPreview(null);
+    setSelectedNetworks([]);
   };
 
   const priceDisplay = formatPrice(verified?.maxAmountRequired);
@@ -415,7 +357,7 @@ export function RegisterResourceModal({
         <DialogBody>
           <div className="space-y-4">
             {/* URL Input - only show when not verified */}
-            {!verified && (
+            {!verifyResponse && (
               <div className="space-y-3">
                 <Input
                   id="url"
@@ -424,7 +366,6 @@ export function RegisterResourceModal({
                   value={url}
                   onChange={(e) => {
                     setUrl(e.target.value);
-                    setVerified(null);
                     setError(null);
                   }}
                   disabled={isVerifying}
@@ -456,207 +397,192 @@ export function RegisterResourceModal({
               </div>
             )}
 
-            {/* Error */}
+            {/* Error (from network/backend, not validation) */}
             {error && (
               <div className="flex items-center gap-2 p-3 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
-                <AlertCircle className="h-4 w-4 flex-shrink-0" />
+                <span className="flex-shrink-0">&#x2717;</span>
                 {error}
               </div>
             )}
 
-            {/* Verified Resource Info */}
-            {verified && verifyResponse && (
+            {/* Verify result — shown for both valid and invalid */}
+            {verifyResponse && (
               <div className="space-y-4">
-                {/* URL display with version badge and change option */}
+                {/* URL display with change option */}
                 <div className="flex items-center gap-2 text-sm">
                   <code className="flex-1 px-2 py-1 bg-muted rounded text-xs font-mono truncate">
                     {url}
                   </code>
-                  <span
-                    className={`px-1.5 py-0.5 text-xs font-medium rounded ${
-                      verifyResponse.x402Version === 2
-                        ? "bg-primary/10 text-primary"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    v{verifyResponse.x402Version || 1}
-                  </span>
                   <button
-                    onClick={() => {
-                      setVerified(null);
-                      setVerifyResponse(null);
-                    }}
+                    onClick={handleChangeUrl}
                     className="text-muted-foreground hover:text-foreground text-xs underline"
                   >
                     Change
                   </button>
                 </div>
 
-                <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm">
-                  <Check className="h-4 w-4 flex-shrink-0" />
-                  Valid x402 endpoint found!
-                </div>
+                {/* Detailed validation results */}
+                <VerifyResultDetails verifyResponse={verifyResponse} url={url} />
 
-                {/* Validation Warnings */}
-                {warnings.length > 0 && (
-                  <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-600 dark:text-yellow-400 text-sm space-y-1">
-                    <div className="flex items-center gap-2 font-medium">
-                      <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                      Validation warnings
-                    </div>
-                    <ul className="list-disc list-inside text-xs space-y-0.5 ml-6">
-                      {warnings.map((warning, i) => (
-                        <li key={i}>{warning}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Server Preview */}
-                {serverPreview && (
-                  <div className="flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-lg">
-                    {serverPreview.faviconUrl ? (
-                      <img
-                        src={serverPreview.faviconUrl}
-                        alt=""
-                        className="w-8 h-8 rounded object-contain bg-background"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = "none";
-                        }}
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded bg-background flex items-center justify-center">
-                        <Server className="w-4 h-4 text-muted-foreground" />
+                {/* Only show resource preview, server, network selection, etc. when valid */}
+                {verified && (
+                  <>
+                    {/* Server Preview */}
+                    {serverPreview && (
+                      <div className="flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-lg">
+                        {serverPreview.faviconUrl ? (
+                          <img
+                            src={serverPreview.faviconUrl}
+                            alt=""
+                            className="w-8 h-8 rounded object-contain bg-background"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display =
+                                "none";
+                            }}
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded bg-background flex items-center justify-center">
+                            <Server className="w-4 h-4 text-muted-foreground" />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm truncate">
+                            {serverPreview.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {serverPreview.exists
+                              ? `${serverPreview.resourceCount} existing resource${serverPreview.resourceCount === 1 ? "" : "s"}`
+                              : "New server will be created"}
+                          </p>
+                        </div>
                       </div>
                     )}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm truncate">
-                        {serverPreview.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {serverPreview.exists
-                          ? `${serverPreview.resourceCount} existing resource${serverPreview.resourceCount === 1 ? "" : "s"}`
-                          : "New server will be created"}
-                      </p>
-                    </div>
-                  </div>
-                )}
 
-                {/* Resource Preview with Avatar */}
-                <div className="flex items-center gap-3 p-3 bg-accent/50 border border-border rounded-lg">
-                  {verified.avatarUrl || verified.extra?.avatarUrl ? (
-                    <img
-                      src={verified.avatarUrl || verified.extra?.avatarUrl}
-                      alt=""
-                      className="w-12 h-12 rounded-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = "none";
-                      }}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-resource/20 flex items-center justify-center">
-                      <Box className="w-6 h-6 text-resource" />
+                    {/* Resource Preview with Avatar */}
+                    <div className="flex items-center gap-3 p-3 bg-accent/50 border border-border rounded-lg">
+                      {verified.avatarUrl || verified.extra?.avatarUrl ? (
+                        <img
+                          src={verified.avatarUrl || verified.extra?.avatarUrl}
+                          alt=""
+                          className="w-12 h-12 rounded-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display =
+                              "none";
+                          }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-resource/20 flex items-center justify-center">
+                          <Box className="w-6 h-6 text-resource" />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        {(() => {
+                          const displayName =
+                            verified.extra?.agentName ||
+                            verified.serviceName ||
+                            verified.extra?.serviceName ||
+                            resourceName;
+                          const showDescription =
+                            verified.description &&
+                            verified.description !== displayName;
+                          return (
+                            <>
+                              <p className="font-semibold truncate">
+                                {displayName}
+                              </p>
+                              {showDescription && (
+                                <p className="text-sm text-muted-foreground line-clamp-1">
+                                  {verified.description}
+                                </p>
+                              )}
+                            </>
+                          );
+                        })()}
+                      </div>
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    {(() => {
-                      const displayName =
-                        verified.extra?.agentName ||
-                        verified.serviceName ||
-                        verified.extra?.serviceName ||
-                        resourceName;
-                      const showDescription =
-                        verified.description &&
-                        verified.description !== displayName;
-                      return (
-                        <>
-                          <p className="font-semibold truncate">
-                            {displayName}
-                          </p>
-                          {showDescription && (
-                            <p className="text-sm text-muted-foreground line-clamp-1">
-                              {verified.description}
-                            </p>
-                          )}
-                        </>
-                      );
-                    })()}
-                  </div>
-                </div>
 
-                {/* Network Selection for v2 with multiple options */}
-                {verifyResponse.accepts && verifyResponse.accepts.length > 1 ? (
-                  <div className="space-y-2">
-                    <span className="text-sm text-muted-foreground">
-                      Select payment network(s)
-                    </span>
-                    <div className="space-y-2">
-                      {verifyResponse.accepts.map((accept) => {
-                        const network = getNetwork(accept.normalizedNetwork);
-                        const isSelected = selectedNetworks.includes(
-                          accept.normalizedNetwork,
-                        );
-                        const price = accept.amount
-                          ? parseFloat(accept.amount) / 1_000_000
-                          : 0;
-                        return (
-                          <label
-                            key={accept.normalizedNetwork}
-                            className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                              isSelected
-                                ? "border-primary bg-primary/5"
-                                : "border-border hover:border-primary/50"
-                            }`}
-                          >
-                            <input
-                              type="checkbox"
-                              checked={isSelected}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedNetworks((prev) => [
-                                    ...prev,
-                                    accept.normalizedNetwork,
-                                  ]);
-                                } else {
-                                  setSelectedNetworks((prev) =>
-                                    prev.filter(
-                                      (n) => n !== accept.normalizedNetwork,
-                                    ),
-                                  );
-                                }
-                              }}
-                              className="h-4 w-4 rounded border-border"
-                            />
-                            <div className="flex-1">
-                              <span className="font-medium">
-                                {network.name}
-                              </span>
-                              <span className="text-muted-foreground ml-2">
-                                ${price.toFixed(2)} USDC
-                              </span>
-                            </div>
-                          </label>
-                        );
-                      })}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Each selection creates a separate resource entry
-                    </p>
-                  </div>
-                ) : (
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">Price</span>
-                    <p className="font-mono">
-                      {priceDisplay} USDC ({getNetwork(verified.network).name})
-                    </p>
-                  </div>
-                )}
+                    {/* Network Selection for v2 with multiple options */}
+                    {verifyResponse.accepts &&
+                    verifyResponse.accepts.length > 1 ? (
+                      <div className="space-y-2">
+                        <span className="text-sm text-muted-foreground">
+                          Select payment network(s)
+                        </span>
+                        <div className="space-y-2">
+                          {verifyResponse.accepts.map((accept) => {
+                            const network = getNetwork(
+                              accept.normalizedNetwork,
+                            );
+                            const isSelected = selectedNetworks.includes(
+                              accept.normalizedNetwork,
+                            );
+                            const price = accept.amount
+                              ? parseFloat(accept.amount) / 1_000_000
+                              : 0;
+                            return (
+                              <label
+                                key={accept.normalizedNetwork}
+                                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                                  isSelected
+                                    ? "border-primary bg-primary/5"
+                                    : "border-border hover:border-primary/50"
+                                }`}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={isSelected}
+                                  onChange={(e) => {
+                                    if (e.target.checked) {
+                                      setSelectedNetworks((prev) => [
+                                        ...prev,
+                                        accept.normalizedNetwork,
+                                      ]);
+                                    } else {
+                                      setSelectedNetworks((prev) =>
+                                        prev.filter(
+                                          (n) =>
+                                            n !== accept.normalizedNetwork,
+                                        ),
+                                      );
+                                    }
+                                  }}
+                                  className="h-4 w-4 rounded border-border"
+                                />
+                                <div className="flex-1">
+                                  <span className="font-medium">
+                                    {network.name}
+                                  </span>
+                                  <span className="text-muted-foreground ml-2">
+                                    ${price.toFixed(2)} USDC
+                                  </span>
+                                </div>
+                              </label>
+                            );
+                          })}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Each selection creates a separate resource entry
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">Price</span>
+                        <p className="font-mono">
+                          {priceDisplay} USDC (
+                          {getNetwork(verified.network).name})
+                        </p>
+                      </div>
+                    )}
 
-                {verified.description && (
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">Description</span>
-                    <p className="mt-1">{verified.description}</p>
-                  </div>
+                    {verified.description && (
+                      <div className="text-sm">
+                        <span className="text-muted-foreground">
+                          Description
+                        </span>
+                        <p className="mt-1">{verified.description}</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -667,7 +593,7 @@ export function RegisterResourceModal({
           <Button variant="ghost" onClick={handleClose}>
             Cancel
           </Button>
-          {!verified ? (
+          {!verifyResponse ? (
             <Button
               onClick={handleVerify}
               disabled={!url.trim() || isVerifying}
@@ -682,7 +608,7 @@ export function RegisterResourceModal({
                 "Verify URL"
               )}
             </Button>
-          ) : (
+          ) : verified ? (
             <Button
               onClick={handleRegister}
               disabled={isRegistering || selectedNetworks.length === 0}
@@ -699,7 +625,7 @@ export function RegisterResourceModal({
                 "Register Resource"
               )}
             </Button>
-          )}
+          ) : null}
         </DialogFooter>
       </AnimatedDialogContent>
     </AnimatedDialog>

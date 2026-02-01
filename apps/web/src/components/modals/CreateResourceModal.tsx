@@ -43,6 +43,13 @@ import { ImageUrlOrUpload } from "@/components/inputs/ImageUrlOrUpload";
 import { getNetwork } from "@/lib/networks";
 import { formatPrice } from "@/lib/format";
 import {
+  processVerifyResponse,
+  type VerifiedResource,
+  type VerifyResponse,
+  type ServerPreview,
+} from "@/lib/x402-verify";
+import { VerifyResultDetails } from "@/components/VerifyResultDetails";
+import {
   createPromptTemplateSchema,
   CreatePromptTemplateInput,
 } from "@/types/prompt-template";
@@ -151,67 +158,7 @@ interface CreateResourceModalProps {
   editResource?: EditResourceData | null;
 }
 
-interface AcceptOption {
-  network: string;
-  normalizedNetwork: string;
-  payTo: string;
-  amount: string;
-  asset?: string;
-  scheme?: string;
-  extra?: Record<string, unknown>;
-}
-
-interface VerifiedResource {
-  description?: string;
-  network?: string;
-  payTo?: string;
-  maxAmountRequired?: string;
-  asset?: string;
-  mimeType?: string;
-  maxTimeoutSeconds?: number;
-  outputSchema?: {
-    input?: {
-      type?: string;
-      method?: string;
-      bodyType?: string;
-      bodyFields?: Record<
-        string,
-        { type: string; required?: boolean; description?: string }
-      >;
-    };
-    output?: Record<string, unknown>;
-  };
-  extra?: {
-    serviceName?: string;
-    agentName?: string;
-    avatarUrl?: string;
-    [key: string]: unknown;
-  };
-  serviceName?: string;
-  agentName?: string;
-  avatarUrl?: string;
-  isA2A?: boolean;
-}
-
-interface VerifyResponse {
-  valid: boolean;
-  x402Version?: number;
-  accepts?: AcceptOption[];
-  service?: { name?: string; description?: string; website?: string };
-  resource: VerifiedResource;
-  server: ServerPreview;
-  warnings?: string[];
-  normalizedUrl?: string;
-}
-
-interface ServerPreview {
-  exists: boolean;
-  id: string | null;
-  name: string;
-  originUrl: string;
-  faviconUrl: string | null;
-  resourceCount: number;
-}
+// Types imported from @/lib/x402-verify
 
 function getResourceNameFromUrl(urlString: string): string {
   try {
@@ -627,32 +574,35 @@ export function CreateResourceModal({
         body: JSON.stringify({ url: externalUrl }),
       });
 
-      const data: VerifyResponse = await res.json();
+      const rawData = await res.json();
 
       if (!res.ok) {
-        const errorData = data as unknown as {
-          validationErrors?: string[];
-          error?: string;
-        };
-        if (errorData.validationErrors) {
-          throw new Error(errorData.validationErrors.join(". "));
+        if (rawData.validationErrors) {
+          throw new Error(rawData.validationErrors.join(". "));
         }
-        throw new Error(errorData.error || "Verification failed");
+        throw new Error(rawData.error || "Verification failed");
       }
 
-      setVerified(data.resource);
+      const data = processVerifyResponse(rawData, externalUrl);
+
+      // Always set verifyResponse (for VerifyResultDetails display)
       setVerifyResponse(data);
       setServerPreview(data.server);
       setWarnings(data.warnings || []);
 
-      if (data.accepts && data.accepts.length > 0) {
-        setSelectedNetworks([data.accepts[0].normalizedNetwork]);
-      } else if (data.resource.network) {
-        setSelectedNetworks([data.resource.network]);
-      }
+      // Only set verified resource when valid — gates registration
+      if (data.valid) {
+        setVerified(data.resource);
 
-      if (data.normalizedUrl) {
-        setExternalUrl(data.normalizedUrl);
+        if (data.accepts && data.accepts.length > 0) {
+          setSelectedNetworks([data.accepts[0].normalizedNetwork]);
+        } else if (data.resource.network) {
+          setSelectedNetworks([data.resource.network]);
+        }
+
+        if (data.normalizedUrl) {
+          setExternalUrl(data.normalizedUrl);
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to verify URL");
@@ -1295,8 +1245,8 @@ export function CreateResourceModal({
                 </form>
               ) : (
                 <>
-                  {/* URL Input - only show when not verified */}
-                  {!verified && (
+                  {/* URL Input - only show when no verify response yet */}
+                  {!verifyResponse && (
                     <div className="space-y-3">
                       <div>
                         <Label htmlFor="external-url">Resource URL</Label>
@@ -1307,7 +1257,6 @@ export function CreateResourceModal({
                           value={externalUrl}
                           onChange={(e) => {
                             setExternalUrl(e.target.value);
-                            setVerified(null);
                             setError("");
                           }}
                           disabled={isVerifying}
@@ -1321,22 +1270,20 @@ export function CreateResourceModal({
                     </div>
                   )}
 
-                  {/* Verified Resource Info */}
-                  {verified && verifyResponse && (
+                  {/* Verify result — shown for both valid and invalid */}
+                  {verifyResponse && (
                     <div className="space-y-4">
+                      {/* URL display with change option */}
                       <div className="flex items-center gap-2 text-sm">
                         <code className="flex-1 px-2 py-1 bg-muted rounded text-xs font-mono truncate">
                           {externalUrl}
                         </code>
-                        <span
-                          className={`px-1.5 py-0.5 text-xs font-medium rounded ${verifyResponse.x402Version === 2 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}
-                        >
-                          v{verifyResponse.x402Version || 1}
-                        </span>
                         <button
                           onClick={() => {
                             setVerified(null);
                             setVerifyResponse(null);
+                            setServerPreview(null);
+                            setSelectedNetworks([]);
                           }}
                           className="text-muted-foreground hover:text-foreground text-xs underline"
                         >
@@ -1344,161 +1291,150 @@ export function CreateResourceModal({
                         </button>
                       </div>
 
-                      <div className="flex items-center gap-2 p-3 bg-primary/10 border border-primary/20 rounded-lg text-primary text-sm">
-                        <Check className="h-4 w-4 flex-shrink-0" />
-                        Valid x402 endpoint found!
-                      </div>
+                      {/* Detailed validation results */}
+                      <VerifyResultDetails verifyResponse={verifyResponse} url={externalUrl} />
 
-                      {warnings.length > 0 && (
-                        <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-600 dark:text-yellow-400 text-sm space-y-1">
-                          <div className="flex items-center gap-2 font-medium">
-                            <AlertCircle className="h-4 w-4 flex-shrink-0" />
-                            Validation warnings
-                          </div>
-                          <ul className="list-disc list-inside text-xs space-y-0.5 ml-6">
-                            {warnings.map((warning, i) => (
-                              <li key={i}>{warning}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {serverPreview && (
-                        <div className="flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-lg">
-                          {serverPreview.faviconUrl ? (
-                            <img
-                              src={serverPreview.faviconUrl}
-                              alt=""
-                              className="w-8 h-8 rounded object-contain bg-background"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display =
-                                  "none";
-                              }}
-                            />
-                          ) : (
-                            <div className="w-8 h-8 rounded bg-background flex items-center justify-center">
-                              <Server className="w-4 h-4 text-muted-foreground" />
+                      {/* Only show resource preview, server, network when valid */}
+                      {verified && (
+                        <>
+                          {serverPreview && (
+                            <div className="flex items-center gap-3 p-3 bg-muted/50 border border-border rounded-lg">
+                              {serverPreview.faviconUrl ? (
+                                <img
+                                  src={serverPreview.faviconUrl}
+                                  alt=""
+                                  className="w-8 h-8 rounded object-contain bg-background"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display =
+                                      "none";
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-8 h-8 rounded bg-background flex items-center justify-center">
+                                  <Server className="w-4 h-4 text-muted-foreground" />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm truncate">
+                                  {serverPreview.name}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {serverPreview.exists
+                                    ? `${serverPreview.resourceCount} existing resource${serverPreview.resourceCount === 1 ? "" : "s"}`
+                                    : "New server will be created"}
+                                </p>
+                              </div>
                             </div>
                           )}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm truncate">
-                              {serverPreview.name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {serverPreview.exists
-                                ? `${serverPreview.resourceCount} existing resource${serverPreview.resourceCount === 1 ? "" : "s"}`
-                                : "New server will be created"}
-                            </p>
-                          </div>
-                        </div>
-                      )}
 
-                      <div className="flex items-center gap-3 p-3 bg-accent/50 border border-border rounded-lg">
-                        {verified.avatarUrl || verified.extra?.avatarUrl ? (
-                          <img
-                            src={
-                              (verified.avatarUrl ||
-                                verified.extra?.avatarUrl) as string
-                            }
-                            alt=""
-                            className="w-12 h-12 rounded-full object-cover"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).style.display =
-                                "none";
-                            }}
-                          />
-                        ) : (
-                          <div className="w-12 h-12 rounded-full bg-resource/20 flex items-center justify-center">
-                            <Box className="w-6 h-6 text-resource" />
+                          <div className="flex items-center gap-3 p-3 bg-accent/50 border border-border rounded-lg">
+                            {verified.avatarUrl || verified.extra?.avatarUrl ? (
+                              <img
+                                src={
+                                  (verified.avatarUrl ||
+                                    verified.extra?.avatarUrl) as string
+                                }
+                                alt=""
+                                className="w-12 h-12 rounded-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display =
+                                    "none";
+                                }}
+                              />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full bg-resource/20 flex items-center justify-center">
+                                <Box className="w-6 h-6 text-resource" />
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              {(() => {
+                                const displayName =
+                                  verified.extra?.agentName ||
+                                  verified.serviceName ||
+                                  verified.extra?.serviceName ||
+                                  resourceName;
+                                const showDescription =
+                                  verified.description &&
+                                  verified.description !== displayName;
+                                return (
+                                  <>
+                                    <p className="font-semibold truncate">
+                                      {displayName}
+                                    </p>
+                                    {showDescription && (
+                                      <p className="text-sm text-muted-foreground line-clamp-1">
+                                        {verified.description}
+                                      </p>
+                                    )}
+                                  </>
+                                );
+                              })()}
+                            </div>
                           </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          {(() => {
-                            const displayName =
-                              verified.extra?.agentName ||
-                              verified.serviceName ||
-                              verified.extra?.serviceName ||
-                              resourceName;
-                            const showDescription =
-                              verified.description &&
-                              verified.description !== displayName;
-                            return (
-                              <>
-                                <p className="font-semibold truncate">
-                                  {displayName}
-                                </p>
-                                {showDescription && (
-                                  <p className="text-sm text-muted-foreground line-clamp-1">
-                                    {verified.description}
-                                  </p>
-                                )}
-                              </>
-                            );
-                          })()}
-                        </div>
-                      </div>
 
-                      {verifyResponse.accepts &&
-                      verifyResponse.accepts.length > 1 ? (
-                        <div className="space-y-2">
-                          <span className="text-sm text-muted-foreground">
-                            Select payment network(s)
-                          </span>
-                          <div className="space-y-2">
-                            {verifyResponse.accepts.map((accept) => {
-                              const net = getNetwork(accept.normalizedNetwork);
-                              const isSelected = selectedNetworks.includes(
-                                accept.normalizedNetwork,
-                              );
-                              const price = accept.amount
-                                ? parseFloat(accept.amount) / 1_000_000
-                                : 0;
-                              return (
-                                <label
-                                  key={accept.normalizedNetwork}
-                                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${isSelected ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    checked={isSelected}
-                                    onChange={(e) => {
-                                      if (e.target.checked) {
-                                        setSelectedNetworks((prev) => [
-                                          ...prev,
-                                          accept.normalizedNetwork,
-                                        ]);
-                                      } else {
-                                        setSelectedNetworks((prev) =>
-                                          prev.filter(
-                                            (n) =>
-                                              n !== accept.normalizedNetwork,
-                                          ),
-                                        );
-                                      }
-                                    }}
-                                    className="h-4 w-4 rounded border-border"
-                                  />
-                                  <div className="flex-1">
-                                    <span className="font-medium">
-                                      {net.name}
-                                    </span>
-                                    <span className="text-muted-foreground ml-2">
-                                      ${price.toFixed(2)} USDC
-                                    </span>
-                                  </div>
-                                </label>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-sm">
-                          <span className="text-muted-foreground">Price</span>
-                          <p className="font-mono">
-                            {priceDisplay} USDC (
-                            {getNetwork(verified.network).name})
-                          </p>
-                        </div>
+                          {verifyResponse.accepts &&
+                          verifyResponse.accepts.length > 1 ? (
+                            <div className="space-y-2">
+                              <span className="text-sm text-muted-foreground">
+                                Select payment network(s)
+                              </span>
+                              <div className="space-y-2">
+                                {verifyResponse.accepts.map((accept) => {
+                                  const net = getNetwork(accept.normalizedNetwork);
+                                  const isSelected = selectedNetworks.includes(
+                                    accept.normalizedNetwork,
+                                  );
+                                  const price = accept.amount
+                                    ? parseFloat(accept.amount) / 1_000_000
+                                    : 0;
+                                  return (
+                                    <label
+                                      key={accept.normalizedNetwork}
+                                      className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${isSelected ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"}`}
+                                    >
+                                      <input
+                                        type="checkbox"
+                                        checked={isSelected}
+                                        onChange={(e) => {
+                                          if (e.target.checked) {
+                                            setSelectedNetworks((prev) => [
+                                              ...prev,
+                                              accept.normalizedNetwork,
+                                            ]);
+                                          } else {
+                                            setSelectedNetworks((prev) =>
+                                              prev.filter(
+                                                (n) =>
+                                                  n !== accept.normalizedNetwork,
+                                              ),
+                                            );
+                                          }
+                                        }}
+                                        className="h-4 w-4 rounded border-border"
+                                      />
+                                      <div className="flex-1">
+                                        <span className="font-medium">
+                                          {net.name}
+                                        </span>
+                                        <span className="text-muted-foreground ml-2">
+                                          ${price.toFixed(2)} USDC
+                                        </span>
+                                      </div>
+                                    </label>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-sm">
+                              <span className="text-muted-foreground">Price</span>
+                              <p className="font-mono">
+                                {priceDisplay} USDC (
+                                {getNetwork(verified.network).name})
+                              </p>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   )}
@@ -2933,7 +2869,7 @@ export function CreateResourceModal({
                     "Save Changes"
                   )}
                 </Button>
-              ) : !verified ? (
+              ) : !verifyResponse ? (
                 <Button
                   onClick={handleVerify}
                   disabled={!externalUrl.trim() || isVerifying}
@@ -2948,7 +2884,7 @@ export function CreateResourceModal({
                     "Verify URL"
                   )}
                 </Button>
-              ) : (
+              ) : verified ? (
                 <Button
                   onClick={handleRegisterExternal}
                   disabled={isSubmitting || selectedNetworks.length === 0}
@@ -2965,7 +2901,7 @@ export function CreateResourceModal({
                     "Register Resource"
                   )}
                 </Button>
-              )}
+              ) : null}
             </>
           )}
 

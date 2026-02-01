@@ -1,28 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { processVerifyResponse, type VerifyResponse } from "@/lib/x402-verify";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3011";
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
-
-interface AcceptOption {
-  network: string;
-  normalizedNetwork: string;
-  payTo: string;
-  amount: string;
-  asset?: string;
-  scheme?: string;
-  extra?: Record<string, unknown>;
-}
-
-interface VerifyResponse {
-  valid: boolean;
-  x402Version?: number;
-  accepts?: AcceptOption[];
-  resource: {
-    description?: string;
-    network?: string;
-    [key: string]: unknown;
-  };
-}
 
 interface BackfillResult {
   id: string;
@@ -145,13 +125,13 @@ async function processResources(
         );
       }
 
-      const verifyData: VerifyResponse = await verifyRes.json();
+      const rawVerifyData = await verifyRes.json();
+      const verifyData: VerifyResponse = processVerifyResponse(rawVerifyData, resource.resource_url);
 
       // Extract supportsRefunds from accepts[].extra
       const supportsRefunds =
         verifyData.accepts?.some(
-          (accept: { extra?: Record<string, unknown> }) =>
-            accept.extra?.supportsRefunds === true,
+          (accept) => accept.extra?.supportsRefunds === true,
         ) ?? false;
 
       // Update the resource via PATCH

@@ -15,13 +15,13 @@
   "dependencies": {
     "@hookform/resolvers": "3.3.4",
     "@monaco-editor/react": "^4.7.0",
-    "@x402jobs/ui": "workspace:*",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
     "@solana/wallet-adapter-react-ui": "^0.9.39",
     "@solana/wallet-adapter-wallets": "^0.19.37",
     "@solana/web3.js": "^1.98.4",
     "@supabase/supabase-js": "^2.47.22",
+    "@x402jobs/ui": "workspace:*",
     "@xyflow/react": "^12.4.4",
     "bs58": "^5.0.0",
     "canvas-confetti": "^1.9.3",
@@ -37,6 +37,7 @@
     "react-markdown": "^10.1.0",
     "recharts": "^2.15.0",
     "swr": "^2.3.6",
+    "x402check": "^0.2.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {
