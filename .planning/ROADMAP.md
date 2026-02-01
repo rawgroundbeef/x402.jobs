@@ -180,13 +180,18 @@ Plans:
 
 **Dependencies:** Phase 19 (wizard shell), Phase 20 (details and review steps)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 24-01-PLAN.md -- OpenRouter config page with API key check, model browser, system prompt textarea, parameter definitions, temperature, max tokens, plus details preservation and review display
+
 **Requirements:**
 
 - ORTR-01: Warning banner shown if user has no OpenRouter API key configured, with link to Settings
 - ORTR-02: Model browser with search and filters (modality, provider, price)
 - ORTR-03: Curated popular models shown by default
-- ORTR-04: Prompt template editor with `{{param}}` syntax support
-- ORTR-05: Parameter definitions (name, type, description, required)
+- ORTR-04: Prompt template editor with `{param}{/param}` syntax support
+- ORTR-05: Parameter definitions (name, description, required)
 - ORTR-06: Model config (temperature, max_tokens)
 - ORTR-07: Continue button blocked until API key configured and model selected
 
@@ -194,7 +199,7 @@ Plans:
 
 1. User without an OpenRouter API key sees a warning banner with a link to Settings, and the Continue button is blocked
 2. User can browse curated popular models by default and search/filter the full catalog by modality, provider, and price
-3. User can write a prompt template with `{{param}}` syntax and define parameters with name, type, description, and required flag
+3. User can write a prompt template with `{param}{/param}` syntax and define parameters with name, description, and required flag
 4. User can configure model parameters (temperature, max_tokens)
 5. User can complete the full flow: select model, configure prompt, fill details, review, and publish an OpenRouter resource
 
@@ -228,7 +233,7 @@ Plans:
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
-| 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
+| 24 - OpenRouter Path               | Planned  | 1     | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
 **Total:** 7/14 plans complete (Phases 19-25, 50% complete)
