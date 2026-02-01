@@ -174,10 +174,11 @@ export default function DetailsPage() {
       category: data.category,
       price: data.price,
       network: data.network,
-      // Preserve link-specific fields from validation step
+      // Preserve type-specific fields from config step
       ...(draft?.resourceUrl && { resourceUrl: draft.resourceUrl }),
       ...(draft?.preFilled && { preFilled: draft.preFilled }),
       ...(draft?.linkConfig && { linkConfig: draft.linkConfig }),
+      ...(draft?.proxyConfig && { proxyConfig: draft.proxyConfig }),
     });
     router.push("/dashboard/resources/new/review");
   };

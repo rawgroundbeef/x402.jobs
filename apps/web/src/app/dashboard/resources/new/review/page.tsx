@@ -237,17 +237,6 @@ export default function ReviewPage() {
           <p className="text-sm text-muted-foreground">
             Type: {TYPE_DISPLAY[draft.type!] || draft.type}
           </p>
-          {(() => {
-            const originUrl = draft.proxyConfig?.originUrl;
-            if (typeof originUrl === "string") {
-              return (
-                <p className="text-sm font-mono text-foreground mt-2">
-                  {originUrl}
-                </p>
-              );
-            }
-            return null;
-          })()}
           {/* Type-specific config display will be expanded by Phases 21-24 */}
           {draft.type === "link" && draft.linkConfig && (() => {
             const linkConfig = draft.linkConfig as { url?: string; method?: string };
@@ -265,6 +254,37 @@ export default function ReviewPage() {
                     <dd className="text-sm font-medium text-foreground">
                       {linkConfig.method}
                     </dd>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+          {draft.type === "proxy" && draft.proxyConfig && (() => {
+            const proxyConfig = draft.proxyConfig as {
+              originUrl?: string;
+              method?: string;
+              authHeader?: string;
+            };
+            return (
+              <div className="mt-3 space-y-2">
+                <div>
+                  <dt className="text-sm text-muted-foreground">Origin URL</dt>
+                  <dd className="text-sm font-mono text-foreground break-all">
+                    {proxyConfig.originUrl || ""}
+                  </dd>
+                </div>
+                {proxyConfig.method && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">HTTP Method</dt>
+                    <dd className="text-sm font-medium text-foreground">
+                      {proxyConfig.method}
+                    </dd>
+                  </div>
+                )}
+                {proxyConfig.authHeader && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">Auth Header</dt>
+                    <dd className="text-sm text-foreground">Configured (encrypted on publish)</dd>
                   </div>
                 )}
               </div>
