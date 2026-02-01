@@ -238,7 +238,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 26-01-PLAN.md -- Route Link Existing publish to POST /api/resources/ instead of /api/resources/instant
+- [x] 26-01-PLAN.md -- Route Link Existing publish to POST /api/resources/ instead of /api/resources/instant
 
 **Requirements:**
 
@@ -269,9 +269,9 @@ Plans:
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Complete | 1/1   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Complete | 1/1   | CLNP-01..02              |
-| 26 - Fix Link Existing Publish     | Pending  | 0/1   | REVW-04, LINK-07         |
+| 26 - Fix Link Existing Publish     | Complete | 1/1   | REVW-04, LINK-07         |
 
-**Total:** 10/11 plans complete (Phases 19-26, gap closure phase added)
+**Total:** 11/11 plans complete (Phases 19-26, all complete)
 
 ---
 
