@@ -180,6 +180,7 @@ export default function DetailsPage() {
       ...(draft?.linkConfig && { linkConfig: draft.linkConfig }),
       ...(draft?.proxyConfig && { proxyConfig: draft.proxyConfig }),
       ...(draft?.claudeConfig && { claudeConfig: draft.claudeConfig }),
+      ...(draft?.openrouterConfig && { openrouterConfig: draft.openrouterConfig }),
     });
     router.push("/dashboard/resources/new/review");
   };

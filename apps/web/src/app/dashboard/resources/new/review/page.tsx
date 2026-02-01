@@ -348,6 +348,83 @@ export default function ReviewPage() {
             </div>
           );
         })()}
+
+        {draft.type === "openrouter" && draft.openrouterConfig && (() => {
+          const orConfig = draft.openrouterConfig as {
+            modelId?: string;
+            modelName?: string;
+            provider?: string;
+            systemPrompt?: string;
+            parameters?: Array<{
+              name: string;
+              description?: string;
+              required?: boolean;
+              default?: string;
+            }>;
+            temperature?: number;
+            maxTokens?: number;
+          };
+          return (
+            <div className="mt-3 space-y-3">
+              <div>
+                <dt className="text-sm text-muted-foreground">Model</dt>
+                <dd className="text-sm font-medium text-foreground mt-1">
+                  {orConfig.modelName || orConfig.modelId || "Unknown model"}
+                  {orConfig.provider && (
+                    <span className="text-muted-foreground font-normal ml-2">
+                      by {orConfig.provider}
+                    </span>
+                  )}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm text-muted-foreground">System Prompt</dt>
+                <dd className="text-sm font-mono text-foreground mt-1 p-2 bg-muted/30 rounded max-h-32 overflow-y-auto whitespace-pre-wrap">
+                  {orConfig.systemPrompt || ""}
+                </dd>
+              </div>
+              {orConfig.parameters && orConfig.parameters.length > 0 && (
+                <div>
+                  <dt className="text-sm text-muted-foreground">Parameters</dt>
+                  <dd className="space-y-2 mt-1">
+                    {orConfig.parameters.map((param, i) => (
+                      <div key={i} className="p-2 bg-muted/30 rounded text-sm">
+                        <div className="flex items-center gap-2">
+                          <code className="font-mono text-primary">
+                            {"{" + param.name + "}{/" + param.name + "}"}
+                          </code>
+                          {!param.required && (
+                            <span className="text-xs text-muted-foreground">(optional)</span>
+                          )}
+                        </div>
+                        {param.description && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {param.description}
+                          </p>
+                        )}
+                        {param.default && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Default: {param.default}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </dd>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="text-muted-foreground">Temperature:</span>
+                  <span className="font-mono ml-2">{orConfig.temperature ?? 1.0}</span>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Max Tokens:</span>
+                  <span className="font-mono ml-2">{orConfig.maxTokens?.toLocaleString() || "4,096"}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
         </div>
       </div>
     </WizardShell>
