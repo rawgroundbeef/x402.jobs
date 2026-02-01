@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 20 - Shared Details & Review (2 of 7 v2.0 phases)
-**Plan:** 20-02 of 2 complete
+**Phase:** 21 - Link Existing Path (3 of 7 v2.0 phases)
+**Plan:** 21-01 of 1 complete
 **Status:** Phase complete
-**Last activity:** 2026-01-31 -- Completed 20-02-PLAN.md (review and publish)
+**Last activity:** 2026-02-01 -- Completed 21-01-PLAN.md (Link Existing validation page)
 
 ```
-v2.0 Progress: [███----] 3/14 plans (21%)
-Phase 20:      [██] 2/2 plans (100%)
+v2.0 Progress: [████---] 4/14 plans (29%)
+Phase 21:      [█] 1/1 plans (100%)
 ```
 
 ## Milestone History
@@ -77,6 +77,9 @@ Phase 20:      [██] 2/2 plans (100%)
 | Category required                    | Per research recommendation, improves discoverability     | 2026-01-31 |
 | 4-step wizard (details + review)     | Details and review are now separate visible steps         | 2026-01-31 |
 | Minimum price $0.01                  | Matches plan requirement, enforced in Zod schema          | 2026-01-31 |
+| Plain fetch for public verify API    | /api/v1/resources/verify is public, no auth needed       | 2026-02-01 |
+| Clear validation on URL/method change | Prevents stale validation results                        | 2026-02-01 |
+| Pre-filled fields with lock flags    | Auto-detected network/price saved with preFilled flags    | 2026-02-01 |
 
 ## Remaining Manual Tasks
 
@@ -97,9 +100,9 @@ Phase 20:      [██] 2/2 plans (100%)
 
 ## Session Continuity
 
-**Last session:** 2026-01-31T23:00:00Z
-**Stopped at:** Completed 20-02-PLAN.md (review and publish) - Phase 20 complete
-**Resume with:** `/gsd:plan-phase 21` (start Phase 21: Link Existing Path)
+**Last session:** 2026-02-01T02:15:11Z
+**Stopped at:** Completed 21-01-PLAN.md (Link Existing validation page) - Phase 21 complete
+**Resume with:** `/gsd:plan-phase 22` (start Phase 22: Proxy Server Path)
 
 ---
 
@@ -114,3 +117,4 @@ _v2.0 roadmap created: 2026-01-30_
 _v2.0 19-01 complete: 2026-01-31_
 _v2.0 20-01 complete: 2026-01-31_
 _v2.0 20-02 complete: 2026-01-31_
+_v2.0 21-01 complete: 2026-02-01_
