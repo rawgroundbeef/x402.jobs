@@ -82,6 +82,8 @@ export default function DetailsPage() {
     setIsLoaded(true);
   }, [router]);
 
+  const isPreFilled = draft?.preFilled || {};
+
   const {
     register,
     handleSubmit,
@@ -172,6 +174,10 @@ export default function DetailsPage() {
       category: data.category,
       price: data.price,
       network: data.network,
+      // Preserve link-specific fields from validation step
+      ...(draft?.resourceUrl && { resourceUrl: draft.resourceUrl }),
+      ...(draft?.preFilled && { preFilled: draft.preFilled }),
+      ...(draft?.linkConfig && { linkConfig: draft.linkConfig }),
     });
     router.push("/dashboard/resources/new/review");
   };
@@ -291,6 +297,9 @@ export default function DetailsPage() {
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">
             Price (USDC) <span className="text-destructive">*</span>
+            {isPreFilled.price && (
+              <span className="text-xs text-muted-foreground ml-2">(Detected from endpoint)</span>
+            )}
           </label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
@@ -302,6 +311,8 @@ export default function DetailsPage() {
               inputMode="decimal"
               placeholder="0.01"
               className="pl-7"
+              disabled={!!isPreFilled.price}
+              readOnly={!!isPreFilled.price}
             />
           </div>
           {errors.price && (
@@ -313,11 +324,18 @@ export default function DetailsPage() {
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">
             Network <span className="text-destructive">*</span>
+            {isPreFilled.network && (
+              <span className="text-xs text-muted-foreground ml-2">(Detected from endpoint)</span>
+            )}
           </label>
           <Select
             value={watch("network")}
-            onChange={(val) => setValue("network", val as "base" | "solana", { shouldValidate: true })}
+            onChange={(val) => {
+              if (isPreFilled.network) return;
+              setValue("network", val as "base" | "solana", { shouldValidate: true });
+            }}
             options={getAllNetworks().map((n) => ({ value: n.id, label: n.name }))}
+            disabled={!!isPreFilled.network}
           />
           {errors.network && (
             <p className="text-sm text-destructive mt-1">{errors.network.message}</p>

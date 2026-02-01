@@ -238,15 +238,6 @@ export default function ReviewPage() {
             Type: {TYPE_DISPLAY[draft.type!] || draft.type}
           </p>
           {(() => {
-            const url = draft.linkConfig?.url;
-            if (typeof url === "string") {
-              return (
-                <p className="text-sm font-mono text-foreground mt-2">{url}</p>
-              );
-            }
-            return null;
-          })()}
-          {(() => {
             const originUrl = draft.proxyConfig?.originUrl;
             if (typeof originUrl === "string") {
               return (
@@ -258,11 +249,27 @@ export default function ReviewPage() {
             return null;
           })()}
           {/* Type-specific config display will be expanded by Phases 21-24 */}
-          {draft.type === "link" && (
-            <p className="text-xs text-muted-foreground mt-2">
-              Validation details will display here for Link Existing resources
-            </p>
-          )}
+          {draft.type === "link" && draft.linkConfig && (() => {
+            const linkConfig = draft.linkConfig as { url?: string; method?: string };
+            return (
+              <div className="mt-3 space-y-2">
+                <div>
+                  <dt className="text-sm text-muted-foreground">Endpoint URL</dt>
+                  <dd className="text-sm font-mono text-foreground break-all">
+                    {linkConfig.url || draft.resourceUrl || ''}
+                  </dd>
+                </div>
+                {linkConfig.method && (
+                  <div>
+                    <dt className="text-sm text-muted-foreground">HTTP Method</dt>
+                    <dd className="text-sm font-medium text-foreground">
+                      {linkConfig.method}
+                    </dd>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
     </WizardShell>
