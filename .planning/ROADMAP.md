@@ -229,6 +229,35 @@ Plans:
 
 ---
 
+### Phase 26: Fix Link Existing Publish
+
+**Goal:** Link Existing resources publish successfully by routing to the correct API endpoint for external resource registration.
+
+**Dependencies:** Phase 21 (Link Existing path exists but publish fails)
+
+**Plans:** 1 plan
+
+Plans:
+- [ ] 26-01-PLAN.md -- Route Link Existing publish to POST /api/resources/ instead of /api/resources/instant
+
+**Requirements:**
+
+- REVW-04: Publish Resource button submits to backend (currently PARTIAL — fails for Link Existing)
+- LINK-07: Valid endpoint pre-fills network and price in details step (currently PARTIAL — pre-fill works but publish fails)
+
+**Gap Closure:** Closes gaps from v2.0 milestone audit:
+- Requirement: LINK-07/REVW-04 Link Existing publish fails
+- Integration: review/page.tsx TYPE_TO_API maps link→"external" but /resources/instant rejects "external"
+- Flow: Link Existing E2E broken at publish step (400 error)
+
+**Success Criteria:**
+
+1. User can complete the full Link Existing flow: enter URL, validate, fill details, review, and publish
+2. Published Link Existing resource appears on the creator's dashboard and has a working detail page
+3. Proxy, Claude Prompt, and OpenRouter publish flows continue to work unchanged
+
+---
+
 ## Progress
 
 | Phase                              | Status   | Plans | Requirements             |
@@ -240,8 +269,9 @@ Plans:
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Complete | 1/1   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Complete | 1/1   | CLNP-01..02              |
+| 26 - Fix Link Existing Publish     | Pending  | 0/1   | REVW-04, LINK-07         |
 
-**Total:** 10/10 plans complete (Phases 19-25, 100% complete)
+**Total:** 10/11 plans complete (Phases 19-26, gap closure phase added)
 
 ---
 
@@ -263,9 +293,12 @@ Phase 20 (Shared Details & Review)
                                              |
                                              v
                                      Phase 25 (Cleanup & Migration)
+                                             |
+                                             v
+                                     Phase 26 (Fix Link Existing Publish)
 ```
 
-Phases 21-24 are independent of each other and can be built in any order. Each becomes end-to-end functional immediately because the shared Details and Review steps (Phase 20) are already in place.
+Phases 21-24 are independent of each other and can be built in any order. Each becomes end-to-end functional immediately because the shared Details and Review steps (Phase 20) are already in place. Phase 26 is a gap closure phase that fixes the Link Existing publish flow identified in the milestone audit.
 
 ---
 
@@ -296,7 +329,7 @@ Phases 21-24 are independent of each other and can be built in any order. Each b
 | REVW-01     | 20    |
 | REVW-02     | 20    |
 | REVW-03     | 20    |
-| REVW-04     | 20    |
+| REVW-04     | 20, 26 |
 | REVW-05     | 20    |
 | LINK-01     | 21    |
 | LINK-02     | 21    |
@@ -304,7 +337,7 @@ Phases 21-24 are independent of each other and can be built in any order. Each b
 | LINK-04     | 21    |
 | LINK-05     | 21    |
 | LINK-06     | 21    |
-| LINK-07     | 21    |
+| LINK-07     | 21, 26 |
 | LINK-08     | 21    |
 | PRXY-01     | 22    |
 | PRXY-02     | 22    |
