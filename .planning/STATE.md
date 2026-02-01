@@ -13,13 +13,13 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 ## Current Position
 
 **Phase:** 26 - Fix Link Existing Publish (gap closure from audit)
-**Plan:** 0 of 1 complete
-**Status:** Phase pending, needs planning
-**Last activity:** 2026-02-01 -- Gap closure phase created from milestone audit
+**Plan:** 1 of 1 complete
+**Status:** Phase complete
+**Last activity:** 2026-02-01 -- Completed 26-01-PLAN.md
 
 ```
-v2.0 Progress: [█████████░] 10/11 plans (91%)
-Phase 26:      [░] 0/1 plan (0%)
+v2.0 Progress: [███████████] 11/11 plans (100%)
+Phase 26:      [█] 1/1 plan (100%)
 ```
 
 ## Milestone History
@@ -29,7 +29,7 @@ Phase 26:      [░] 0/1 plan (0%)
 - **v1.2 Resource Detail Redesign** -- Shipped 2026-01-22 (1 phase, 2 plans)
 - **v1.3 x402.storage Output Destination** -- Shipped 2026-01-25 (2 phases, 3 plans)
 - **v1.4 OpenRouter Instant Resources** -- Code complete 2026-01-28, deployment paused (8 phases, Phases 11-18)
-- **v2.0 Resource Registration Redesign** -- Complete 2026-02-01 (7 phases, Phases 19-25)
+- **v2.0 Resource Registration Redesign** -- Complete 2026-02-01 (8 phases, Phases 19-26)
 
 ## v1.4 Deployment Blocker
 
@@ -89,6 +89,10 @@ Phase 26:      [░] 0/1 plan (0%)
 | Collapsed model summary card         | Saves space, clear Change button                          | 2026-02-01 |
 | Progressive disclosure for OpenRouter | Hide prompt/params until model selected                   | 2026-02-01 |
 | Max tokens 1-128K for OpenRouter     | Wider range than Claude for large context models          | 2026-02-01 |
+| Link type routes to POST /resources  | Backend rejects "external" resourceType on /instant       | 2026-02-01 |
+| Save verification data to linkConfig | Avoid re-calling verify API during publish                | 2026-02-01 |
+| Link redirects use API-generated slug | POST /resources generates slug from name+network          | 2026-02-01 |
+| Instant types continue using /instant | Proxy/Claude/OpenRouter work correctly, avoid regression  | 2026-02-01 |
 
 ## Remaining Manual Tasks
 
@@ -110,8 +114,8 @@ Phase 26:      [░] 0/1 plan (0%)
 ## Session Continuity
 
 **Last session:** 2026-02-01
-**Stopped at:** Created Phase 26 gap closure from milestone audit
-**Resume with:** `/gsd:plan-phase 26`
+**Stopped at:** Completed 26-01-PLAN.md (Link Existing publish fix)
+**Resume with:** All v2.0 plans complete - ready for production deployment
 
 ---
 
@@ -132,4 +136,5 @@ _v2.0 22-01 complete: 2026-02-01_
 _v2.0 23-01 complete: 2026-02-01_
 _v2.0 24-01 complete: 2026-02-01_
 _v2.0 25-01 complete: 2026-02-01_
+_v2.0 26-01 complete: 2026-02-01_
 _v2.0 complete: 2026-02-01_
