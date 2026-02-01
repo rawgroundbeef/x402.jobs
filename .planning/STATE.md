@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 22 - Proxy Path (4 of 7 v2.0 phases)
-**Plan:** 22-01 of 1 complete
-**Status:** Phase complete, verified (7/7 must-haves)
-**Last activity:** 2026-02-01 -- Phase 22 verified and complete
+**Phase:** 23 - Claude Prompt Path (5 of 7 v2.0 phases)
+**Plan:** 23-01 of 1 complete
+**Status:** Phase complete, verified (5/5 success criteria)
+**Last activity:** 2026-02-01 -- Completed 23-01-PLAN.md
 
 ```
-v2.0 Progress: [██████-] 6/14 plans (43%)
-Phase 22:      [█] 1/1 plan (100%)
+v2.0 Progress: [███████] 7/14 plans (50%)
+Phase 23:      [█] 1/1 plan (100%)
 ```
 
 ## Milestone History
@@ -81,6 +81,9 @@ Phase 22:      [█] 1/1 plan (100%)
 | Clear validation on URL/method change | Prevents stale validation results                        | 2026-02-01 |
 | Pre-filled fields with lock flags    | Auto-detected network/price saved with preFilled flags    | 2026-02-01 |
 | Action button right of Cancel        | Per user feedback, wizard footer renders Cancel then action | 2026-02-01 |
+| Max tokens 1-64,000 for Claude       | Future-proof for larger context models                    | 2026-02-01 |
+| field.id as parameter key            | Proper React tracking when reordering/removing parameters | 2026-02-01 |
+| Warning banner conditional render    | Prevent flash with !isLoadingConfig && !hasApiKey check   | 2026-02-01 |
 
 ## Remaining Manual Tasks
 
@@ -102,8 +105,8 @@ Phase 22:      [█] 1/1 plan (100%)
 ## Session Continuity
 
 **Last session:** 2026-02-01
-**Stopped at:** Phase 22 complete and verified (7/7 must-haves)
-**Resume with:** `/gsd:discuss-phase 23` (start Phase 23: Claude Prompt Path)
+**Stopped at:** Completed 23-01-PLAN.md
+**Resume with:** `/gsd:discuss-phase 24` (start Phase 24: OpenRouter Path)
 
 ---
 
@@ -121,3 +124,4 @@ _v2.0 20-02 complete: 2026-01-31_
 _v2.0 21-01 complete: 2026-02-01_
 _v2.0 21-02 complete: 2026-02-01_
 _v2.0 22-01 complete: 2026-02-01_
+_v2.0 23-01 complete: 2026-02-01_
