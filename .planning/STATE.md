@@ -14,8 +14,8 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Phase:** 22 - Proxy Path (4 of 7 v2.0 phases)
 **Plan:** 22-01 of 1 complete
-**Status:** Phase complete, all success criteria met
-**Last activity:** 2026-02-01 -- Completed 22-01-PLAN.md (Proxy Config Wizard)
+**Status:** Phase complete, verified (7/7 must-haves)
+**Last activity:** 2026-02-01 -- Phase 22 verified and complete
 
 ```
 v2.0 Progress: [██████-] 6/14 plans (43%)
@@ -102,8 +102,8 @@ Phase 22:      [█] 1/1 plan (100%)
 ## Session Continuity
 
 **Last session:** 2026-02-01
-**Stopped at:** Completed 22-01-PLAN.md (Proxy Config Wizard)
-**Resume with:** `/gsd:plan-phase 23` (start Phase 23: Claude Instant Path)
+**Stopped at:** Phase 22 complete and verified (7/7 must-haves)
+**Resume with:** `/gsd:discuss-phase 23` (start Phase 23: Claude Prompt Path)
 
 ---
 

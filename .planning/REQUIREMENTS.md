@@ -38,10 +38,10 @@ Requirements for full-page wizard replacing modal-based resource creation.
 
 ### Proxy
 
-- [ ] **PRXY-01**: Origin URL input field for non-x402 endpoint
-- [ ] **PRXY-02**: HTTP method selector (GET, POST, PUT, DELETE)
-- [ ] **PRXY-03**: Optional headers section with add/remove capability
-- [ ] **PRXY-04**: Continue button enabled when URL is provided
+- [x] **PRXY-01**: Origin URL input field for non-x402 endpoint
+- [x] **PRXY-02**: HTTP method selector (GET, POST, PUT, DELETE)
+- [x] **PRXY-03**: Optional headers section with add/remove capability
+- [x] **PRXY-04**: Continue button enabled when URL is provided
 
 ### Claude Prompt
 
@@ -152,10 +152,10 @@ Deferred to later milestones.
 | LINK-06     | Phase 21 | Pending |
 | LINK-07     | Phase 21 | Pending |
 | LINK-08     | Phase 21 | Pending |
-| PRXY-01     | Phase 22 | Pending |
-| PRXY-02     | Phase 22 | Pending |
-| PRXY-03     | Phase 22 | Pending |
-| PRXY-04     | Phase 22 | Pending |
+| PRXY-01     | Phase 22 | Complete |
+| PRXY-02     | Phase 22 | Complete |
+| PRXY-03     | Phase 22 | Complete |
+| PRXY-04     | Phase 22 | Complete |
 | CLPT-01     | Phase 23 | Pending |
 | CLPT-02     | Phase 23 | Pending |
 | CLPT-03     | Phase 23 | Pending |
