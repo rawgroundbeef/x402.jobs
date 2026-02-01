@@ -125,6 +125,11 @@ Plans:
 
 **Dependencies:** Phase 19 (wizard shell), Phase 20 (details and review steps)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 22-01-PLAN.md -- Proxy config page with origin URL, HTTP method button group, collapsible auth header, plus details preservation and review display
+
 **Requirements:**
 
 - PRXY-01: Origin URL input field for non-x402 endpoint
@@ -216,7 +221,7 @@ Plans:
 | 19 - Wizard Shell & Type Selection | Planned  | 2     | WIZD-01..08, TYPE-01..04 |
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
-| 22 - Proxy Path                    | Pending  | 0/?   | PRXY-01..04              |
+| 22 - Proxy Path                    | Planned  | 1     | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Pending  | 0/?   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
