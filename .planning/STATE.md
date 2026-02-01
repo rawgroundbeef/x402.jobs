@@ -12,14 +12,14 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 24 - OpenRouter Path (6 of 7 v2.0 phases)
-**Plan:** 24-01 of 1 complete
-**Status:** Phase complete, verified (11/11 must-haves)
-**Last activity:** 2026-02-01 -- Phase 24 complete: OpenRouter config with model browser
+**Phase:** 25 - Cleanup and Migration (7 of 7 v2.0 phases)
+**Plan:** 25-01 of 1 complete
+**Status:** Phase complete, v2.0 complete
+**Last activity:** 2026-02-01 -- Phase 25 complete: Removed old CreateResourceModal, 3,646 lines of dead code
 
 ```
-v2.0 Progress: [████████] 8/14 plans (57%)
-Phase 24:      [█] 1/1 plan (100%)
+v2.0 Progress: [█████████] 9/9 plans (100%)
+Phase 25:      [█] 1/1 plan (100%)
 ```
 
 ## Milestone History
@@ -29,7 +29,7 @@ Phase 24:      [█] 1/1 plan (100%)
 - **v1.2 Resource Detail Redesign** -- Shipped 2026-01-22 (1 phase, 2 plans)
 - **v1.3 x402.storage Output Destination** -- Shipped 2026-01-25 (2 phases, 3 plans)
 - **v1.4 OpenRouter Instant Resources** -- Code complete 2026-01-28, deployment paused (8 phases, Phases 11-18)
-- **v2.0 Resource Registration Redesign** -- Started 2026-01-30 (7 phases, Phases 19-25)
+- **v2.0 Resource Registration Redesign** -- Complete 2026-02-01 (7 phases, Phases 19-25)
 
 ## v1.4 Deployment Blocker
 
@@ -42,7 +42,7 @@ Phase 24:      [█] 1/1 plan (100%)
 1. Create standalone x402-jobs repo (frontend open source, backend private)
 2. Set up new Supabase project
 3. Apply migrations 005 and 006 (tables already namespaced with `x402_` prefix)
-4. Uncomment OpenRouter option in CreateResourceModal.tsx
+4. OpenRouter already live in wizard (Phase 24)
 5. Run model sync to populate `x402_openrouter_models`
 
 ## Architecture Summary
@@ -50,7 +50,7 @@ Phase 24:      [█] 1/1 plan (100%)
 | Component    | Implementation                                                   |
 | ------------ | ---------------------------------------------------------------- |
 | Database     | pt\_\* columns on x402_resources, public_x402_resources view     |
-| Creator UI   | CreateResourceModal with prompt template type                    |
+| Creator UI   | Full-page wizard at /dashboard/resources/new (v2.0)              |
 | API Key      | User-level integration (Dashboard > Integrations > Claude)       |
 | Execution    | Server-side via instant.ts with @anthropic-ai/sdk and openai SDK |
 | Caller UI    | ResourceDetailPage with inline prompt_template handling          |
@@ -70,6 +70,7 @@ Phase 24:      [█] 1/1 plan (100%)
 | Session storage + URL hybrid         | Clean URLs, survives refresh                              | 2026-01-30 |
 | Import x402check components          | Reuse validated components, don't rebuild                 | 2026-01-30 |
 | Remove old modal immediately         | No migration period, clean break                          | 2026-01-30 |
+| ResourceEditModal for basic edits    | Lightweight modal sufficient for metadata changes         | 2026-02-01 |
 | Details/Review before paths          | Each path phase is immediately end-to-end testable        | 2026-01-30 |
 | Session storage key x402jobs:newResource | Consistent with project naming convention             | 2026-01-31 |
 | Type-only draft not meaningful       | User can easily re-select, only ask confirmation for name+ | 2026-01-31 |
@@ -109,8 +110,8 @@ Phase 24:      [█] 1/1 plan (100%)
 ## Session Continuity
 
 **Last session:** 2026-02-01
-**Stopped at:** Completed 24-01-PLAN.md
-**Resume with:** `/gsd:discuss-phase 25` (start Phase 25: Cleanup)
+**Stopped at:** Completed 25-01-PLAN.md (v2.0 complete)
+**Resume with:** Next milestone (TBD)
 
 ---
 
@@ -130,3 +131,5 @@ _v2.0 21-02 complete: 2026-02-01_
 _v2.0 22-01 complete: 2026-02-01_
 _v2.0 23-01 complete: 2026-02-01_
 _v2.0 24-01 complete: 2026-02-01_
+_v2.0 25-01 complete: 2026-02-01_
+_v2.0 complete: 2026-02-01_
