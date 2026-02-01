@@ -87,14 +87,14 @@ export function WizardShell({
             <div />
           )}
 
-          {/* Right side: custom footer + cancel */}
+          {/* Right side: cancel + custom footer */}
           <div className="flex items-center gap-3">
-            {footer}
             {showCancel && (
               <Button variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
             )}
+            {footer}
           </div>
         </div>
       </div>
