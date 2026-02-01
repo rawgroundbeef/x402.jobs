@@ -214,7 +214,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 25-01-PLAN.md -- Remove CreateResourceModal and RegisterResourceModal, clean ModalContext, switch dashboard edit to ResourceEditModal
+- [x] 25-01-PLAN.md -- Remove CreateResourceModal and RegisterResourceModal, clean ModalContext, switch dashboard edit to ResourceEditModal
 
 **Requirements:**
 
@@ -233,15 +233,15 @@ Plans:
 
 | Phase                              | Status   | Plans | Requirements             |
 | ---------------------------------- | -------- | ----- | ------------------------ |
-| 19 - Wizard Shell & Type Selection | Planned  | 2     | WIZD-01..08, TYPE-01..04 |
+| 19 - Wizard Shell & Type Selection | Complete | 2/2   | WIZD-01..08, TYPE-01..04 |
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
 | 23 - Claude Prompt Path            | Complete | 1/1   | CLPT-01..05              |
 | 24 - OpenRouter Path               | Complete | 1/1   | ORTR-01..07              |
-| 25 - Cleanup & Migration           | Planned  | 1     | CLNP-01..02              |
+| 25 - Cleanup & Migration           | Complete | 1/1   | CLNP-01..02              |
 
-**Total:** 8/14 plans complete (Phases 19-25, 57% complete)
+**Total:** 10/10 plans complete (Phases 19-25, 100% complete)
 
 ---
 

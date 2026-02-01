@@ -9,32 +9,32 @@ Requirements for full-page wizard replacing modal-based resource creation.
 
 ### Wizard Shell
 
-- [ ] **WIZD-01**: Full-page wizard renders at `/resources/new` with consistent layout
-- [ ] **WIZD-02**: Step indicator shows current position (e.g., "Step 1 of 3")
-- [ ] **WIZD-03**: Back button navigates to previous step
-- [ ] **WIZD-04**: Cancel button returns to resources page
-- [ ] **WIZD-05**: Continue button advances to next step (disabled when form invalid)
-- [ ] **WIZD-06**: URL routing maps each step to a distinct path (`/resources/new/link`, `/resources/new/details`, etc.)
-- [ ] **WIZD-07**: Wizard state persists in session storage across page refreshes
-- [ ] **WIZD-08**: Wizard layout is mobile-responsive (stacks naturally on small screens)
+- [x] **WIZD-01**: Full-page wizard renders at `/resources/new` with consistent layout
+- [x] **WIZD-02**: Step indicator shows current position (e.g., "Step 1 of 3")
+- [x] **WIZD-03**: Back button navigates to previous step
+- [x] **WIZD-04**: Cancel button returns to resources page
+- [x] **WIZD-05**: Continue button advances to next step (disabled when form invalid)
+- [x] **WIZD-06**: URL routing maps each step to a distinct path (`/resources/new/link`, `/resources/new/details`, etc.)
+- [x] **WIZD-07**: Wizard state persists in session storage across page refreshes
+- [x] **WIZD-08**: Wizard layout is mobile-responsive (stacks naturally on small screens)
 
 ### Type Selection
 
-- [ ] **TYPE-01**: Step 1 shows 4 resource type cards: Link Existing, Proxy, Claude Prompt, OpenRouter
-- [ ] **TYPE-02**: Link Existing card is visually primary (most common path)
-- [ ] **TYPE-03**: Create options (Proxy, Claude, OpenRouter) grouped under "Create Something New" divider
-- [ ] **TYPE-04**: Clicking a type card navigates to that type's Step 2 route
+- [x] **TYPE-01**: Step 1 shows 4 resource type cards: Link Existing, Proxy, Claude Prompt, OpenRouter
+- [x] **TYPE-02**: Link Existing card is visually primary (most common path)
+- [x] **TYPE-03**: Create options (Proxy, Claude, OpenRouter) grouped under "Create Something New" divider
+- [x] **TYPE-04**: Clicking a type card navigates to that type's Step 2 route
 
 ### Link Existing
 
-- [ ] **LINK-01**: URL input field with HTTP method dropdown (GET, POST, PUT, DELETE)
-- [ ] **LINK-02**: Validate Endpoint button triggers x402check validation
-- [ ] **LINK-03**: Validation results display with verdict, error count, warning count
-- [ ] **LINK-04**: Expandable sections for warnings, parsed config, endpoint checks, response body
-- [ ] **LINK-05**: Parsed config shows detected chain, address, amount, format
-- [ ] **LINK-06**: Invalid endpoint blocks Continue button (must fix and re-validate)
-- [ ] **LINK-07**: Valid endpoint pre-fills network and price in details step
-- [ ] **LINK-08**: x402check components imported from x402check package
+- [x] **LINK-01**: URL input field with HTTP method dropdown (GET, POST, PUT, DELETE)
+- [x] **LINK-02**: Validate Endpoint button triggers x402check validation
+- [x] **LINK-03**: Validation results display with verdict, error count, warning count
+- [x] **LINK-04**: Expandable sections for warnings, parsed config, endpoint checks, response body
+- [x] **LINK-05**: Parsed config shows detected chain, address, amount, format
+- [x] **LINK-06**: Invalid endpoint blocks Continue button (must fix and re-validate)
+- [x] **LINK-07**: Valid endpoint pre-fills network and price in details step
+- [x] **LINK-08**: x402check components imported from x402check package
 
 ### Proxy
 
@@ -63,27 +63,27 @@ Requirements for full-page wizard replacing modal-based resource creation.
 
 ### Resource Details (Shared)
 
-- [ ] **DETL-01**: Name field (required)
-- [ ] **DETL-02**: URL slug field with auto-generation from name, shown as `/@username/slug`
-- [ ] **DETL-03**: Description textarea
-- [ ] **DETL-04**: Image field (URL input or upload)
-- [ ] **DETL-05**: Category dropdown
-- [ ] **DETL-06**: Price field in USDC (minimum $0.01)
-- [ ] **DETL-07**: Network selector (Base, Solana) — pre-filled for Link Existing
-- [ ] **DETL-08**: Continue button enabled when required fields filled
+- [x] **DETL-01**: Name field (required)
+- [x] **DETL-02**: URL slug field with auto-generation from name, shown as `/@username/slug`
+- [x] **DETL-03**: Description textarea
+- [x] **DETL-04**: Image field (URL input or upload)
+- [x] **DETL-05**: Category dropdown
+- [x] **DETL-06**: Price field in USDC (minimum $0.01)
+- [x] **DETL-07**: Network selector (Base, Solana) — pre-filled for Link Existing
+- [x] **DETL-08**: Continue button enabled when required fields filled
 
 ### Review & Publish
 
-- [ ] **REVW-01**: Summary card shows all resource configuration
-- [ ] **REVW-02**: Each section has Edit link that navigates back to relevant step
-- [ ] **REVW-03**: Validation summary shown for Link Existing type
-- [ ] **REVW-04**: Publish Resource button submits to backend
-- [ ] **REVW-05**: Success state redirects to new resource's detail page
+- [x] **REVW-01**: Summary card shows all resource configuration
+- [x] **REVW-02**: Each section has Edit link that navigates back to relevant step
+- [x] **REVW-03**: Validation summary shown for Link Existing type
+- [x] **REVW-04**: Publish Resource button submits to backend
+- [x] **REVW-05**: Success state redirects to new resource's detail page
 
 ### Cleanup
 
-- [ ] **CLNP-01**: Old CreateResourceModal component removed
-- [ ] **CLNP-02**: All entry points that opened the modal now navigate to `/resources/new`
+- [x] **CLNP-01**: Old CreateResourceModal component removed
+- [x] **CLNP-02**: All entry points that opened the modal now navigate to `/resources/new`
 
 ## Future Requirements
 
@@ -119,18 +119,18 @@ Deferred to later milestones.
 
 | Requirement | Phase    | Status  |
 | ----------- | -------- | ------- |
-| WIZD-01     | Phase 19 | Pending |
-| WIZD-02     | Phase 19 | Pending |
-| WIZD-03     | Phase 19 | Pending |
-| WIZD-04     | Phase 19 | Pending |
-| WIZD-05     | Phase 19 | Pending |
-| WIZD-06     | Phase 19 | Pending |
-| WIZD-07     | Phase 19 | Pending |
-| WIZD-08     | Phase 19 | Pending |
-| TYPE-01     | Phase 19 | Pending |
-| TYPE-02     | Phase 19 | Pending |
-| TYPE-03     | Phase 19 | Pending |
-| TYPE-04     | Phase 19 | Pending |
+| WIZD-01     | Phase 19 | Complete |
+| WIZD-02     | Phase 19 | Complete |
+| WIZD-03     | Phase 19 | Complete |
+| WIZD-04     | Phase 19 | Complete |
+| WIZD-05     | Phase 19 | Complete |
+| WIZD-06     | Phase 19 | Complete |
+| WIZD-07     | Phase 19 | Complete |
+| WIZD-08     | Phase 19 | Complete |
+| TYPE-01     | Phase 19 | Complete |
+| TYPE-02     | Phase 19 | Complete |
+| TYPE-03     | Phase 19 | Complete |
+| TYPE-04     | Phase 19 | Complete |
 | DETL-01     | Phase 20 | Complete |
 | DETL-02     | Phase 20 | Complete |
 | DETL-03     | Phase 20 | Complete |
@@ -144,14 +144,14 @@ Deferred to later milestones.
 | REVW-03     | Phase 20 | Complete |
 | REVW-04     | Phase 20 | Complete |
 | REVW-05     | Phase 20 | Complete |
-| LINK-01     | Phase 21 | Pending |
-| LINK-02     | Phase 21 | Pending |
-| LINK-03     | Phase 21 | Pending |
-| LINK-04     | Phase 21 | Pending |
-| LINK-05     | Phase 21 | Pending |
-| LINK-06     | Phase 21 | Pending |
-| LINK-07     | Phase 21 | Pending |
-| LINK-08     | Phase 21 | Pending |
+| LINK-01     | Phase 21 | Complete |
+| LINK-02     | Phase 21 | Complete |
+| LINK-03     | Phase 21 | Complete |
+| LINK-04     | Phase 21 | Complete |
+| LINK-05     | Phase 21 | Complete |
+| LINK-06     | Phase 21 | Complete |
+| LINK-07     | Phase 21 | Complete |
+| LINK-08     | Phase 21 | Complete |
 | PRXY-01     | Phase 22 | Complete |
 | PRXY-02     | Phase 22 | Complete |
 | PRXY-03     | Phase 22 | Complete |
@@ -168,8 +168,8 @@ Deferred to later milestones.
 | ORTR-05     | Phase 24 | Complete |
 | ORTR-06     | Phase 24 | Complete |
 | ORTR-07     | Phase 24 | Complete |
-| CLNP-01     | Phase 25 | Pending |
-| CLNP-02     | Phase 25 | Pending |
+| CLNP-01     | Phase 25 | Complete |
+| CLNP-02     | Phase 25 | Complete |
 
 **Coverage:**
 
