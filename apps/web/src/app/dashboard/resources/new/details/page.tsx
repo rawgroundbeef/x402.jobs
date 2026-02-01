@@ -179,6 +179,7 @@ export default function DetailsPage() {
       ...(draft?.preFilled && { preFilled: draft.preFilled }),
       ...(draft?.linkConfig && { linkConfig: draft.linkConfig }),
       ...(draft?.proxyConfig && { proxyConfig: draft.proxyConfig }),
+      ...(draft?.claudeConfig && { claudeConfig: draft.claudeConfig }),
     });
     router.push("/dashboard/resources/new/review");
   };

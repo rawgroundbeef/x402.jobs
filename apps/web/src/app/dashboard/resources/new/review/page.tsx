@@ -290,6 +290,64 @@ export default function ReviewPage() {
               </div>
             );
           })()}
+
+        {draft.type === "claude" && draft.claudeConfig && (() => {
+          const claudeConfig = draft.claudeConfig as {
+            systemPrompt?: string;
+            parameters?: Array<{
+              name: string;
+              description?: string;
+              required?: boolean;
+              default?: string;
+            }>;
+            maxTokens?: number;
+          };
+          return (
+            <div className="mt-3 space-y-3">
+              <div>
+                <dt className="text-sm text-muted-foreground">System Prompt</dt>
+                <dd className="text-sm font-mono text-foreground mt-1 p-2 bg-muted/30 rounded max-h-32 overflow-y-auto whitespace-pre-wrap">
+                  {claudeConfig.systemPrompt || ""}
+                </dd>
+              </div>
+              {claudeConfig.parameters && claudeConfig.parameters.length > 0 && (
+                <div>
+                  <dt className="text-sm text-muted-foreground">Parameters</dt>
+                  <dd className="space-y-2 mt-1">
+                    {claudeConfig.parameters.map((param, i) => (
+                      <div key={i} className="p-2 bg-muted/30 rounded text-sm">
+                        <div className="flex items-center gap-2">
+                          <code className="font-mono text-primary">
+                            {"{" + param.name + "}{/" + param.name + "}"}
+                          </code>
+                          {!param.required && (
+                            <span className="text-xs text-muted-foreground">(optional)</span>
+                          )}
+                        </div>
+                        {param.description && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            {param.description}
+                          </p>
+                        )}
+                        {param.default && (
+                          <p className="text-xs text-muted-foreground mt-1">
+                            Default: {param.default}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </dd>
+                </div>
+              )}
+              <div>
+                <dt className="text-sm text-muted-foreground">Max Tokens</dt>
+                <dd className="text-sm font-mono text-foreground">
+                  {claudeConfig.maxTokens?.toLocaleString() || "4,096"}
+                </dd>
+              </div>
+            </div>
+          );
+        })()}
         </div>
       </div>
     </WizardShell>
