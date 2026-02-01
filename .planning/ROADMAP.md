@@ -152,6 +152,11 @@ Plans:
 
 **Dependencies:** Phase 19 (wizard shell), Phase 20 (details and review steps)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 23-01-PLAN.md -- Claude prompt config page with API key check, system prompt textarea, parameter definitions, max tokens, plus details preservation and review display
+
 **Requirements:**
 
 - CLPT-01: Warning banner shown if user has no Claude API key configured, with link to Settings
@@ -222,7 +227,7 @@ Plans:
 | 20 - Shared Details & Review       | Complete | 2/2   | DETL-01..08, REVW-01..05 |
 | 21 - Link Existing Path            | Complete | 2/2   | LINK-01..08              |
 | 22 - Proxy Path                    | Complete | 1/1   | PRXY-01..04              |
-| 23 - Claude Prompt Path            | Pending  | 0/?   | CLPT-01..05              |
+| 23 - Claude Prompt Path            | Planned  | 1     | CLPT-01..05              |
 | 24 - OpenRouter Path               | Pending  | 0/?   | ORTR-01..07              |
 | 25 - Cleanup & Migration           | Pending  | 0/?   | CLNP-01..02              |
 
