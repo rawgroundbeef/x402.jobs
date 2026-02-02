@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { Copy, Check } from "lucide-react";
-import { extractImageUrls, truncateBase64 } from "./media-utils";
+import { extractImageUrls, truncateBase64 } from "@/lib/media-utils";
 
 interface SyncResultDisplayProps {
   data: Record<string, unknown>;

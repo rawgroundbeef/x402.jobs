@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { OutputConfig } from "@/types/output-config";
 import type { X402StorageResult } from "@/lib/x402-storage";
+import { truncateBase64 } from "@/lib/media-utils";
 
 // x402.storage icon (cardboard box)
 function X402StorageIcon({ className }: { className?: string }) {
@@ -155,7 +156,7 @@ function formatResult(result: string): {
 
     if (artifactUrl && typeof artifactUrl === "string" && isUrl(artifactUrl)) {
       return {
-        display: JSON.stringify(parsed, null, 2),
+        display: JSON.stringify(parsed, truncateBase64, 2),
         isImage: isImageUrl(artifactUrl),
         isVideo: isVideoUrl(artifactUrl),
         mediaUrl: artifactUrl,
@@ -172,7 +173,7 @@ function formatResult(result: string): {
         isUrl(nestedArtifact)
       ) {
         return {
-          display: JSON.stringify(parsed, null, 2),
+          display: JSON.stringify(parsed, truncateBase64, 2),
           isImage: isImageUrl(nestedArtifact),
           isVideo: isVideoUrl(nestedArtifact),
           mediaUrl: nestedArtifact,
@@ -180,8 +181,41 @@ function formatResult(result: string): {
       }
     }
 
+    // Check inside nested resource objects (e.g. {"resource-1": {imageDataUrl: "..."}})
+    if (typeof parsed === "object" && parsed !== null) {
+      for (const val of Object.values(parsed)) {
+        if (typeof val === "object" && val !== null) {
+          const nested = val as Record<string, unknown>;
+          if (
+            typeof nested.imageDataUrl === "string" &&
+            isDataUrl(nested.imageDataUrl)
+          ) {
+            return {
+              display: JSON.stringify(parsed, truncateBase64, 2),
+              isImage: isImageDataUrl(nested.imageDataUrl),
+              isVideo: false,
+              mediaUrl: nested.imageDataUrl,
+            };
+          }
+          const nestedArtifact =
+            nested.artifactUrl || nested.artifact_url;
+          if (
+            typeof nestedArtifact === "string" &&
+            isDataUrl(nestedArtifact)
+          ) {
+            return {
+              display: JSON.stringify(parsed, truncateBase64, 2),
+              isImage: isImageDataUrl(nestedArtifact),
+              isVideo: false,
+              mediaUrl: nestedArtifact as string,
+            };
+          }
+        }
+      }
+    }
+
     return {
-      display: JSON.stringify(parsed, null, 2),
+      display: JSON.stringify(parsed, truncateBase64, 2),
       isImage: false,
       isVideo: false,
       mediaUrl: null,
