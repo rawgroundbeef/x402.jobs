@@ -1,7 +1,7 @@
 import { Input } from "@x402jobs/ui/input";
 import { Select } from "@x402jobs/ui/select";
 import { Search, X } from "lucide-react";
-import { cn } from "@x402jobs/ui/utils";
+
 
 export interface ModelFiltersProps {
   search: string;
