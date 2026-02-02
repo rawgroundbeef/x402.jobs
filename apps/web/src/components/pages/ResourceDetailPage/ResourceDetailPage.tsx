@@ -54,6 +54,7 @@ import { useRouter } from "next/navigation";
 import {
   PollingProgress,
   ResultDisplay,
+  SyncResultDisplay,
   useLROPolling,
   type LROPayment,
   type LROResult,
@@ -1445,74 +1446,11 @@ export default function ResourceDetailPage({
 
               {/* Sync Result (non-LRO) */}
               {syncResult && !isSubmitting && (
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-semibold">Output</h3>
-                    <button
-                      onClick={() =>
-                        copyToClipboard(
-                          JSON.stringify(syncResult, null, 2),
-                          "output",
-                        )
-                      }
-                      className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-                    >
-                      {outputCopied ? (
-                        <>
-                          <Check className="h-3 w-3" />
-                          Copied
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="h-3 w-3" />
-                          Copy
-                        </>
-                      )}
-                    </button>
-                  </div>
-                  {/* Render image if output contains imageDataUrl */}
-                  {typeof syncResult === "object" &&
-                    syncResult !== null &&
-                    "imageDataUrl" in syncResult &&
-                    typeof (syncResult as Record<string, unknown>)
-                      .imageDataUrl === "string" &&
-                    (
-                      (syncResult as Record<string, unknown>)
-                        .imageDataUrl as string
-                    ).startsWith("data:image/") && (
-                      <div className="mb-4 p-4 bg-muted rounded-lg">
-                        <img
-                          src={
-                            (syncResult as Record<string, unknown>)
-                              .imageDataUrl as string
-                          }
-                          alt="Generated output"
-                          className="max-w-full max-h-[400px] rounded-lg mx-auto"
-                        />
-                      </div>
-                    )}
-                  <div className="bg-muted rounded-lg overflow-hidden">
-                    <pre className="p-4 text-xs font-mono whitespace-pre-wrap break-words max-h-80 overflow-y-auto">
-                      {JSON.stringify(
-                        syncResult,
-                        (key, value) => {
-                          // Truncate base64 data URLs for display
-                          if (
-                            typeof value === "string" &&
-                            value.startsWith("data:")
-                          ) {
-                            const sizeKB = Math.round(value.length / 1024);
-                            const mimeMatch = value.match(/^data:([^;]+)/);
-                            const mimeType = mimeMatch?.[1] || "unknown";
-                            return `[${mimeType} - ${sizeKB}KB base64]`;
-                          }
-                          return value;
-                        },
-                        2,
-                      )}
-                    </pre>
-                  </div>
-                </div>
+                <SyncResultDisplay
+                  data={syncResult}
+                  outputCopied={outputCopied}
+                  onCopyOutput={(text) => copyToClipboard(text, "output")}
+                />
               )}
             </div>
           ) : null}
