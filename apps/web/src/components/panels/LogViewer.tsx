@@ -17,6 +17,7 @@ import {
 import { cn } from "@x402jobs/ui/utils";
 import { Input } from "@x402jobs/ui/input";
 import type { RunEvent } from "@/types/runs";
+import { extractImageUrls, truncateBase64 } from "@/components/lro";
 
 interface LogViewerProps {
   events: RunEvent[];
@@ -301,10 +302,35 @@ function LogEntry({ event, isExpanded, onToggle }: LogEntryProps) {
                   </button>
                 </div>
               </div>
+              {/* Render response text + media when output is an object */}
+              {typeof event.output === "object" && event.output !== null && (
+                <>
+                  {typeof (event.output as Record<string, unknown>).response === "string" && (
+                    <p className="text-xs text-foreground mb-2">
+                      {(event.output as Record<string, unknown>).response as string}
+                    </p>
+                  )}
+                  {(() => {
+                    const images = extractImageUrls(event.output as Record<string, unknown>);
+                    return images.length > 0 ? (
+                      <div className="mb-2 space-y-2">
+                        {images.map((url, i) => (
+                          <img
+                            key={i}
+                            src={url}
+                            alt={`Output image ${i + 1}`}
+                            className="max-w-full max-h-60 rounded border border-border"
+                          />
+                        ))}
+                      </div>
+                    ) : null;
+                  })()}
+                </>
+              )}
               <pre className="text-xs font-mono bg-background rounded p-2 overflow-x-auto max-h-48 overflow-y-auto">
                 {typeof event.output === "string"
                   ? event.output
-                  : JSON.stringify(event.output, null, 2)}
+                  : JSON.stringify(event.output, truncateBase64, 2)}
               </pre>
             </div>
           )}
