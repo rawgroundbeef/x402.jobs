@@ -102,10 +102,10 @@ export function ResultDisplay({
   const maxRetries = 5;
   const retryDelay = 2000; // 2 seconds between retries
 
-  // Reset state when artifactUrl changes
+  // Reset state when artifactUrl changes — skip loading state for data URLs
   useEffect(() => {
     if (artifactUrl && isImageUrl(artifactUrl)) {
-      setImageState("loading");
+      setImageState(artifactUrl.startsWith("data:") ? "loaded" : "loading");
       setRetryCount(0);
     }
   }, [artifactUrl]);
