@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@x402jobs/ui/dialog";
-import { Loader2, Upload, Box, X } from "lucide-react";
+import { Loader2, Upload, Box, X, Info } from "lucide-react";
 import { authenticatedFetch } from "@/lib/api";
 import { useToast } from "@x402jobs/ui/toast";
 
@@ -26,6 +26,7 @@ interface ResourceEditModalProps {
     description?: string;
     server_slug?: string;
     avatar_url?: string;
+    resource_type?: string;
   };
   onSaved: (newSlug?: string) => void;
 }
@@ -231,6 +232,22 @@ export function ResourceEditModal({
         <DialogHeader>
           <DialogTitle>Edit Resource</DialogTitle>
         </DialogHeader>
+
+        {(resource.resource_type === "prompt_template" ||
+          resource.resource_type === "openrouter_instant") && (
+          <div className="flex gap-3 rounded-lg border border-border bg-muted/50 p-3">
+            <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              This is a{" "}
+              {resource.resource_type === "prompt_template"
+                ? "Claude Prompt"
+                : "OpenRouter"}{" "}
+              resource. The model configuration and prompt are locked to
+              protect existing users. To change them, archive this resource and
+              create a new one.
+            </p>
+          </div>
+        )}
 
         <div className="space-y-6 py-4">
           {/* Image Upload */}
