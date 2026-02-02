@@ -2,40 +2,12 @@
 
 import { useMemo } from "react";
 import { Copy, Check } from "lucide-react";
+import { extractImageUrls, truncateBase64 } from "./media-utils";
 
 interface SyncResultDisplayProps {
   data: Record<string, unknown>;
   outputCopied: boolean;
   onCopyOutput: (text: string) => void;
-}
-
-/** Extract image URLs from various response shapes (imageDataUrl, images as string[] or [{url}]) */
-function extractImageUrls(data: Record<string, unknown>): string[] {
-  if (
-    typeof data.imageDataUrl === "string" &&
-    data.imageDataUrl.startsWith("data:image/")
-  ) {
-    return [data.imageDataUrl];
-  }
-
-  if (Array.isArray(data.images)) {
-    return (data.images as Array<string | { url: string }>)
-      .map((img) => (typeof img === "string" ? img : img?.url))
-      .filter((url): url is string => !!url);
-  }
-
-  return [];
-}
-
-/** Truncate base64 data URLs for raw JSON display */
-function truncateBase64(_key: string, value: unknown): unknown {
-  if (typeof value === "string" && value.startsWith("data:")) {
-    const sizeKB = Math.round(value.length / 1024);
-    const mimeMatch = value.match(/^data:([^;]+)/);
-    const mimeType = mimeMatch?.[1] || "unknown";
-    return `[${mimeType} - ${sizeKB}KB base64]`;
-  }
-  return value;
 }
 
 export function SyncResultDisplay({
