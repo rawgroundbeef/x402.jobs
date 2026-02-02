@@ -15,7 +15,7 @@ import { getDraft, saveDraft, WizardDraft } from "@/lib/wizard-draft";
 import { RESOURCE_CATEGORIES } from "@/constants/categories";
 import { getAllNetworks } from "@/lib/networks";
 import { authenticatedFetch, authenticatedFetcher } from "@/lib/api";
-import { ImageUrlOrUpload } from "@/components/inputs/ImageUrlOrUpload";
+import { ImageDropZone } from "@/components/inputs/ImageDropZone";
 
 // Generate URL-safe slug from text
 function generateSlug(text: string): string {
@@ -214,7 +214,6 @@ export default function DetailsPage() {
       step={3}
       totalSteps={4}
       title="Resource Details"
-      description="Add information about your resource"
       backHref={`/dashboard/resources/new/${draft.type}`}
       footer={
         <Button
@@ -226,156 +225,168 @@ export default function DetailsPage() {
         </Button>
       }
     >
-      <form id="details-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Endpoint context for link type */}
+      <form id="details-form" onSubmit={handleSubmit(onSubmit)}>
+        {/* Endpoint context for link and proxy types */}
         {draft.type === "link" && draft.resourceUrl && (
-          <div className="flex items-center gap-2 px-3 py-2 bg-muted/30 border border-border/50 rounded-md text-xs text-muted-foreground">
-            <span>Endpoint:</span>
-            <span className="font-mono truncate">{draft.resourceUrl}</span>
+          <div className="px-3 py-2 mb-6 bg-muted/30 border border-border/50 rounded-md text-xs text-muted-foreground font-mono truncate">
+            {draft.resourceUrl}
+          </div>
+        )}
+        {draft.type === "proxy" && draft.proxyConfig && (
+          <div className="px-3 py-2 mb-6 bg-muted/30 border border-border/50 rounded-md text-xs text-muted-foreground font-mono truncate">
+            {(draft.proxyConfig as { originUrl?: string }).originUrl}
           </div>
         )}
 
-        {/* Name field */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            Name <span className="text-destructive">*</span>
-          </label>
-          <Input
-            {...register("name")}
-            onChange={(e) => {
-              register("name").onChange(e);
-              handleNameChange(e);
-            }}
-            placeholder="My API Resource"
-          />
-          {errors.name && (
-            <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
-          )}
+        {/* Identity block: image + name + slug */}
+        <div className="flex gap-6 items-start pb-8 mb-8 border-b border-border sm:flex-row flex-col items-center sm:items-start">
+          <div className="flex-shrink-0">
+            <ImageDropZone
+              value={watch("imageUrl") || ""}
+              onChange={(url) => setValue("imageUrl", url)}
+            />
+          </div>
+          <div className="flex-1 flex flex-col gap-4 w-full">
+            {/* Name field */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Name <span className="text-destructive">*</span>
+              </label>
+              <Input
+                {...register("name")}
+                onChange={(e) => {
+                  register("name").onChange(e);
+                  handleNameChange(e);
+                }}
+                placeholder="My API Resource"
+              />
+              {errors.name && (
+                <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
+              )}
+            </div>
+
+            {/* URL Slug field */}
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                URL Slug <span className="text-destructive">*</span>
+              </label>
+              <div className="flex items-center gap-2">
+                <div className="flex items-center flex-1 min-w-0">
+                  <span
+                    className="text-sm text-muted-foreground px-3 py-2 bg-muted rounded-l-md border border-r-0 border-input flex items-center h-9 whitespace-nowrap max-w-[200px] truncate flex-shrink-0"
+                    title={slugPrefix}
+                  >
+                    {slugPrefix}
+                  </span>
+                  <Input
+                    {...register("slug")}
+                    onChange={(e) => {
+                      register("slug").onChange(e);
+                      handleSlugChange();
+                    }}
+                    className="rounded-l-none"
+                    placeholder="my-api-resource"
+                  />
+                </div>
+                {/* Slug status indicators — inline */}
+                {isCheckingSlug && (
+                  <span className="text-xs text-muted-foreground whitespace-nowrap flex-shrink-0">Checking...</span>
+                )}
+                {!isCheckingSlug && slugStatus?.available && (
+                  <span className="text-xs text-green-500 whitespace-nowrap flex-shrink-0">Available</span>
+                )}
+                {!isCheckingSlug && slugStatus && !slugStatus.available && (
+                  <span className="text-xs text-destructive whitespace-nowrap flex-shrink-0">
+                    {slugStatus.reason || "Taken"}
+                  </span>
+                )}
+              </div>
+              {errors.slug && (
+                <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* URL Slug field */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            URL Slug <span className="text-destructive">*</span>
-          </label>
-          <div className="flex items-center">
-            <span
-              className="text-sm text-muted-foreground px-3 py-2 bg-muted rounded-l-md border border-r-0 border-input flex items-center h-9 whitespace-nowrap max-w-[200px] truncate flex-shrink-0"
-              title={slugPrefix}
-            >
-              {slugPrefix}
-            </span>
-            <Input
-              {...register("slug")}
-              onChange={(e) => {
-                register("slug").onChange(e);
-                handleSlugChange();
+        {/* Rest of form */}
+        <div className="space-y-6">
+          {/* Description textarea */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">
+              Description
+            </label>
+            <Textarea
+              {...register("description")}
+              placeholder="Describe what your resource does..."
+              rows={3}
+            />
+          </div>
+
+          {/* Category + Price side by side */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Category <span className="text-destructive">*</span>
+              </label>
+              <Select
+                value={watch("category")}
+                onChange={(val) => setValue("category", val, { shouldValidate: true })}
+                options={RESOURCE_CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
+                placeholder="Select a category"
+              />
+              {errors.category && (
+                <p className="text-sm text-destructive mt-1">{errors.category.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-1.5">
+                Price (USDC) <span className="text-destructive">*</span>
+                {isPreFilled.price && (
+                  <span className="text-xs text-muted-foreground ml-2">(Detected)</span>
+                )}
+              </label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
+                  $
+                </span>
+                <Input
+                  {...register("price")}
+                  type="text"
+                  inputMode="decimal"
+                  placeholder="0.01"
+                  className="pl-7"
+                  disabled={!!isPreFilled.price}
+                  readOnly={!!isPreFilled.price}
+                />
+              </div>
+              {errors.price && (
+                <p className="text-sm text-destructive mt-1">{errors.price.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Network selector */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-1.5">
+              Network <span className="text-destructive">*</span>
+              {isPreFilled.network && (
+                <span className="text-xs text-muted-foreground ml-2">(Detected from endpoint)</span>
+              )}
+            </label>
+            <Select
+              value={watch("network")}
+              onChange={(val) => {
+                if (isPreFilled.network) return;
+                setValue("network", val as "base" | "solana", { shouldValidate: true });
               }}
-              className="rounded-l-none"
-              placeholder="my-api-resource"
+              options={getAllNetworks().map((n) => ({ value: n.id, label: n.name }))}
+              disabled={!!isPreFilled.network}
             />
-          </div>
-          {/* Slug status indicators */}
-          {isCheckingSlug && (
-            <p className="text-sm text-muted-foreground mt-1">Checking availability...</p>
-          )}
-          {!isCheckingSlug && slugStatus?.available && (
-            <p className="text-sm text-green-500 mt-1">Available</p>
-          )}
-          {!isCheckingSlug && slugStatus && !slugStatus.available && (
-            <p className="text-sm text-destructive mt-1">
-              {slugStatus.reason || "Already taken"}
-            </p>
-          )}
-          {errors.slug && (
-            <p className="text-sm text-destructive mt-1">{errors.slug.message}</p>
-          )}
-        </div>
-
-        {/* Description textarea */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            Description
-          </label>
-          <Textarea
-            {...register("description")}
-            placeholder="Describe what your resource does..."
-            rows={3}
-          />
-        </div>
-
-        {/* Image field */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">Image</label>
-          <ImageUrlOrUpload
-            value={watch("imageUrl") || ""}
-            onChange={(url) => setValue("imageUrl", url)}
-          />
-        </div>
-
-        {/* Category dropdown */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            Category <span className="text-destructive">*</span>
-          </label>
-          <Select
-            value={watch("category")}
-            onChange={(val) => setValue("category", val, { shouldValidate: true })}
-            options={RESOURCE_CATEGORIES.map((c) => ({ value: c.value, label: c.label }))}
-            placeholder="Select a category"
-          />
-          {errors.category && (
-            <p className="text-sm text-destructive mt-1">{errors.category.message}</p>
-          )}
-        </div>
-
-        {/* Price field */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            Price (USDC) <span className="text-destructive">*</span>
-            {isPreFilled.price && (
-              <span className="text-xs text-muted-foreground ml-2">(Detected from endpoint)</span>
+            {errors.network && (
+              <p className="text-sm text-destructive mt-1">{errors.network.message}</p>
             )}
-          </label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
-              $
-            </span>
-            <Input
-              {...register("price")}
-              type="text"
-              inputMode="decimal"
-              placeholder="0.01"
-              className="pl-7"
-              disabled={!!isPreFilled.price}
-              readOnly={!!isPreFilled.price}
-            />
           </div>
-          {errors.price && (
-            <p className="text-sm text-destructive mt-1">{errors.price.message}</p>
-          )}
-        </div>
-
-        {/* Network selector */}
-        <div>
-          <label className="block text-sm font-medium text-foreground mb-1.5">
-            Network <span className="text-destructive">*</span>
-            {isPreFilled.network && (
-              <span className="text-xs text-muted-foreground ml-2">(Detected from endpoint)</span>
-            )}
-          </label>
-          <Select
-            value={watch("network")}
-            onChange={(val) => {
-              if (isPreFilled.network) return;
-              setValue("network", val as "base" | "solana", { shouldValidate: true });
-            }}
-            options={getAllNetworks().map((n) => ({ value: n.id, label: n.name }))}
-            disabled={!!isPreFilled.network}
-          />
-          {errors.network && (
-            <p className="text-sm text-destructive mt-1">{errors.network.message}</p>
-          )}
         </div>
       </form>
     </WizardShell>

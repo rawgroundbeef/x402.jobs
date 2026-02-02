@@ -70,7 +70,35 @@ export default function ProxyConfigPage() {
   const method = watch("method");
 
   const handleContinue = (data: ProxyFormData) => {
+    // Derive default name from URL
+    let defaultName = "";
+    try {
+      const parsed = new URL(data.originUrl);
+      const segments = parsed.pathname.split("/").filter(Boolean);
+      if (segments.length > 0) {
+        defaultName = segments
+          .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+          .join(" ");
+      } else {
+        defaultName = parsed.hostname.replace(/^(www|api)\./, "");
+      }
+    } catch {
+      defaultName = "";
+    }
+
+    // Generate slug from name
+    const defaultSlug = defaultName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "-")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .substring(0, 60)
+      .replace(/-$/, "");
+
     saveDraft({
+      name: defaultName,
+      slug: defaultSlug,
       proxyConfig: {
         originUrl: data.originUrl,
         method: data.method,
@@ -87,7 +115,6 @@ export default function ProxyConfigPage() {
       step={2}
       totalSteps={4}
       title="Configure Proxy"
-      description="Set up your proxy endpoint"
       backHref="/dashboard/resources/new"
       footer={
         <Button

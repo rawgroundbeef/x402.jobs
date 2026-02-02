@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,6 +75,35 @@ export default function OpenRouterConfigPage() {
   });
 
   const systemPrompt = watch("systemPrompt");
+  const prevParamNames = useRef<string[]>([]);
+
+  // Auto-extract parameters from {paramName}{/paramName} in system prompt
+  useEffect(() => {
+    if (!systemPrompt) {
+      prevParamNames.current = [];
+      return;
+    }
+    const regex = /\{(\w+)\}\{\/\1\}/g;
+    const found: string[] = [];
+    let match;
+    while ((match = regex.exec(systemPrompt)) !== null) {
+      if (!found.includes(match[1])) found.push(match[1]);
+    }
+
+    const prev = prevParamNames.current;
+    for (const name of found) {
+      if (!fields.some((f) => f.name === name)) {
+        append({ name, description: "", required: true, default: "" }, { shouldFocus: false });
+      }
+    }
+    for (let i = fields.length - 1; i >= 0; i--) {
+      const field = fields[i];
+      if (prev.includes(field.name) && !found.includes(field.name)) {
+        remove(i);
+      }
+    }
+    prevParamNames.current = found;
+  }, [systemPrompt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Deep link protection
   useEffect(() => {
@@ -135,7 +164,20 @@ export default function OpenRouterConfigPage() {
   const handleContinue = (data: OpenRouterFormData) => {
     if (!selectedModel) return;
 
+    // Default name from model name
+    const defaultName = selectedModel.display_name || selectedModel.id.split("/").pop() || "";
+    const defaultSlug = defaultName
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "-")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .substring(0, 60)
+      .replace(/-$/, "");
+
     saveDraft({
+      name: defaultName,
+      slug: defaultSlug,
       openrouterConfig: {
         modelId: selectedModel.id,
         modelName: selectedModel.display_name,
@@ -157,7 +199,6 @@ export default function OpenRouterConfigPage() {
       step={2}
       totalSteps={4}
       title="Configure OpenRouter Resource"
-      description="Select a model and configure your AI prompt"
       backHref="/dashboard/resources/new"
       footer={
         <Button

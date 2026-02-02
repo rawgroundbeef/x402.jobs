@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -64,6 +64,38 @@ export default function ClaudeConfigPage() {
   });
 
   const systemPrompt = watch("systemPrompt");
+  const prevParamNames = useRef<string[]>([]);
+
+  // Auto-extract parameters from {paramName}{/paramName} in system prompt
+  useEffect(() => {
+    if (!systemPrompt) {
+      prevParamNames.current = [];
+      return;
+    }
+    const regex = /\{(\w+)\}\{\/\1\}/g;
+    const found: string[] = [];
+    let match;
+    while ((match = regex.exec(systemPrompt)) !== null) {
+      if (!found.includes(match[1])) found.push(match[1]);
+    }
+
+    const prev = prevParamNames.current;
+    // Add new params that don't exist yet
+    for (const name of found) {
+      if (!fields.some((f) => f.name === name)) {
+        append({ name, description: "", required: true, default: "" }, { shouldFocus: false });
+      }
+    }
+    // Remove params that were auto-added but are no longer in the prompt
+    // Only remove if the param was previously detected (not manually added)
+    for (let i = fields.length - 1; i >= 0; i--) {
+      const field = fields[i];
+      if (prev.includes(field.name) && !found.includes(field.name)) {
+        remove(i);
+      }
+    }
+    prevParamNames.current = found;
+  }, [systemPrompt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Deep link protection and draft restoration
   useEffect(() => {
@@ -115,7 +147,6 @@ export default function ClaudeConfigPage() {
       step={2}
       totalSteps={4}
       title="Configure Prompt Template"
-      description="Create your AI prompt with parameters"
       backHref="/dashboard/resources/new"
       footer={
         <Button type="submit" form="claude-form" disabled={!canContinue}>

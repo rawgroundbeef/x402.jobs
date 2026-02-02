@@ -215,7 +215,6 @@ export default function LinkConfigPage() {
       step={2}
       totalSteps={4}
       title="Validate Endpoint"
-      description="Check your x402 endpoint configuration"
       backHref="/dashboard/resources/new"
       footer={
         canContinue ? (

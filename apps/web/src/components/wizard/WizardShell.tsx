@@ -60,20 +60,23 @@ export function WizardShell({
   return (
     <>
       <div className="py-6 px-6">
-        {/* Page header — title left, step counter right */}
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-          <span className="text-sm text-muted-foreground">Step {step} of {totalSteps}</span>
+        {/* Everything constrained to content width */}
+        <div className="max-w-[720px]">
+          {/* Page header — title left, step counter right */}
+          <div className="flex items-center justify-between mb-2">
+            <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+            <span className="text-sm text-muted-foreground">Step {step} of {totalSteps}</span>
+          </div>
+          <hr className="border-t border-border mb-6" />
+
+          {/* Description */}
+          {description && (
+            <p className="text-[15px] text-muted-foreground mb-6">{description}</p>
+          )}
+
+          {/* Content */}
+          {children}
         </div>
-        <hr className="border-t border-border mb-6" />
-
-        {/* Description */}
-        {description && (
-          <p className="text-[15px] text-muted-foreground mb-6">{description}</p>
-        )}
-
-        {/* Content — left-aligned, max-width constrained */}
-        <div className="max-w-[720px]">{children}</div>
 
         {/* Footer */}
         <div className="max-w-[720px] flex items-center justify-between mt-8 pt-6 border-t border-border">

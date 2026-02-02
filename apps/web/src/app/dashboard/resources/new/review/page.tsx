@@ -157,7 +157,6 @@ export default function ReviewPage() {
       step={4}
       totalSteps={4}
       title="Review & Publish"
-      description="Review your resource before publishing"
       backHref="/dashboard/resources/new/details"
       footer={
         <Button onClick={handlePublish} disabled={isPublishing}>
