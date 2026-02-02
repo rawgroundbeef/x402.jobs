@@ -102,10 +102,10 @@ export function ResultDisplay({
   const maxRetries = 5;
   const retryDelay = 2000; // 2 seconds between retries
 
-  // Reset state when artifactUrl changes
+  // Reset state when artifactUrl changes — skip loading state for data URLs
   useEffect(() => {
     if (artifactUrl && isImageUrl(artifactUrl)) {
-      setImageState("loading");
+      setImageState(artifactUrl.startsWith("data:") ? "loaded" : "loading");
       setRetryCount(0);
     }
   }, [artifactUrl]);
@@ -228,21 +228,31 @@ export function ResultDisplay({
                 </div>
               )}
               {/* Image (hidden while loading) */}
-              <a
-                href={artifactUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`block ${imageState !== "loaded" ? "hidden" : ""}`}
-              >
+              {artifactUrl.startsWith("data:") ? (
                 <img
-                  key={`${artifactUrl}-${retryCount}`} // Force re-render on retry
                   src={artifactUrl}
                   alt="Generated content"
-                  className="rounded-lg max-h-96 w-auto mx-auto border border-border"
+                  className={`rounded-lg max-h-96 w-auto mx-auto border border-border ${imageState !== "loaded" ? "hidden" : ""}`}
                   onLoad={() => setImageState("loaded")}
                   onError={() => setImageState("error")}
                 />
-              </a>
+              ) : (
+                <a
+                  href={artifactUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`block ${imageState !== "loaded" ? "hidden" : ""}`}
+                >
+                  <img
+                    key={`${artifactUrl}-${retryCount}`} // Force re-render on retry
+                    src={artifactUrl}
+                    alt="Generated content"
+                    className="rounded-lg max-h-96 w-auto mx-auto border border-border"
+                    onLoad={() => setImageState("loaded")}
+                    onError={() => setImageState("error")}
+                  />
+                </a>
+              )}
             </div>
           ) : isVideoUrl(artifactUrl) ? (
             <video
