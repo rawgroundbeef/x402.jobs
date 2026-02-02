@@ -42,7 +42,7 @@ export function ModelCard({
     <div
       onClick={handleClick}
       className={cn(
-        "p-4 rounded-lg border border-border bg-card hover:bg-accent transition-colors cursor-pointer relative",
+        "p-4 rounded-lg border border-border bg-card hover:bg-accent hover:-translate-y-1 hover:shadow-md transition-all cursor-pointer relative",
         isSelected && "ring-2 ring-primary",
       )}
     >
