@@ -805,6 +805,7 @@ export default function ResourcesPage() {
             description: editingResource.description ?? undefined,
             server_slug: editingResource.server?.slug,
             avatar_url: editingResource.avatar_url ?? undefined,
+            resource_type: editingResource.resource_type,
           }}
           onSaved={() => {
             setEditingResource(null);
