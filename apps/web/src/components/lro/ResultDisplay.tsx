@@ -71,8 +71,13 @@ export function ResultDisplay({
       return { artifactUrl: null, message: result.response, images: null };
     }
 
-    // Check for OpenRouter images array first (from Phase 17)
-    const imagesArray = data.images as string[] | undefined;
+    // Check for OpenRouter images array — handle both string[] and [{url}] formats
+    const rawImages = data.images as
+      | Array<string | { url: string }>
+      | undefined;
+    const imagesArray = rawImages?.map((img) =>
+      typeof img === "string" ? img : img.url,
+    );
 
     // Check for imageDataUrl (base64), then other URL fields
     const url = (data.imageDataUrl ||
