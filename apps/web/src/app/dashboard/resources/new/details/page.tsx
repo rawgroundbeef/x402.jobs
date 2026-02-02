@@ -83,27 +83,49 @@ export default function DetailsPage() {
   }, [router]);
 
   const isPreFilled = draft?.preFilled || {};
+  const isLinkType = draft?.type === "link";
+
+  // Slug prefix: server slug for link type, @username for instant types
+  const slugPrefix = isLinkType && draft?.serverSlug
+    ? `/${draft.serverSlug}/`
+    : `/@${username}/`;
 
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors, isValid },
   } = useForm<DetailsFormData>({
     resolver: zodResolver(detailsSchema),
     mode: "onBlur",
     reValidateMode: "onChange",
     defaultValues: {
-      name: draft?.name || "",
-      slug: draft?.slug || "",
-      description: draft?.description || "",
-      imageUrl: draft?.imageUrl || "",
-      category: draft?.category || "",
-      price: draft?.price || "",
-      network: (draft?.network as "base" | "solana") || "base",
+      name: "",
+      slug: "",
+      description: "",
+      imageUrl: "",
+      category: "",
+      price: "",
+      network: "base",
     },
   });
+
+  // Reset form values once draft loads (useForm captures defaults on first render when draft is null)
+  useEffect(() => {
+    if (draft) {
+      reset({
+        name: draft.name || "",
+        slug: draft.slug || "",
+        description: draft.description || "",
+        imageUrl: draft.imageUrl || "",
+        category: draft.category || "",
+        price: draft.price || "",
+        network: (draft.network as "base" | "solana") || "base",
+      });
+    }
+  }, [draft, reset]);
 
   const slug = watch("slug");
   const network = watch("network");
@@ -205,6 +227,14 @@ export default function DetailsPage() {
       }
     >
       <form id="details-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Endpoint context for link type */}
+        {draft.type === "link" && draft.resourceUrl && (
+          <div className="flex items-center gap-2 px-3 py-2 bg-muted/30 border border-border/50 rounded-md text-xs text-muted-foreground">
+            <span>Endpoint:</span>
+            <span className="font-mono truncate">{draft.resourceUrl}</span>
+          </div>
+        )}
+
         {/* Name field */}
         <div>
           <label className="block text-sm font-medium text-foreground mb-1.5">
@@ -229,8 +259,11 @@ export default function DetailsPage() {
             URL Slug <span className="text-destructive">*</span>
           </label>
           <div className="flex items-center">
-            <span className="text-sm text-muted-foreground px-3 py-2 bg-muted rounded-l-md border border-r-0 border-input flex items-center h-9">
-              /@{username}/
+            <span
+              className="text-sm text-muted-foreground px-3 py-2 bg-muted rounded-l-md border border-r-0 border-input flex items-center h-9 whitespace-nowrap max-w-[200px] truncate flex-shrink-0"
+              title={slugPrefix}
+            >
+              {slugPrefix}
             </span>
             <Input
               {...register("slug")}

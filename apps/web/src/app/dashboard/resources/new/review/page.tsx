@@ -87,10 +87,10 @@ export default function ReviewPage() {
         }
 
         // External endpoint returns { resource, server, updated }
-        // Use resource.slug for redirect (API generates the slug, we don't send one)
         const data = await res.json();
+        const serverSlug = data.server?.slug || draft.serverSlug || username;
         clearDraft();
-        router.push(`/${username}/${data.resource.slug}`);
+        router.push(`/resources/${serverSlug}/${data.resource.slug}`);
         return;
       }
 
@@ -140,7 +140,7 @@ export default function ReviewPage() {
 
       // Success - clear draft and redirect to the new resource's detail page
       clearDraft();
-      router.push(`/${username}/${draft.slug}`);
+      router.push(`/resources/@${username}/${draft.slug}`);
     } catch (err) {
       setPublishError(
         err instanceof Error ? err.message : "Failed to publish resource"
@@ -209,7 +209,9 @@ export default function ReviewPage() {
             <div>
               <dt className="text-sm text-muted-foreground">URL</dt>
               <dd className="text-sm font-mono text-primary">
-                /@{username}/{draft.slug}
+                {draft.type === "link" && draft.serverSlug
+                  ? `https://x402.jobs/resources/${draft.serverSlug}/${draft.slug}`
+                  : `https://x402.jobs/resources/@${username}/${draft.slug}`}
               </dd>
             </div>
             {draft.description && (

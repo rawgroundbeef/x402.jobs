@@ -76,6 +76,7 @@ export interface VerifyResponse {
 export interface ServerPreview {
   exists: boolean;
   id: string | null;
+  slug: string | null;
   name: string;
   originUrl: string;
   faviconUrl: string | null;

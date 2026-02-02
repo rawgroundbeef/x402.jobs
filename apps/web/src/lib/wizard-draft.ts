@@ -18,6 +18,7 @@ export interface WizardDraft {
   price?: string;
   network?: string;
   resourceUrl?: string;
+  serverSlug?: string;
   preFilled?: { network?: boolean; price?: boolean };
   updatedAt: string;
 }
