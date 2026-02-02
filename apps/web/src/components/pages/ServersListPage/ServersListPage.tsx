@@ -10,7 +10,7 @@ import { Server, Plus, Search, ChevronLeft, ChevronRight } from "lucide-react";
 import BaseLayout from "@/components/BaseLayout";
 import { PageHeader } from "@/components/PageHeader";
 import { ListCard } from "@/components/ListCard";
-import { useModals } from "@/contexts/ModalContext";
+import Link from "next/link";
 import { formatUsd } from "@/lib/format";
 
 type SortOption = "popular" | "latest" | "resources";
@@ -49,7 +49,6 @@ interface ServersResponse {
 }
 
 export default function ServersListPage() {
-  const { openRegisterResource } = useModals();
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [sort, setSort] = useState<SortOption>("popular");
@@ -104,7 +103,7 @@ export default function ServersListPage() {
         title={titleWithCount}
         description="Hosts that manage collections of x402 resources"
         rightSlot={
-          <Button variant="primary" onClick={() => openRegisterResource()}>
+          <Button variant="primary" as={Link} href="/dashboard/resources/new">
             <Plus className="w-4 h-4" />
             Add Resource
           </Button>

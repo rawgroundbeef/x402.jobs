@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import useSWR from "swr";
 import {
   Plus,
@@ -146,7 +147,8 @@ export function ResourcesPanel({
   onSelectResource,
   onTryResource,
 }: ResourcesPanelProps) {
-  const { openRegisterResource, openResourceModal, openCreateJob } =
+  const router = useRouter();
+  const { openResourceModal, openCreateJob } =
     useModals();
   const [activeTab, setActiveTab] = useState<ResourcesPanelTab>(initialTab);
   const [search, setSearch] = useState("");
@@ -369,8 +371,8 @@ export function ResourcesPanel({
   };
 
   const handleAddResource = () => {
-    openRegisterResource();
     onClose();
+    router.push("/dashboard/resources/new");
   };
 
   const handleNewJob = () => {

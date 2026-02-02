@@ -5,7 +5,6 @@ import { AskJobputerModal } from "@/components/modals/AskJobputerModal";
 import { CreateJobModal } from "@/components/modals/CreateJobModal";
 import { SearchModal } from "@/components/modals/SearchModal";
 import { ResourceInteractionModal } from "@/components/modals/ResourceInteractionModal";
-import { CreateResourceModal } from "@/components/modals/CreateResourceModal";
 import { JobsSidebar } from "@/components/sidebars/JobsSidebar";
 import { useWallet } from "@/hooks/useWallet";
 import { getNetworkBalance } from "@/lib/networks";
@@ -28,9 +27,6 @@ export function GlobalModals() {
     closeJobputerChat,
     resourceModalResource,
     closeResourceModal,
-    isRegisterResourceOpen,
-    registerResourceOnSuccess,
-    closeRegisterResource,
     isMyJobsOpen,
     closeMyJobs,
   } = useModals();
@@ -65,13 +61,6 @@ export function GlobalModals() {
         isOpen={!!resourceModalResource}
         onClose={closeResourceModal}
         resource={resourceModalResource as any}
-      />
-
-      {/* Create Resource Modal */}
-      <CreateResourceModal
-        isOpen={isRegisterResourceOpen}
-        onClose={closeRegisterResource}
-        onSuccess={registerResourceOnSuccess || undefined}
       />
 
       {/* Jobs Sidebar - for browsing outside of canvas */}

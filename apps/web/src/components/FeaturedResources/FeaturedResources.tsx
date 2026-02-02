@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { ListCard } from "@/components/ListCard";
 import { formatUsd } from "@/lib/format";
 import { useAuth } from "@/contexts/AuthContext";
-import { useModals } from "@/contexts/ModalContext";
 
 interface PublicResource {
   id: string;
@@ -24,9 +22,7 @@ interface PublicResource {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.x402.jobs";
 
 export function FeaturedResources() {
-  const router = useRouter();
   const { user } = useAuth();
-  const { openRegisterResource } = useModals();
   const isAuthenticated = !!user;
 
   const [resources, setResources] = useState<PublicResource[]>([]);
@@ -113,18 +109,12 @@ export function FeaturedResources() {
         </Link>
         <p className="text-sm text-muted-foreground">
           Have an x402 resource?{" "}
-          <button
-            onClick={() => {
-              if (isAuthenticated) {
-                openRegisterResource();
-              } else {
-                router.push("/login");
-              }
-            }}
+          <Link
+            href={isAuthenticated ? "/dashboard/resources/new" : "/login"}
             className="text-foreground hover:underline font-medium"
           >
             Register it and earn when jobs use it →
-          </button>
+          </Link>
         </p>
       </div>
     </div>

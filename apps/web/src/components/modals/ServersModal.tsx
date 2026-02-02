@@ -16,7 +16,6 @@ import { Search, Server, Box, Play, Plus } from "lucide-react";
 import Link from "next/link";
 import { authenticatedFetcher } from "@/lib/api";
 import { formatPrice } from "@/lib/format";
-import { useModals } from "@/contexts/ModalContext";
 
 interface ServerData {
   id: string;
@@ -56,7 +55,6 @@ export function ServersModal({
   onClose,
   onTryResource,
 }: ServersModalProps) {
-  const { openRegisterResource } = useModals();
   const [search, setSearch] = useState("");
   const [selectedServer, setSelectedServer] = useState<ServerData | null>(null);
 
@@ -293,16 +291,14 @@ export function ServersModal({
         {/* Footer - only show when not viewing a specific server */}
         {!selectedServer && (
           <DialogFooter>
-            <button
-              onClick={() => {
-                openRegisterResource();
-                onClose();
-              }}
+            <Link
+              href="/dashboard/resources/new"
+              onClick={onClose}
               className="px-4 py-2 text-sm font-medium rounded bg-resource/20 hover:bg-resource/30 text-resource transition-colors flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Resource
-            </button>
+            </Link>
           </DialogFooter>
         )}
       </DialogContent>

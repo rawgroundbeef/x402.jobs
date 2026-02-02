@@ -11,7 +11,7 @@ import { formatUsd } from "@/lib/format";
 import { ChainIcon, BaseIcon, SolanaIcon } from "@/components/icons/ChainIcons";
 import { RESOURCE_CATEGORIES } from "@/constants/categories";
 import { AddResourceModalButton } from "@/components/AddResourceModalButton";
-import { CreateResourceModal } from "@/components/modals/CreateResourceModal";
+import { ResourceEditModal } from "@/components/modals/ResourceEditModal";
 import {
   Loader2,
   Globe,
@@ -794,40 +794,24 @@ export default function ResourcesPage() {
       )}
 
       {/* Edit Resource Modal */}
-      <CreateResourceModal
-        isOpen={!!editingResource}
-        onClose={() => setEditingResource(null)}
-        onSuccess={() => {
-          setEditingResource(null);
-          fetchResources();
-        }}
-        editResource={
-          editingResource
-            ? {
-                id: editingResource.id,
-                name: editingResource.name,
-                description: editingResource.description,
-                network: editingResource.network,
-                price_usdc: editingResource.price_usdc,
-                resource_type: editingResource.resource_type as
-                  | "external"
-                  | "proxy"
-                  | "prompt_template"
-                  | "openrouter_instant",
-                resource_url: editingResource.resource_url,
-                avatar_url: editingResource.avatar_url,
-                category: editingResource.category,
-                slug: editingResource.slug,
-                // Prompt template specific fields
-                pt_system_prompt: editingResource.pt_system_prompt,
-                pt_parameters: editingResource.pt_parameters,
-                pt_model: editingResource.pt_model,
-                pt_max_tokens: editingResource.pt_max_tokens,
-                pt_allows_user_message: editingResource.pt_allows_user_message,
-              }
-            : null
-        }
-      />
+      {editingResource && (
+        <ResourceEditModal
+          isOpen={!!editingResource}
+          onClose={() => setEditingResource(null)}
+          resource={{
+            id: editingResource.id,
+            name: editingResource.name,
+            slug: editingResource.slug,
+            description: editingResource.description ?? undefined,
+            server_slug: editingResource.server?.slug,
+            avatar_url: editingResource.avatar_url ?? undefined,
+          }}
+          onSaved={() => {
+            setEditingResource(null);
+            fetchResources();
+          }}
+        />
+      )}
 
       {/* Archive Confirmation Modal */}
       <ArchiveConfirmationModal

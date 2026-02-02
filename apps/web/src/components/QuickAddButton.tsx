@@ -6,6 +6,7 @@ import { Dropdown, DropdownItem } from "@x402jobs/ui/dropdown";
 import { useModals } from "@/contexts/ModalContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface QuickAddButtonProps {
   /** When provided, shows "Add Resource to Job" option (for canvas context) */
@@ -19,20 +20,12 @@ interface QuickAddButtonProps {
 export function QuickAddButton({ onAddResourceToJob }: QuickAddButtonProps) {
   const router = useRouter();
   const { user } = useAuth();
-  const { openCreateJob, openRegisterResource } = useModals();
+  const { openCreateJob } = useModals();
   const isAuthenticated = !!user;
 
   const handleCreateJob = () => {
     if (isAuthenticated) {
       openCreateJob();
-    } else {
-      router.push("/login");
-    }
-  };
-
-  const handleRegisterResource = () => {
-    if (isAuthenticated) {
-      openRegisterResource();
     } else {
       router.push("/login");
     }
@@ -53,7 +46,7 @@ export function QuickAddButton({ onAddResourceToJob }: QuickAddButtonProps) {
           New Job
         </span>
       </DropdownItem>
-      <DropdownItem variant="muted" onClick={handleRegisterResource}>
+      <DropdownItem variant="muted" as={Link} href={isAuthenticated ? "/dashboard/resources/new" : "/login"}>
         <span className="inline-flex items-center gap-2">
           <Box className="h-3 w-3" />
           Add Resource
