@@ -228,21 +228,31 @@ export function ResultDisplay({
                 </div>
               )}
               {/* Image (hidden while loading) */}
-              <a
-                href={artifactUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`block ${imageState !== "loaded" ? "hidden" : ""}`}
-              >
+              {artifactUrl.startsWith("data:") ? (
                 <img
-                  key={`${artifactUrl}-${retryCount}`} // Force re-render on retry
                   src={artifactUrl}
                   alt="Generated content"
-                  className="rounded-lg max-h-96 w-auto mx-auto border border-border"
+                  className={`rounded-lg max-h-96 w-auto mx-auto border border-border ${imageState !== "loaded" ? "hidden" : ""}`}
                   onLoad={() => setImageState("loaded")}
                   onError={() => setImageState("error")}
                 />
-              </a>
+              ) : (
+                <a
+                  href={artifactUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`block ${imageState !== "loaded" ? "hidden" : ""}`}
+                >
+                  <img
+                    key={`${artifactUrl}-${retryCount}`} // Force re-render on retry
+                    src={artifactUrl}
+                    alt="Generated content"
+                    className="rounded-lg max-h-96 w-auto mx-auto border border-border"
+                    onLoad={() => setImageState("loaded")}
+                    onError={() => setImageState("error")}
+                  />
+                </a>
+              )}
             </div>
           ) : isVideoUrl(artifactUrl) ? (
             <video
