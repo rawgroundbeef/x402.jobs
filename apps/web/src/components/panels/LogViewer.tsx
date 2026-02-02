@@ -17,7 +17,7 @@ import {
 import { cn } from "@x402jobs/ui/utils";
 import { Input } from "@x402jobs/ui/input";
 import type { RunEvent } from "@/types/runs";
-import { extractImageUrls, truncateBase64 } from "@/components/lro";
+import { extractImageUrls, truncateBase64 } from "@/lib/media-utils";
 
 interface LogViewerProps {
   events: RunEvent[];
@@ -305,7 +305,8 @@ function LogEntry({ event, isExpanded, onToggle }: LogEntryProps) {
               {/* Render response text + media when output is an object */}
               {typeof event.output === "object" && event.output !== null && (
                 <>
-                  {typeof (event.output as Record<string, unknown>).response === "string" && (
+                  {typeof (event.output as Record<string, unknown>).response === "string" &&
+                    !(event.output as Record<string, unknown>).response?.toString().startsWith("data:") && (
                     <p className="text-xs text-foreground mb-2">
                       {(event.output as Record<string, unknown>).response as string}
                     </p>
@@ -327,7 +328,7 @@ function LogEntry({ event, isExpanded, onToggle }: LogEntryProps) {
                   })()}
                 </>
               )}
-              <pre className="text-xs font-mono bg-background rounded p-2 overflow-x-auto max-h-48 overflow-y-auto">
+              <pre className="text-xs font-mono bg-background rounded p-2 whitespace-pre-wrap break-words max-h-48 overflow-y-auto">
                 {typeof event.output === "string"
                   ? event.output
                   : JSON.stringify(event.output, truncateBase64, 2)}
