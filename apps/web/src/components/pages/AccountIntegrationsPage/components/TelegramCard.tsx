@@ -7,6 +7,14 @@ import { Input } from "@x402jobs/ui/input";
 import { Label } from "@x402jobs/ui/label";
 import { Card } from "@x402jobs/ui/card";
 import { Badge } from "@x402jobs/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@x402jobs/ui/dialog";
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@x402jobs/ui/alert";
 import { authenticatedFetch, authenticatedFetcher } from "@/lib/api";
@@ -38,6 +46,10 @@ export default function TelegramCard() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Disconnect confirmation state
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   // Pre-populate chat ID when entering edit mode
   const handleStartEditing = () => {
@@ -79,7 +91,32 @@ export default function TelegramCard() {
     }
   };
 
+  const handleConfirmedDisconnect = async () => {
+    setIsDisconnecting(true);
+    try {
+      const res = await authenticatedFetch("/integrations/telegram/config", {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to disconnect Telegram");
+      }
+
+      mutate();
+      setShowDisconnectConfirm(false);
+      setSuccess("Telegram disconnected successfully.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to disconnect Telegram",
+      );
+      setShowDisconnectConfirm(false);
+    } finally {
+      setIsDisconnecting(false);
+    }
+  };
+
   return (
+    <>
     <Card className="p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -122,9 +159,22 @@ export default function TelegramCard() {
               "No bot token configured"
             )}
           </div>
-          <Button variant="primary" onClick={handleStartEditing}>
-            {data?.hasBotToken ? "Update" : "Configure"}
-          </Button>
+          <div className="flex gap-2">
+            {data?.hasBotToken && (
+              <Button
+                variant="outline"
+                onClick={() => setShowDisconnectConfirm(true)}
+              >
+                Disconnect
+              </Button>
+            )}
+            <Button
+              variant={data?.hasBotToken ? "outline" : "primary"}
+              onClick={handleStartEditing}
+            >
+              {data?.hasBotToken ? "Update" : "Configure"}
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-3 max-w-sm">
@@ -176,5 +226,37 @@ export default function TelegramCard() {
         </div>
       )}
     </Card>
+
+    {/* Disconnect Confirmation Dialog */}
+    <Dialog open={showDisconnectConfirm} onOpenChange={setShowDisconnectConfirm}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Disconnect Telegram?</DialogTitle>
+          <DialogDescription>
+            This will remove your bot token and chat configuration.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            variant="ghost"
+            onClick={() => setShowDisconnectConfirm(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleConfirmedDisconnect}
+            disabled={isDisconnecting}
+          >
+            {isDisconnecting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Disconnect"
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
