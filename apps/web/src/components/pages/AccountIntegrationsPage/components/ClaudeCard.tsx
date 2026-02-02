@@ -7,6 +7,14 @@ import { Input } from "@x402jobs/ui/input";
 import { Label } from "@x402jobs/ui/label";
 import { Card } from "@x402jobs/ui/card";
 import { Badge } from "@x402jobs/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@x402jobs/ui/dialog";
 import { AlertCircle, CheckCircle, Loader2, Sparkles } from "lucide-react";
 import { Alert, AlertDescription } from "@x402jobs/ui/alert";
 import { authenticatedFetch, authenticatedFetcher } from "@/lib/api";
@@ -27,6 +35,10 @@ export default function ClaudeCard() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+  // Disconnect confirmation state
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
+  const [isDisconnecting, setIsDisconnecting] = useState(false);
 
   // Start editing mode
   const handleStartEditing = () => {
@@ -65,7 +77,32 @@ export default function ClaudeCard() {
     }
   };
 
+  const handleConfirmedDisconnect = async () => {
+    setIsDisconnecting(true);
+    try {
+      const res = await authenticatedFetch("/integrations/claude/config", {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to disconnect Claude AI");
+      }
+
+      mutate();
+      setShowDisconnectConfirm(false);
+      setSuccess("Claude AI disconnected successfully.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Failed to disconnect Claude AI",
+      );
+      setShowDisconnectConfirm(false);
+    } finally {
+      setIsDisconnecting(false);
+    }
+  };
+
   return (
+    <>
     <Card className="p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
@@ -101,9 +138,22 @@ export default function ClaudeCard() {
           <div className="text-sm text-muted-foreground">
             {data?.hasApiKey ? "API key configured" : "No API key configured"}
           </div>
-          <Button variant="primary" onClick={handleStartEditing}>
-            {data?.hasApiKey ? "Update" : "Configure"}
-          </Button>
+          <div className="flex gap-2">
+            {data?.hasApiKey && (
+              <Button
+                variant="outline"
+                onClick={() => setShowDisconnectConfirm(true)}
+              >
+                Disconnect
+              </Button>
+            )}
+            <Button
+              variant={data?.hasApiKey ? "outline" : "primary"}
+              onClick={handleStartEditing}
+            >
+              {data?.hasApiKey ? "Update" : "Configure"}
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-3 max-w-sm">
@@ -156,5 +206,38 @@ export default function ClaudeCard() {
         </div>
       )}
     </Card>
+
+    {/* Disconnect Confirmation Dialog */}
+    <Dialog open={showDisconnectConfirm} onOpenChange={setShowDisconnectConfirm}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Disconnect Claude AI?</DialogTitle>
+          <DialogDescription>
+            This will remove your Claude API key. Resources using prompt
+            templates will stop working.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button
+            variant="ghost"
+            onClick={() => setShowDisconnectConfirm(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleConfirmedDisconnect}
+            disabled={isDisconnecting}
+          >
+            {isDisconnecting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Disconnect"
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }

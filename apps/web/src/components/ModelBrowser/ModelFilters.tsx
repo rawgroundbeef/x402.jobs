@@ -41,8 +41,6 @@ export function ModelFilters({
     { value: "all", label: "All Types" },
     { value: "text", label: "Text" },
     { value: "image", label: "Image" },
-    { value: "video", label: "Video" },
-    { value: "audio", label: "Audio" },
     { value: "multimodal", label: "Multimodal" },
   ];
 
@@ -99,16 +97,13 @@ export function ModelFilters({
         className="w-full sm:w-[200px]"
       />
 
-      {/* Active filter badge with clear all button */}
+      {/* Clear filters button */}
       {hasActiveFilters && (
         <button
           onClick={onClearFilters}
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium",
-            "bg-primary/10 text-primary hover:bg-primary/20 transition-colors",
-          )}
+          className="flex items-center justify-center p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
+          title="Clear filters"
         >
-          <span>{activeFilterCount + (search ? 1 : 0)} active</span>
           <X className="w-4 h-4" />
         </button>
       )}

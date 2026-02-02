@@ -165,18 +165,21 @@ export default function OpenRouterCard() {
             <div className="flex gap-2">
               {data?.hasApiKey && (
                 <Button
-                  variant="destructive"
+                  variant="outline"
                   onClick={handleDeleteClick}
                   disabled={isDeleting}
                 >
                   {isDeleting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
-                    "Delete Integration"
+                    "Disconnect"
                   )}
                 </Button>
               )}
-              <Button variant="primary" onClick={handleStartEditing}>
+              <Button
+                variant={data?.hasApiKey ? "outline" : "primary"}
+                onClick={handleStartEditing}
+              >
                 {data?.hasApiKey ? "Update" : "Configure"}
               </Button>
             </div>
@@ -245,7 +248,7 @@ export default function OpenRouterCard() {
       <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete OpenRouter Integration?</DialogTitle>
+            <DialogTitle>Disconnect OpenRouter?</DialogTitle>
             <DialogDescription>
               {affectedCount > 0
                 ? `You have ${affectedCount} resource(s) using this key. They will stop working.`
@@ -257,7 +260,7 @@ export default function OpenRouterCard() {
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleConfirmedDelete}>
-              Delete Integration
+              Disconnect
             </Button>
           </DialogFooter>
         </DialogContent>
