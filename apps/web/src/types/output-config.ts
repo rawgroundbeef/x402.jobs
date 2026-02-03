@@ -9,6 +9,7 @@ export interface OutputDestination {
     chatId?: string; // For telegram - override default
     imageField?: string; // Field path for image URL (e.g., "imageUrl", "artifactUrl")
     captionField?: string; // Field path for caption/text (e.g., "captions", "text")
+    contentType?: string; // For x402storage - MIME type (e.g., "text/html", "application/json")
   };
 }
 

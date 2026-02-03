@@ -13,6 +13,7 @@ import {
 import { Button } from "@x402jobs/ui/button";
 import { Input } from "@x402jobs/ui/input";
 import { Label } from "@x402jobs/ui/label";
+import { Select } from "@x402jobs/ui/select";
 import { SlidePanel } from "./SlidePanel";
 import { DrawerHeaderAvatar } from "./DrawerHeaderAvatar";
 import { useToast } from "@x402jobs/ui/toast";
@@ -66,6 +67,7 @@ export interface OutputDestination {
     chatId?: string;
     imageField?: string;
     captionField?: string;
+    contentType?: string;
   };
 }
 
@@ -122,6 +124,7 @@ export function OutputConfigPanel({
   const [telegramChatId, setTelegramChatId] = useState("");
   const [xImageField, setXImageField] = useState("");
   const [xCaptionField, setXCaptionField] = useState("");
+  const [storageContentType, setStorageContentType] = useState("");
 
   const hasTelegram = telegramStatus?.connected || false;
   const hasX = xStatus?.connected || false;
@@ -160,6 +163,12 @@ export function OutputConfigPanel({
           setXImageField("");
           setXCaptionField("");
         }
+
+        // Load x402storage config
+        const storageDest = currentConfig.destinations?.find(
+          (d) => d.type === "x402storage",
+        );
+        setStorageContentType(storageDest?.config?.contentType || "");
       } else {
         // Reset to defaults when no config exists
         setDestinations([{ type: "app", enabled: true }]);
@@ -168,6 +177,7 @@ export function OutputConfigPanel({
         setTelegramChatId("");
         setXImageField("");
         setXCaptionField("");
+        setStorageContentType("");
       }
     }
   }, [isOpen, currentConfig]);
@@ -207,6 +217,14 @@ export function OutputConfigPanel({
           config: {
             imageField: xImageField || undefined,
             captionField: xCaptionField || undefined,
+          },
+        };
+      }
+      if (d.type === "x402storage" && d.enabled) {
+        return {
+          ...d,
+          config: {
+            contentType: storageContentType || undefined,
           },
         };
       }
@@ -487,6 +505,30 @@ export function OutputConfigPanel({
               </p>
             </div>
           </button>
+
+          {/* x402.storage Settings */}
+          {isDestinationEnabled("x402storage") && hasStorageBalance && (
+            <div className="ml-8 pl-4 border-l-2 border-output/20 space-y-3 py-2">
+              <div className="space-y-1.5">
+                <Label className="text-sm">Content Type</Label>
+                <Select
+                  value={storageContentType}
+                  onChange={(value) => setStorageContentType(value)}
+                  options={[
+                    { value: "", label: "Auto (JSON)" },
+                    { value: "text/html", label: "HTML Page" },
+                    { value: "text/plain", label: "Plain Text" },
+                    { value: "text/css", label: "CSS" },
+                    { value: "image/svg+xml", label: "SVG Image" },
+                    { value: "text/markdown", label: "Markdown" },
+                  ]}
+                />
+                <p className="text-xs text-muted-foreground">
+                  How the file is served when opened in a browser
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </SlidePanel>
