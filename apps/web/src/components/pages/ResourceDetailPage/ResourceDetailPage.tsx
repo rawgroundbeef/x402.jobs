@@ -1608,6 +1608,7 @@ export default function ResourceDetailPage({
             server_slug: serverSlug,
             avatar_url: avatarUrl,
             resource_type: resource.resource_type,
+            parameters: resource.parameters,
           }}
           onSaved={handleEditSaved}
         />

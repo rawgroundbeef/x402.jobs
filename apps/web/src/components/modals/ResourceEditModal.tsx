@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@x402jobs/ui/dialog";
+import { Switch } from "@x402jobs/ui/switch";
 import { Loader2, Upload, Box, X, Info } from "lucide-react";
 import { authenticatedFetch } from "@/lib/api";
 import { useToast } from "@x402jobs/ui/toast";
@@ -27,6 +28,13 @@ interface ResourceEditModalProps {
     server_slug?: string;
     avatar_url?: string;
     resource_type?: string;
+    parameters?: Array<{
+      name: string;
+      description?: string;
+      required?: boolean;
+      default?: string;
+    }>;
+    system_prompt?: string;
   };
   onSaved: (newSlug?: string) => void;
 }
@@ -43,6 +51,9 @@ export function ResourceEditModal({
   const [slug, setSlug] = useState(resource.slug || "");
   const [name, setName] = useState(resource.name || "");
   const [description, setDescription] = useState(resource.description || "");
+  const [parameters, setParameters] = useState(
+    resource.parameters?.map((p) => ({ ...p })) || [],
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -121,6 +132,15 @@ export function ResourceEditModal({
     }
   }, [resource.avatar_url]);
 
+  const updateParameter = useCallback(
+    (index: number, field: string, value: string | boolean) => {
+      setParameters((prev) =>
+        prev.map((p, i) => (i === index ? { ...p, [field]: value } : p)),
+      );
+    },
+    [],
+  );
+
   const uploadImage = async (): Promise<string | null> => {
     if (!imageFile) return null;
 
@@ -175,11 +195,18 @@ export function ResourceEditModal({
       }
 
       // Build updates object
-      const updates: Record<string, string> = {};
+      const updates: Record<string, unknown> = {};
       if (name !== resource.name) updates.name = name;
       if (description !== (resource.description || ""))
         updates.description = description;
       if (newImageUrl) updates.avatarUrl = newImageUrl;
+      if (
+        parameters.length > 0 &&
+        JSON.stringify(parameters) !==
+          JSON.stringify(resource.parameters || [])
+      ) {
+        updates.parameters = parameters;
+      }
 
       // Update details (name, description, image) if any changed
       if (Object.keys(updates).length > 0) {
@@ -224,11 +251,12 @@ export function ResourceEditModal({
     name !== resource.name ||
     slug !== resource.slug ||
     description !== (resource.description || "") ||
-    imageFile !== null;
+    imageFile !== null ||
+    JSON.stringify(parameters) !== JSON.stringify(resource.parameters || []);
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Resource</DialogTitle>
         </DialogHeader>
@@ -245,6 +273,22 @@ export function ResourceEditModal({
               resource. The model configuration and prompt are locked to
               protect existing users. To change them, archive this resource and
               create a new one.
+            </p>
+          </div>
+        )}
+
+        {resource.system_prompt && (
+          <div className="space-y-2">
+            <Label>System Prompt</Label>
+            <Textarea
+              value={resource.system_prompt}
+              readOnly
+              rows={5}
+              className="font-mono text-xs bg-muted/50 cursor-default resize-none"
+            />
+            <p className="text-xs text-muted-foreground">
+              Read-only — archive this resource and create a new one to change
+              the prompt.
             </p>
           </div>
         )}
@@ -372,6 +416,78 @@ export function ResourceEditModal({
               {description.length}/1000 characters
             </p>
           </div>
+
+          {/* Parameters (instant resources only) */}
+          {parameters.length > 0 && (
+            <div className="space-y-3">
+              <Label>Parameters</Label>
+              <p className="text-xs text-muted-foreground">
+                Edit description, default value, and required status for each
+                parameter. Names cannot be changed.
+              </p>
+              <div className="space-y-3">
+                {parameters.map((param, index) => (
+                  <div
+                    key={param.name}
+                    className="rounded-lg border border-border p-3 space-y-3"
+                  >
+                    <div className="flex items-center justify-between">
+                      <code className="text-sm font-mono text-muted-foreground">
+                        {param.name}
+                      </code>
+                      <div className="flex items-center gap-2">
+                        <Label
+                          htmlFor={`param-required-${index}`}
+                          className="text-xs text-muted-foreground"
+                        >
+                          Required
+                        </Label>
+                        <Switch
+                          id={`param-required-${index}`}
+                          checked={param.required ?? true}
+                          onCheckedChange={(checked) =>
+                            updateParameter(index, "required", checked)
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor={`param-desc-${index}`}
+                        className="text-xs"
+                      >
+                        Description
+                      </Label>
+                      <Input
+                        id={`param-desc-${index}`}
+                        value={param.description || ""}
+                        onChange={(e) =>
+                          updateParameter(index, "description", e.target.value)
+                        }
+                        placeholder="Describe this parameter..."
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor={`param-default-${index}`}
+                        className="text-xs"
+                      >
+                        Default Value
+                      </Label>
+                      <Input
+                        id={`param-default-${index}`}
+                        value={param.default || ""}
+                        onChange={(e) =>
+                          updateParameter(index, "default", e.target.value)
+                        }
+                        placeholder="Optional default value"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
