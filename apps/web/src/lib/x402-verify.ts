@@ -267,8 +267,10 @@ function processProxyResponse(
     };
   }
 
-  // Build outputSchema - check both accepts-level and extensions.bazaar.info
-  const bazaarInfo = (rawConfig.extensions as any)?.bazaar?.info;
+  // Build outputSchema - check both accepts-level and extensions.bazaar
+  // Per the bazaar spec: info contains example values, schema contains field definitions
+  const bazaarExt = (rawConfig.extensions as any)?.bazaar;
+  const bazaarInfo = bazaarExt?.info;
   const rawOutputSchema = firstAccept.outputSchema || bazaarInfo;
   const finalOutputSchema = rawOutputSchema ? { ...rawOutputSchema } : {};
   if (!finalOutputSchema.input) {
@@ -276,6 +278,30 @@ function processProxyResponse(
   }
   if (!finalOutputSchema.input.method) {
     finalOutputSchema.input.method = proxy.detectedMethod;
+  }
+
+  // Extract field definitions from bazaar.schema (the source of truth for types/descriptions)
+  const bazaarSchemaInput = bazaarExt?.schema?.properties?.input?.properties;
+  if (bazaarSchemaInput) {
+    const extractFields = (schemaDef: any): Record<string, any> | null => {
+      if (!schemaDef?.properties || Object.keys(schemaDef.properties).length === 0) return null;
+      const required = new Set<string>(schemaDef.required || []);
+      const fields: Record<string, any> = {};
+      for (const [k, v] of Object.entries(schemaDef.properties)) {
+        fields[k] = { ...(v as object), required: required.has(k) };
+      }
+      return fields;
+    };
+
+    if (!finalOutputSchema.input.queryParams || Object.keys(finalOutputSchema.input.queryParams).length === 0) {
+      const qp = extractFields(bazaarSchemaInput.queryParams);
+      if (qp) finalOutputSchema.input.queryParams = qp;
+    }
+
+    if (!finalOutputSchema.input.bodyFields || Object.keys(finalOutputSchema.input.bodyFields).length === 0) {
+      const body = extractFields(bazaarSchemaInput.body || bazaarSchemaInput.bodyFields);
+      if (body) finalOutputSchema.input.bodyFields = body;
+    }
   }
 
   // First accept for primary resource data

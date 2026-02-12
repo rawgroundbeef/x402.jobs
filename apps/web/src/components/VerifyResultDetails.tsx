@@ -436,6 +436,60 @@ function ConfigurationZone({
 }
 
 // ============================================================================
+// Zone 3b: Input Fields
+// ============================================================================
+
+function InputFieldsZone({
+  outputSchema,
+}: {
+  outputSchema?: VerifyResponse["resource"]["outputSchema"];
+}) {
+  const queryParams = outputSchema?.input?.queryParams || {};
+  const bodyFields = outputSchema?.input?.bodyFields || {};
+  const method = outputSchema?.input?.method;
+
+  const allFields = { ...queryParams, ...bodyFields };
+  const entries = Object.entries(allFields);
+
+  if (entries.length === 0) return null;
+
+  const source = Object.keys(queryParams).length > 0 ? "query" : "body";
+
+  return (
+    <div>
+      <SectionLabel>Input Fields</SectionLabel>
+      <ZoneCard className="p-0 divide-y divide-border/50">
+        {entries.map(([name, field]: [string, any]) => (
+          <div key={name} className="flex items-center justify-between px-4 py-2.5 text-xs">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="font-mono font-medium text-foreground">{name}</span>
+              {field.required && (
+                <span className="text-[10px] px-1 py-0.5 rounded bg-destructive/10 text-destructive font-medium">
+                  required
+                </span>
+              )}
+              <span className="text-[10px] px-1 py-0.5 rounded bg-muted text-muted-foreground">
+                {field.type || "string"}
+              </span>
+            </div>
+            {field.description && (
+              <span className="text-muted-foreground truncate ml-3 max-w-[50%] text-right">
+                {field.description}
+              </span>
+            )}
+          </div>
+        ))}
+        <div className="px-4 py-2 text-[11px] text-muted-foreground">
+          {method && <span className="font-mono">{method}</span>}
+          {method && " · "}
+          {source === "query" ? "Query parameters" : "Request body"}
+        </div>
+      </ZoneCard>
+    </div>
+  );
+}
+
+// ============================================================================
 // Zone 4: Endpoint Checks
 // ============================================================================
 
@@ -663,6 +717,9 @@ export function VerifyResultDetails({
 
       {/* Zone 3: Configuration */}
       <ConfigurationZone summary={summary} version={version} />
+
+      {/* Zone 3b: Input Fields */}
+      <InputFieldsZone outputSchema={verifyResponse.resource.outputSchema} />
 
       {/* Zone 4: Endpoint Checks */}
       <EndpointChecksZone
