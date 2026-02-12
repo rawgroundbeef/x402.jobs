@@ -674,6 +674,7 @@ export default function ResourceDetailPage({
                 avatarUrl: avatarUrl, // Use the computed avatarUrl with fallbacks
                 resourceUrl: resource.resource_url,
                 network: resource.network,
+                outputSchema: resource.output_schema,
                 // Include prompt_template fields if applicable
                 ...(isPromptTemplate && {
                   resource_type: "prompt_template",

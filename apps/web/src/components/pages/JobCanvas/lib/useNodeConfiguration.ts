@@ -22,7 +22,12 @@ interface ResourceData {
   extra?: Record<string, unknown>;
   outputSchema?: {
     input?: {
+      method?: string;
       bodyFields?: Record<
+        string,
+        { type: string; required?: boolean; description?: string }
+      >;
+      queryParams?: Record<
         string,
         { type: string; required?: boolean; description?: string }
       >;
