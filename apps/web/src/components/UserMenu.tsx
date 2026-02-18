@@ -14,19 +14,19 @@ import {
   Box,
   LayoutDashboard,
   LogOut,
-  Gift,
+  // Gift, // DISABLED - rewards section removed
 } from "lucide-react";
 import { Dropdown } from "@x402jobs/ui/dropdown";
 import { useWallet, type WalletData } from "@/hooks/useWallet";
 import { authenticatedFetcher } from "@/lib/api";
 import { SolanaIcon, BaseIcon } from "@/components/icons/ChainIcons";
 
-// Response type for pending rewards
-interface PendingRewardsResponse {
-  total_pending: string;
-  wallet_count: number;
-  has_pending: boolean;
-}
+// Response type for pending rewards - DISABLED (not giving away more money)
+// interface PendingRewardsResponse {
+//   total_pending: string;
+//   wallet_count: number;
+//   has_pending: boolean;
+// }
 
 // Chain configuration - easy to add more chains
 interface ChainConfig {
@@ -71,12 +71,12 @@ export function UserMenu() {
   }>(user ? "/user/profile" : null, authenticatedFetcher);
   const username = profileData?.profile?.username;
 
-  // Fetch pending rewards (cached for 5 minutes)
-  const { data: pendingRewards } = useSWR<PendingRewardsResponse>(
-    user ? "/rewards/my-pending" : null,
-    authenticatedFetcher,
-    { refreshInterval: 5 * 60 * 1000 }, // 5 minutes
-  );
+  // Fetch pending rewards - DISABLED (not giving away more money)
+  // const { data: pendingRewards } = useSWR<PendingRewardsResponse>(
+  //   user ? "/rewards/my-pending" : null,
+  //   authenticatedFetcher,
+  //   { refreshInterval: 5 * 60 * 1000 }, // 5 minutes
+  // );
 
   const copyAddress = async (address: string, chainId: string) => {
     await navigator.clipboard.writeText(address);
@@ -107,7 +107,7 @@ export function UserMenu() {
 
   const displayBalance = wallet?.totalBalanceUsdc ?? wallet?.balanceUsdc ?? 0;
 
-  const hasPendingRewards = pendingRewards?.has_pending ?? false;
+  // const hasPendingRewards = pendingRewards?.has_pending ?? false;
 
   return (
     <Dropdown
@@ -119,10 +119,10 @@ export function UserMenu() {
           <span className="text-sm font-mono">
             {wallet ? displayBalance.toFixed(2) : "-.--"}
           </span>
-          {/* Notification dot when rewards are pending */}
-          {hasPendingRewards && (
+          {/* Notification dot when rewards are pending - DISABLED */}
+          {/* {hasPendingRewards && (
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#10b981] rounded-full" />
-          )}
+          )} */}
           <ChevronDown className="h-3 w-3 text-muted-foreground" />
         </button>
       }
@@ -174,8 +174,8 @@ export function UserMenu() {
 
       <div className="border-t border-border mx-3" />
 
-      {/* Rewards Row */}
-      <div className="p-1.5">
+      {/* Rewards Row - DISABLED (not giving away more money) */}
+      {/* <div className="p-1.5">
         <Link
           href="/rewards"
           className="flex items-center justify-between px-2.5 py-2 rounded-md text-sm hover:bg-muted transition-colors"
@@ -192,7 +192,7 @@ export function UserMenu() {
         </Link>
       </div>
 
-      <div className="border-t border-border mx-3" />
+      <div className="border-t border-border mx-3" /> */}
 
       {/* Wallet Section */}
       <div className="px-3 py-2.5">

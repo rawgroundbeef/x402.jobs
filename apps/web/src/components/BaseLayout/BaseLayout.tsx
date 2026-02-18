@@ -4,9 +4,10 @@ import { type ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@x402jobs/ui/button";
-import { Dropdown, DropdownItem } from "@x402jobs/ui/dropdown";
+// DISABLED - Dropdowns used for Earn section (not giving away more money)
+// import { Dropdown, DropdownItem } from "@x402jobs/ui/dropdown";
 import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { JobputerChatButton } from "@/components/JobputerChatButton";
@@ -15,8 +16,9 @@ import { SearchButton } from "@/components/SearchButton";
 import { MyJobsButton } from "@/components/MyJobsButton";
 import { UserMenu } from "@/components/UserMenu";
 import { NotificationBell } from "@/components/NotificationBell";
-import { HackathonBanner, HackathonBadge } from "@/components/HackathonBanner";
-import { RewardsBanner } from "@/components/RewardsBanner";
+// DISABLED - not giving away more money
+// import { HackathonBanner, HackathonBadge } from "@/components/HackathonBanner";
+// import { RewardsBanner } from "@/components/RewardsBanner";
 import { useModals } from "@/contexts/ModalContext";
 
 const NAV_LINKS = [
@@ -26,11 +28,12 @@ const NAV_LINKS = [
   { href: "/developers", label: "API" },
 ];
 
-const EARN_LINKS = [
-  { href: "/rewards", label: "Rewards" },
-  { href: "/hackathons", label: "Hackathons" },
-  { href: "/bounties", label: "Bounties" },
-];
+// EARN_LINKS disabled - not giving away more money
+// const EARN_LINKS = [
+//   { href: "/rewards", label: "Rewards" },
+//   { href: "/hackathons", label: "Hackathons" },
+//   { href: "/bounties", label: "Bounties" },
+// ];
 
 export interface BaseLayoutProps {
   children: ReactNode;
@@ -71,11 +74,11 @@ export default function BaseLayout({
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Rewards Banner - site-wide announcement */}
-      <RewardsBanner />
+      {/* Rewards Banner - DISABLED (not giving away more money) */}
+      {/* <RewardsBanner /> */}
 
-      {/* Hackathon Banner - shows above nav on all pages */}
-      <HackathonBanner />
+      {/* Hackathon Banner - DISABLED (not giving away more money) */}
+      {/* <HackathonBanner /> */}
 
       <header className="py-5">
         <div
@@ -86,8 +89,8 @@ export default function BaseLayout({
         >
           <div className="flex items-center gap-4">
             <Logo />
-            {/* Mobile hackathon badge - shown inline on mobile */}
-            <HackathonBadge />
+            {/* Mobile hackathon badge - DISABLED (not giving away more money) */}
+            {/* <HackathonBadge /> */}
             <nav className="hidden lg:flex items-center gap-1">
               {NAV_LINKS.map((link) => {
                 const isActive = pathname.startsWith(link.href);
@@ -103,8 +106,8 @@ export default function BaseLayout({
                   </Button>
                 );
               })}
-              {/* Earn Dropdown */}
-              <Dropdown
+              {/* Earn Dropdown - DISABLED (not giving away more money) */}
+              {/* <Dropdown
                 trigger={
                   <Button
                     variant="ghost"
@@ -132,7 +135,7 @@ export default function BaseLayout({
                     </Link>
                   </DropdownItem>
                 ))}
-              </Dropdown>
+              </Dropdown> */}
             </nav>
           </div>
 
@@ -191,8 +194,8 @@ export default function BaseLayout({
                 </Button>
               );
             })}
-            {/* Earn section */}
-            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-2 mb-1 px-3">
+            {/* Earn section - DISABLED (not giving away more money) */}
+            {/* <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider mt-2 mb-1 px-3">
               Earn
             </div>
             {EARN_LINKS.map((link) => {
@@ -213,7 +216,7 @@ export default function BaseLayout({
                   {link.label}
                 </Button>
               );
-            })}
+            })} */}
           </nav>
 
           {/* Action buttons - shown in mobile menu */}
@@ -249,8 +252,8 @@ export default function BaseLayout({
         className={clsx(showJobsFooter ? "py-24 md:py-32" : "py-12 md:py-16")}
       >
         <div className={clsx("px-6 w-full text-center", containerClass)}>
-          {/* Top line - $JOBS info (homepage only) */}
-          {showJobsFooter && (
+          {/* Top line - $JOBS info (homepage only) - DISABLED (not giving away more money) */}
+          {/* {showJobsFooter && (
             <p className="text-base md:text-lg text-muted-foreground mb-10">
               $JOBS holders earn 50% of platform fees, paid monthly in USDC.{" "}
               <Link
@@ -260,7 +263,7 @@ export default function BaseLayout({
                 Claim rewards →
               </Link>
             </p>
-          )}
+          )} */}
 
           {/* Bottom line - Links */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-x-4 sm:gap-y-2 text-sm text-muted-foreground">
