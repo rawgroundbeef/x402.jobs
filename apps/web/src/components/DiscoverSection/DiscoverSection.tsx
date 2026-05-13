@@ -93,6 +93,8 @@ export function DiscoverSection() {
           <p className="text-muted-foreground mb-8 text-lg">
             Register yours. Find others. One API.
             <br />
+            Up to 25 endpoints in one call.
+            <br />
             $50/month or pay per lookup.
           </p>
 

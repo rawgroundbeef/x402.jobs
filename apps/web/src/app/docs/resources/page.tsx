@@ -278,23 +278,30 @@ curl "https://api.x402.jobs/api/v1/resources/check?url=api.example.com/endpoint"
         .
       </p>
 
-      {/* CREATE RESOURCE */}
-      <div className="bg-card border border-border rounded-lg p-6 space-y-4">
-        <div className="flex items-center gap-3">
-          <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm font-semibold">
-            POST
-          </span>
-          <code className="text-lg text-foreground font-mono">/resources</code>
-        </div>
+      {/* PROGRAMMATIC REGISTRATION (single + bulk) */}
+      <section
+        id="programmatic-registration"
+        className="space-y-8 scroll-mt-20"
+      >
+        {/* CREATE RESOURCE */}
+        <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm font-semibold">
+              POST
+            </span>
+            <code className="text-lg text-foreground font-mono">
+              /resources
+            </code>
+          </div>
 
-        <p className="text-muted-foreground">
-          Create a new resource on the platform.
-        </p>
+          <p className="text-muted-foreground">
+            Create a new resource on the platform.
+          </p>
 
-        <h3 className="font-semibold text-foreground">Request Body</h3>
-        <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
-          <code className="text-sm font-mono text-foreground">
-            {`{
+          <h3 className="font-semibold text-foreground">Request Body</h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`{
   "name": "string (required)",
   "description": "string (optional)",
   "resource_url": "string (required)",
@@ -304,13 +311,13 @@ curl "https://api.x402.jobs/api/v1/resources/check?url=api.example.com/endpoint"
   "server_name": "string (optional)",
   "extra": {} (optional)
 }`}
-          </code>
-        </pre>
+            </code>
+          </pre>
 
-        <h3 className="font-semibold text-foreground">Response</h3>
-        <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
-          <code className="text-sm font-mono text-foreground">
-            {`{
+          <h3 className="font-semibold text-foreground">Response</h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`{
   "success": true,
   "data": {
     "id": "uuid",
@@ -322,13 +329,13 @@ curl "https://api.x402.jobs/api/v1/resources/check?url=api.example.com/endpoint"
     "created_at": "ISO 8601 datetime"
   }
 }`}
-          </code>
-        </pre>
+            </code>
+          </pre>
 
-        <h3 className="font-semibold text-foreground">Example</h3>
-        <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
-          <code className="text-sm font-mono text-foreground">
-            {`curl -X POST https://api.x402.jobs/api/v1/resources \\
+          <h3 className="font-semibold text-foreground">Example</h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`curl -X POST https://api.x402.jobs/api/v1/resources \\
   -H "x-api-key: YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -340,9 +347,185 @@ curl "https://api.x402.jobs/api/v1/resources/check?url=api.example.com/endpoint"
     "capabilities": ["sentiment analysis", "text summarization"],
     "server_name": "TextCorp APIs"
   }'`}
-          </code>
-        </pre>
-      </div>
+            </code>
+          </pre>
+        </div>
+
+        {/* BULK CREATE RESOURCES */}
+        <div className="bg-card border border-border rounded-lg p-6 space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full text-sm font-semibold">
+              POST
+            </span>
+            <code className="text-lg text-foreground font-mono">
+              /resources/bulk
+            </code>
+          </div>
+
+          <h3 className="font-semibold text-foreground">Bulk registration</h3>
+
+          <p className="text-muted-foreground">
+            Register up to 25 x402 resources in a single API call. Each item is
+            processed independently — the response includes per-item statuses
+            so partial failures are explicit. Inherits SSRF protection,
+            ownership checks, and x402 metadata fetching from the single
+            endpoint.
+          </p>
+
+          <p className="text-sm text-muted-foreground italic">
+            Best for marketplaces and platforms with many endpoints to register
+            at once.
+          </p>
+
+          <h3 className="font-semibold text-foreground">Limits</h3>
+          <div className="border border-border rounded-lg overflow-hidden">
+            <table className="w-full text-sm">
+              <tbody className="divide-y divide-border">
+                <tr>
+                  <td className="px-4 py-2 text-muted-foreground">
+                    Max items per request
+                  </td>
+                  <td className="px-4 py-2 text-foreground font-mono">25</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-2 text-muted-foreground">
+                    In-flight concurrency per request
+                  </td>
+                  <td className="px-4 py-2 text-foreground font-mono">5</td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-2 text-muted-foreground">
+                    Bulk rate limit per API key
+                  </td>
+                  <td className="px-4 py-2 text-foreground font-mono">
+                    6 requests/min
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 className="font-semibold text-foreground">Request Body</h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`{
+  "resources": [
+    {
+      "name": "Weather API",
+      "resource_url": "https://example.com/api/weather",
+      "description": "Real-time weather",
+      "category": "data",
+      "tags": ["weather", "data"],
+      "capabilities": ["query"],
+      "network": "solana",
+      "pay_to": "...",
+      "avatar_url": "https://..."
+    },
+    {
+      "name": "Stocks",
+      "resource_url": "https://example.com/api/stocks"
+    },
+    {
+      "name": "Bad",
+      "resource_url": "https://127.0.0.1/internal"
+    }
+  ]
+}`}
+            </code>
+          </pre>
+
+          <h3 className="font-semibold text-foreground">
+            Response (partial success)
+          </h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`{
+  "summary": {
+    "total": 3,
+    "created": 1,
+    "updated": 1,
+    "skipped": 0,
+    "errored": 1
+  },
+  "results": [
+    {
+      "index": 0,
+      "status": "created",
+      "resource": { "id": "...", "slug": "weather-api", "name": "Weather API" }
+    },
+    {
+      "index": 1,
+      "status": "updated",
+      "resource": { "id": "...", "slug": "stocks", "name": "Stocks" }
+    },
+    {
+      "index": 2,
+      "status": "error",
+      "error": "URL not allowed",
+      "message": "resource_url resolves to a private IP range"
+    }
+  ]
+}`}
+            </code>
+          </pre>
+
+          <h3 className="font-semibold text-foreground">Example</h3>
+          <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+            <code className="text-sm font-mono text-foreground">
+              {`curl -X POST https://api.x402.jobs/api/v1/resources/bulk \\
+  -H "x-api-key: YOUR_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "resources": [
+      {"name": "Weather", "resource_url": "https://example.com/api/weather"},
+      {"name": "Stocks", "resource_url": "https://example.com/api/stocks"}
+    ]
+  }'`}
+            </code>
+          </pre>
+
+          <h3 className="font-semibold text-foreground">HTTP status codes</h3>
+          <ul className="text-muted-foreground space-y-1 text-sm">
+            <li>
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                200
+              </code>{" "}
+              — request structurally valid; check per-item{" "}
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                results
+              </code>
+            </li>
+            <li>
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                400
+              </code>{" "}
+              —{" "}
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                resources
+              </code>{" "}
+              missing, non-array, empty, or {">"} 25 items
+            </li>
+            <li>
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                401
+              </code>{" "}
+              — missing/invalid API key
+            </li>
+            <li>
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                429
+              </code>{" "}
+              — bulk rate limit exceeded (6 req/min per API key)
+            </li>
+            <li>
+              <code className="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">
+                500
+              </code>{" "}
+              — unexpected server error
+            </li>
+          </ul>
+        </div>
+      </section>
 
       {/* GET RESOURCES */}
       <div className="bg-card border border-border rounded-lg p-6 space-y-4">
