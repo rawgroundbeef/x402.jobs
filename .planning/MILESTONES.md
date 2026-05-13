@@ -1,5 +1,53 @@
 # Project Milestones: x402jobs
 
+## v3.0 Open Source + Agent-Native (In Progress: started 2026-05-12)
+
+**Goal:** Convert x402.jobs from closed-source SaaS into source-available, agent-native infrastructure. Merge backend repo into the open frontend monorepo under BSL 1.1; ship an agent SDK + `skill.md` so any LLM with HTTP fetch can build and run x402 workflows with its own wallet.
+
+**Phases planned:** 27-33 (see `.planning/v3.0-MILESTONE-SCOPE.md` for full breakdown)
+
+**Status:**
+
+- ✅ Phase 27: Wallet Encryption (shipped 2026-05-12)
+- 🟡 Phase 28: Structured Security Review (Criticals shipped 2026-05-13; Highs deferred to post-Phase 29)
+- ⏳ Phase 29: Bulk resource registration (side quest, slotted 2026-05-13)
+- ⏳ Phase 30: pnpm 10 + supply-chain `.npmrc`
+- ⏳ Phase 31: Monorepo merge + BSL 1.1 + SECURITY.md
+- ⏳ Phase 32: Agent SDK design + skill.md
+- ⏳ Phase 33: Agent SDK implementation + live LLM demo
+
+**Target:** ~2.5 weeks from start (~2026-05-29 — extended by ~1.5 days for Phase 29)
+
+---
+
+## v2.0 Resource Registration Redesign (Shipped: 2026-02-01)
+
+**Delivered:** Full-page wizard at `/dashboard/resources/new` replacing the legacy CreateResourceModal. All 4 resource type creation flows (Link Existing, Proxy, Claude Prompt, OpenRouter) work end-to-end with progressive disclosure, session storage persistence, and mobile-responsive layout.
+
+**Phases completed:** 19-26 (11 plans)
+
+**Key accomplishments:**
+
+- 4-step wizard (Type → Path-specific → Details → Review) with URL routing per step
+- Session storage + URL hybrid for clean URLs that survive refresh
+- Reused x402check components for endpoint verification (Link Existing path)
+- Auto-pre-filled fields from x402 verification (network, price, recipient)
+- Link Existing routes to `POST /resources`; instant types (Proxy/Claude/OpenRouter) route to `POST /resources/instant`
+- Lightweight ResourceEditModal for basic metadata edits (full edit deferred to EDIT-01/02)
+
+**Stats:**
+
+- 8 phases, 11 plans
+- 51/51 requirements satisfied
+- 4/4 E2E flows complete
+- See `.planning/v2.0-MILESTONE-AUDIT.md` for full audit
+
+**Git range:** `feat(19-01)` → `feat(26-01)`
+
+**Tech debt carried forward:** Complex resource edits (proxy headers, prompt templates, model selection) deferred to future EDIT-01/02 phase.
+
+---
+
 ## v1.4 OpenRouter Instant Resources (Code Complete: 2026-01-28)
 
 **Delivered:** OpenRouter integration enabling users to create monetized x402 endpoints powered by 200+ models. Deployment paused pending repo migration.
