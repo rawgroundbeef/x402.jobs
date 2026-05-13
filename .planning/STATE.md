@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v2.0
+milestone_name: milestone
+status: completed
+stopped_at: Phase 29 (bulk resource registration) plans generated and passed plan-check; ready to execute
+last_updated: "2026-05-13T17:50:13.593Z"
+last_activity: 2026-05-13
+progress:
+  total_phases: 8
+  completed_phases: 7
+  total_plans: 11
+  completed_plans: 10
+  percent: 91
+---
+
 # State: x402jobs
 
 **Initialized:** 2026-01-19
@@ -12,10 +28,10 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 29 - Bulk Resource Registration (planned, ready to execute)
-**Plan:** 2 plans (29-01 API in x402jobs-api, 29-02 docs+marketing in x402jobs); plan-check: PASS
-**Status:** Phase 28 Criticals shipped (7/7, latest CRIT-07 SSRF merged 2026-05-13); Phase 28 Highs paused; side quest Phase 29 slotted in
-**Last activity:** 2026-05-13 -- Phase 29 plans generated; v3.0 phases 29→33 renumbered (supply chain → 30, monorepo → 31, agent SDK → 32+33)
+**Phase:** 29
+**Plan:** Not started
+**Status:** Milestone complete
+**Last activity:** 2026-05-13
 
 ```
 v3.0 Progress: [██░░░░░░░░] 1/7 phases (Phase 27 ✓, Phase 28 Criticals ✓, Phase 29 planned)
@@ -112,6 +128,7 @@ See `.planning/v3.0-MILESTONE-SCOPE.md` for full milestone breakdown.
 **Resume with:** Execute Phase 29 — start with `29-01-PLAN.md` (API refactor + bulk endpoint in `~/Projects/x402jobs-api`), then `29-02-PLAN.md` (docs + marketing in `~/Projects/x402jobs`). After Phase 29 ships, resume Phase 28 Highs triage (`.planning/phases/28-security-review/HIGHS-TRIAGE.md`).
 
 **Active context for next session:**
+
 - v3.0 scope doc: `.planning/v3.0-MILESTONE-SCOPE.md` (renumbered 2026-05-13: bulk-register → 29, supply chain → 30, monorepo → 31, agent SDK → 32, agent SDK impl → 33)
 - Phase 29 plans: `.planning/phases/29-bulk-resource-registration/29-01-PLAN.md`, `29-02-PLAN.md`, plan-check PASS in `29-PLAN-CHECK.md`
 - Phase 29 PRD: `.planning/PRD-bulk-resource-registration.md` (status: approved)
