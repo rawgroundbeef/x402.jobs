@@ -303,11 +303,24 @@ export default function ApiPage() {
               <h2 className="text-2xl md:text-3xl font-semibold mb-4">
                 Running a marketplace? Auto-register your endpoints.
               </h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
                 If users create x402 resources on your platform, register them
-                with our API for increased visibility and usage. One call and
-                your resources are discoverable by agents worldwide.
+                with our API for increased visibility and usage. Send up to 25
+                resources in a single API call — partial failures are surfaced
+                per-item so retries are precise.
               </p>
+              <div className="max-w-2xl mx-auto mb-8 text-left">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Bulk endpoint — register multiple resources in one call:
+                </p>
+                <pre className="bg-muted rounded-lg p-4 overflow-x-auto">
+                  <code className="text-sm font-mono text-foreground">
+                    {`curl -X POST https://api.x402.jobs/api/v1/resources/bulk \\
+  -H "x-api-key: $X402_API_KEY" \\
+  -d '{"resources":[{"name":"Weather","resource_url":"https://example.com/api/weather"}, ...]}'`}
+                  </code>
+                </pre>
+              </div>
               <Button
                 variant="outline"
                 size="lg"
