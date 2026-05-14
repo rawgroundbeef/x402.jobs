@@ -372,4 +372,62 @@ Phases 21-24 are independent of each other and can be built in any order. Each b
 
 ---
 
-_Roadmap created: 2026-01-30_
+## v3.0 Milestone Phases (Open Source + Agent-Native)
+
+> v3.0 phases are scoped in `.planning/v3.0-MILESTONE-SCOPE.md`. Only phases that have advanced to active planning are detailed here. Phase 27 (Wallet Encryption) and Phase 29 (Bulk Resource Registration) shipped without separate ROADMAP entries — see their phase directories and `.planning/v3.0-MILESTONE-SCOPE.md` for context.
+
+### Phase 28: Structured Security Review — HIGH Remediation
+
+**Goal:** Ship all open HIGH-severity findings from `28-security-review/REVIEW.md` (HIGH-01..04, 06..13) as PR-sized batches before v3.0 public release. Phase 28 Criticals are already shipped; HIGH-05 was covered under CRIT-02. The remaining 12 HIGHs are grouped into 9 batches per `HIGHS-TRIAGE.md`.
+
+**Dependencies:** Phase 27 (wallet encryption) merged; CRIT-07 (SSRF library) merged.
+
+**Plans:** 9 plans (one per triage batch A-I)
+
+Plans:
+- [ ] 28-01-PLAN.md -- Batch A: trivial wins (HIGH-04 upload userId, HIGH-06 timing-safe escrow webhook, HIGH-12 payer/signature redaction)
+- [ ] 28-02-PLAN.md -- Batch B: log/secret hygiene (HIGH-01 strip payment payloads from console.log)
+- [ ] 28-03-PLAN.md -- Batch C: Solana payment verification (HIGH-07 recipient validation, HIGH-10 transferChecked + USDC mint match)
+- [ ] 28-04-PLAN.md -- Batch D: money math precision (HIGH-08 Math.round or bigint USDC type)
+- [ ] 28-05-PLAN.md -- Batch F: wallet export hardening (HIGH-11 audit table + rate limit + email confirm + re-auth)
+- [ ] 28-06-PLAN.md -- Batch E: run-status URL signing (HIGH-09 HMAC-sign statusUrl, requires FE coordination)
+- [ ] 28-07-PLAN.md -- Batch G: account-deletion balance check (HIGH-03 block if balance > $0.01, soft-delete + 30-day recovery)
+- [ ] 28-08-PLAN.md -- Batch H: Twitter OAuth hardening (HIGH-02 state nonce + Redis/table + token encryption + state verify)
+- [ ] 28-09-PLAN.md -- Batch I: SSRF library migration (HIGH-13 axios + request-filtering-agent, delete safe-fetch.ts)
+
+**Requirements:**
+
+- HIGH-01: Strip full Solana txn + EIP-3009 auth payloads from `console.log` in `inngest/utils/execute-x402.ts` and `routes/execute.ts`; retain only metadata (signature hash, network, amount)
+- HIGH-02: Twitter OAuth — add `state` nonce on init, move `oauthRequests` from in-memory Map to Redis or `x402_oauth_pending` table with TTL, encrypt `access_token`/`access_secret` at rest, verify state on callback
+- HIGH-03: Block account deletion if wallet balance > $0.01; require external withdrawal address or auto-sweep; wrap in DB transaction; introduce soft-delete with 30-day recovery window
+- HIGH-04: `routes/upload.ts` must stop reading `userId` from request body; always use `req.user!.id` (prevent cross-user file planting)
+- HIGH-06: Replace `===` on `webhook_secret` in `routes/escrow.ts` with `crypto.timingSafeEqual` + length pre-check
+- HIGH-07: `verifySolanaPayment` in `routes/webhooks.ts` must validate `info.destination === recipient ATA`; resolve the `// TODO: Add recipient validation` marker
+- HIGH-08: Replace `String(expectedAmount * 1_000_000)` with `String(Math.round(expectedAmount * 1_000_000))` (or migrate to `Usdc` bigint) in `routes/webhooks.ts` (lines 404, 627, 1120, 1569, 1849) and `routes/instant.ts` (lines 250, 369). Verify whether CRIT-04 already addressed before doing redundant work.
+- HIGH-09: HMAC-sign the `statusUrl` returned in 202 responses in `routes/webhooks.ts` (lines 1279-1444, 2227-2365); coordinate frontend polling to thread signature
+- HIGH-10: `verifySolanaPayment` must reject legacy `parsed.type === "transfer"` without explicit mint check; only accept `transferChecked` with USDC mint match
+- HIGH-11: `/wallet/export-key` must write to `x402_wallet_export_audit` table, send out-of-band email confirmation, enforce `strictRateLimiter` per user, require recent re-auth (password re-prompt or fresh token within 5 min)
+- HIGH-12: Truncate/hash `payer_address` and `payment_signature` in public response shapes in `routes/runs.ts` (lines 312-405) and `routes/wallet.ts` (lines 289-371)
+- HIGH-13: Migrate `routes/upload.ts`, `routes/images.ts`, `routes/instant.ts` from custom `safeFetch` to `axios` + `request-filtering-agent`; delete `lib/safe-fetch.ts`; update post-fetch handlers for axios response shape
+
+**Success Criteria:**
+
+1. All 12 open HIGH findings are remediated (code fixed, tests added) or explicitly accepted with rationale recorded in REVIEW.md
+2. `pnpm vitest run --exclude '**/resource-registration*'` passes at ≥ baseline test count after each batch
+3. Each batch ships as its own PR in `rawgroundbeef/x402-jobs-api` (or unified repo if Phase 31 lands first)
+4. `REVIEW.md` is updated with status per HIGH (FIXED / ACCEPTED + rationale)
+5. Medium and Low findings filed as GitHub issues with target milestones (deferred to v3.1 unless trivial)
+6. No regressions in payment, auth, or webhook flows on staging before public release
+
+**Source documents (read first):**
+
+- `.planning/phases/28-security-review/REVIEW.md` — full security review with line numbers and remediation guidance per finding
+- `.planning/phases/28-security-review/HIGHS-TRIAGE.md` — batching, recommended order, and effort/risk per batch (treat as PRD)
+- `.planning/phases/28-security-review/dep-audit.md` — `pnpm audit` results (context only; not in scope here)
+- `.planning/v3.0-MILESTONE-SCOPE.md` — milestone context, honest limitations to document in SECURITY.md
+
+**Implementation order (per HIGHS-TRIAGE.md):** A → B → C → D → F → E → G → H → I. Batches A, B, C, D, F have no inter-dependencies and may be parallelized.
+
+---
+
+_Roadmap created: 2026-01-30; Phase 28 added 2026-05-13_
