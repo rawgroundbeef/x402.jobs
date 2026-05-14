@@ -31,7 +31,7 @@ key-decisions:
 patterns-established:
   - "Pattern 1: Bump packageManager field first, then verify pnpm --version picks up the pin via volta/corepack/whatever local manager is in use"
 
-requirements-completed: []  # SC1 and SC3 are NOT fully met — see Blocker section. Do NOT mark complete.
+requirements-completed: [SC1, SC3]  # Resolved 2026-05-14 — see Blocker Resolution section below. SC re-interpreted as "ZERO unexpected ignored scripts" per security-intent ruling.
 
 # Metrics
 duration: ~5min
@@ -40,7 +40,7 @@ completed: 2026-05-14
 
 # Phase 30 Plan 01: Pnpm 10.6.5 Local Bump Summary
 
-**Bumped root packageManager to pnpm@10.6.5 with explicit onlyBuiltDependencies allow-list. Web build + dev smoke pass cleanly. BLOCKED on planner decision: pnpm install surfaced 5 additional transitive deps with ignored build scripts not in the plan-specified 6-entry allow-list.**
+**Bumped root packageManager to pnpm@10.6.5 with explicit onlyBuiltDependencies allow-list. Web build + dev smoke pass cleanly. Blocker BLOCKER-30-01-A resolved 2026-05-14 via Option 1 (accept warnings — the 5 ignored scripts are exactly what pnpm 10's default-deny policy was designed to gate). See Blocker Resolution section.**
 
 ## Performance
 
@@ -140,9 +140,31 @@ completed: 2026-05-14
 - **Recommendation (not authoritative):** Option 1 is the lowest-risk and most security-conservative path. The whole point of pnpm 10's default-deny is to surface these so a human reviews them before extending the allow-list. The 5 packages are all dependencies of features we don't actively use at runtime (Trezor hardware wallet, Rust-based fast ESLint resolution). Recommend updating the plan's success criterion and shipping the package.json change as-committed (commit `86cc3ef`).
 - **Suggested next action:** Planner reviews this SUMMARY, picks an option, and either (a) closes the plan via SC update (option 1), (b) spawns a fresh executor with an updated allow-list spec (option 2), or (c) opens a separate plan to remove the offending deps (option 3).
 
+### Blocker Resolution (2026-05-14)
+
+**Decision:** Option 1 — accept the warnings. Allow-list stays at the 6 plan-specified entries.
+
+**Rationale:** The whole point of pnpm 10's default-deny lifecycle-script policy is to surface unexpected install scripts so a human can review them before extending the allow-list. The 5 ignored scripts (`@stellar/stellar-sdk`, `blake-hash`, `tiny-secp256k1`, `usb`, `unrs-resolver`) are *exactly* what the policy is supposed to block — transitive deps of Trezor hardware-wallet support (a feature we don't use at runtime) plus the Rust import resolver inside `eslint-config-next` (dev-only, has a working JS fallback). Web build (48/48 pages) and dev (`Ready in 977ms`) both pass without these scripts running, confirming runtime is unaffected. Extending the allow-list to 11 entries would undermine the hardening rationale of the phase itself.
+
+**Success criteria re-interpretation:**
+- Original SC: "fresh install MUST produce ZERO 'Ignored build scripts:' warnings"
+- Resolved SC: "fresh install MUST produce ZERO *unexpected* ignored scripts; the 5 currently-ignored scripts are intentionally blocked by the supply-chain hardening policy and documented here"
+
+**Downstream impact:**
+- Plan 30-02 (Vercel installCommand pin): No assumption change. Allow-list stays at 6 entries.
+- Plan 30-03 (API repo): Already resolved independently with the API-side allow-list (6 entries, different membership) per its own SUMMARY.
+- Plan 30-04 (.npmrc release-age policy): Independent concern; not affected.
+- Plan 30-05 (convergence): Will note this resolution in CONVERGENCE.md as part of SC1/SC3 sign-off.
+
+**Long-term follow-ups (optional, OUT of Phase 30 scope):**
+- Consider dropping `@solana/wallet-adapter-trezor` if Trezor hardware wallet support is unused. Removes 4 of 5 ignored scripts in one shot.
+- Watch for `eslint-import-resolver-typescript` to publish a config option that skips the Rust binary download, or for `eslint-config-next` to drop the unrs-resolver dep.
+
+**Audit trail:** Resolution made by user (Ben Tatum) during /gsd-execute-phase 30 interactive checkpoint, 2026-05-14.
+
 ---
 
-**Total deviations:** 1 procedural (informational); 1 blocker (planner input required).
+**Total deviations:** 1 procedural (informational); 1 blocker — resolved 2026-05-14 (planner accepted Option 1).
 **Impact on plan:** package.json change is safe to keep regardless of which option the planner picks. The blocker only affects the plan's `<verify>` gate, not the artifacts already produced.
 
 ## Issues Encountered
@@ -152,7 +174,7 @@ completed: 2026-05-14
 
 ## Next Phase Readiness
 
-- **Plan 30-02 (Vercel) and 30-03 (Railway) cannot proceed cleanly until BLOCKER-30-01-A is resolved.** Both downstream plans assume the local allow-list is final; if the planner picks option 2, both downstream plans need to update their assumptions about what the allow-list contains.
+- **BLOCKER-30-01-A resolved 2026-05-14** — allow-list stays at 6 entries (Option 1). Plans 30-02, 30-03, 30-04 unblocked. See Blocker Resolution section.
 - The `pnpm@10.6.5` pin itself is validated against the web app — both `next build` and `next dev` pass. No additional Next.js workarounds needed.
 - Commit `86cc3ef` (Task 2) is safe to roll forward into 30-02 / 30-03 regardless of the blocker decision; the blocker only affects whether to add more entries to `pnpm.onlyBuiltDependencies`, not whether the current 6 are correct.
 
@@ -162,9 +184,9 @@ completed: 2026-05-14
 - File `package.json` contains the literal string `"pnpm@10.6.5"` (verified by grep).
 - Commit `86cc3ef` exists on `worktree-agent-aff51835` (`git log --oneline --all | grep 86cc3ef`).
 
-Note: SC1 and SC3 from PLAN frontmatter are NOT marked complete — see Blocker section. `requirements-completed: []` reflects that. Phase 30 cannot mark these requirements done until BLOCKER-30-01-A is resolved.
+SC1 and SC3 from PLAN frontmatter marked complete via Blocker Resolution (Option 1, 2026-05-14). `requirements-completed: [SC1, SC3]` reflects the resolved state.
 
 ---
 *Phase: 30-supply-chain-hardening*
 *Plan: 01*
-*Completed: 2026-05-14 (partial — see Blocker section)*
+*Completed: 2026-05-14 (blocker resolved via security-intent re-interpretation)*
