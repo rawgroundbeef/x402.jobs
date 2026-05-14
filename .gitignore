@@ -24,3 +24,7 @@ coverage/
 
 # Misc
 *.tsbuildinfo
+
+# Temp api copy for Phase 28 security review — remove after audit completes.
+# Real merge to apps/api/ happens in Phase 30.
+apps/api-audit-tmp/

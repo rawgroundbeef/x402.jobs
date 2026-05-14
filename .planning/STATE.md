@@ -163,3 +163,4 @@ _v3.0 started: 2026-05-12_
 _v3.0 Phase 27 (wallet encryption) complete: 2026-05-12_
 _v3.0 Phase 28 (security review) started: 2026-05-12, Criticals shipped 2026-05-13, Highs deferred_
 _v3.0 Phase 29 (bulk resource registration) planned: 2026-05-13_
+_v3.0 Phase 30 (supply chain hardening) added to roadmap: 2026-05-14_
