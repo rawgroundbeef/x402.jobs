@@ -22,6 +22,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import { authenticatedFetch } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 interface WalletKeys {
   solana: {
@@ -55,10 +56,26 @@ export default function PrivateKeyCard({
     setError("");
 
     try {
-      const res = await authenticatedFetch("/wallet/export-key");
+      // Refresh the Supabase session so the JWT `iat` is within the API's
+      // 5-minute re-auth window (HIGH-11 hardening on POST /wallet/export-key).
+      await supabase.auth.refreshSession();
+
+      const res = await authenticatedFetch("/wallet/export-key", {
+        method: "POST",
+      });
 
       if (!res.ok) {
-        const data = await res.json();
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401 && data.error === "reauth_required") {
+          throw new Error(
+            "Please sign in again, then retry. Your session is too old for this sensitive action.",
+          );
+        }
+        if (res.status === 429) {
+          throw new Error(
+            "Too many export attempts. Try again in an hour.",
+          );
+        }
         throw new Error(data.error || "Failed to export keys");
       }
 
