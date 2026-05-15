@@ -49,7 +49,7 @@ export default function ClaudeConfigPage() {
     formState: { errors, isValid },
     reset,
   } = useForm<ClaudeFormData>({
-    resolver: zodResolver(claudeSchema),
+    resolver: zodResolver(claudeSchema as never),
     mode: "onChange",
     defaultValues: {
       systemPrompt: "",

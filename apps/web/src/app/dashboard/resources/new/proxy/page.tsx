@@ -34,7 +34,7 @@ export default function ProxyConfigPage() {
     formState: { errors, isValid },
     reset,
   } = useForm<ProxyFormData>({
-    resolver: zodResolver(proxySchema),
+    resolver: zodResolver(proxySchema as never),
     defaultValues: {
       originUrl: "",
       method: "POST",

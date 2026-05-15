@@ -53,7 +53,7 @@ export default function LinkConfigPage() {
     watch,
     formState: { errors },
   } = useForm<LinkFormData>({
-    resolver: zodResolver(linkSchema),
+    resolver: zodResolver(linkSchema as never),
     defaultValues: {
       url: "",
       method: "GET",

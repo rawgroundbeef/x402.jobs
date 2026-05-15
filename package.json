@@ -31,7 +31,10 @@
       "protobufjs",
       "sharp",
       "utf-8-validate"
-    ]
+    ],
+    "overrides": {
+      "zod": "3.25.76"
+    }
   },
   "engines": {
     "node": ">=18"

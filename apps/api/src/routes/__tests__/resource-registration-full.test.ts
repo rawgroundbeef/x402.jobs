@@ -22,10 +22,7 @@ describe("Resource Registration - Full Test Suite", () => {
       });
 
       await fetch("https://example.com/resource");
-      expect(mockFetch).toHaveBeenCalledWith("https://example.com/resource", {
-        method: "GET",
-        headers: { Accept: "application/json" },
-      });
+      expect(mockFetch).toHaveBeenCalledWith("https://example.com/resource");
     });
 
     it("should handle 200 response (no payment required)", async () => {
@@ -46,7 +43,7 @@ describe("Resource Registration - Full Test Suite", () => {
 
   describe("x402 v2 Format", () => {
     it("should extract from accepts[0]", () => {
-      extractConfig.mockReturnValue({
+      vi.mocked(extractConfig).mockReturnValue({
         config: {
           accepts: [{
             amount: "100000",
@@ -55,10 +52,10 @@ describe("Resource Registration - Full Test Suite", () => {
             network: "eip155:8453",
           }],
         },
-      });
+      } as never);
 
       const extraction = extractConfig({ body: {}, headers: {} });
-      const accepts = extraction.config!.accepts![0];
+      const accepts = (extraction.config as { accepts: Array<Record<string, string>> }).accepts[0];
 
       expect(accepts.amount).toBe("100000");
       expect(accepts.asset).toBe("0xABC");
@@ -66,7 +63,7 @@ describe("Resource Registration - Full Test Suite", () => {
     });
 
     it("should handle SKALE network", () => {
-      extractConfig.mockReturnValue({
+      vi.mocked(extractConfig).mockReturnValue({
         config: {
           accepts: [{
             network: "eip155:1187947933",
@@ -74,33 +71,35 @@ describe("Resource Registration - Full Test Suite", () => {
             asset: "0x85889c8c714505E0c94b30fcfcF64fE3Ac8FCb20",
           }],
         },
-      });
+      } as never);
 
       const extraction = extractConfig({ body: {}, headers: {} });
-      expect(extraction.config!.accepts![0].network).toBe("eip155:1187947933");
+      const accepts = (extraction.config as { accepts: Array<Record<string, string>> }).accepts;
+      expect(accepts[0].network).toBe("eip155:1187947933");
     });
   });
 
   describe("x402 v1 Format", () => {
     it("should extract flat object", () => {
-      extractConfig.mockReturnValue({
+      vi.mocked(extractConfig).mockReturnValue({
         config: {
           maxAmountRequired: "50000",
           asset: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
           payTo: "ABC123",
         },
-      });
+      } as never);
 
       const extraction = extractConfig({ body: {}, headers: {} });
-      expect(extraction.config!.maxAmountRequired).toBe("50000");
+      const cfg = extraction.config as { maxAmountRequired: string };
+      expect(cfg.maxAmountRequired).toBe("50000");
     });
   });
 
   describe("Error Handling", () => {
     it("should handle x402check error", () => {
-      extractConfig.mockReturnValue({
+      vi.mocked(extractConfig).mockReturnValue({
         error: "Invalid x402 configuration",
-      });
+      } as never);
 
       const extraction = extractConfig({ body: {}, headers: {} });
       expect(extraction.error).toBeDefined();
@@ -120,13 +119,13 @@ describe("Resource Registration - Full Test Suite", () => {
 
   describe("Field Fallback Logic", () => {
     it("should prefer amount over maxAmountRequired", () => {
-      const input = { amount: "100", maxAmountRequired: "200" };
+      const input: { amount?: string; maxAmountRequired?: string } = { amount: "100", maxAmountRequired: "200" };
       const result = input.amount || input.maxAmountRequired;
       expect(result).toBe("100");
     });
 
     it("should fallback to maxAmountRequired", () => {
-      const input = { maxAmountRequired: "200" };
+      const input: { amount?: string; maxAmountRequired?: string } = { maxAmountRequired: "200" };
       const result = input.amount || input.maxAmountRequired;
       expect(result).toBe("200");
     });
@@ -146,7 +145,7 @@ describe("Resource Registration - Full Test Suite", () => {
     });
 
     it("should keep SKALE as-is (not yet mapped)", () => {
-      const input = "eip155:1187947933";
+      const input: string = "eip155:1187947933";
       const normalized = input === "eip155:8453" ? "base" : input;
       expect(normalized).toBe("eip155:1187947933");
     });
@@ -163,16 +162,17 @@ describe("Resource Registration - Full Test Suite", () => {
 
   describe("Edge Cases", () => {
     it("should handle empty accepts array", () => {
-      extractConfig.mockReturnValue({ config: { accepts: [] } });
+      vi.mocked(extractConfig).mockReturnValue({ config: { accepts: [] } } as never);
       const extraction = extractConfig({ body: {}, headers: {} });
-      expect(extraction.config!.accepts).toEqual([]);
+      expect((extraction.config as { accepts: unknown[] }).accepts).toEqual([]);
     });
 
     it("should handle null fields", () => {
-      extractConfig.mockReturnValue({
+      vi.mocked(extractConfig).mockReturnValue({
         config: { accepts: [{ amount: null }] },
-      });
-      expect(extractConfig({ body: {}, headers: {} }).config!.accepts![0].amount).toBeNull();
+      } as never);
+      const cfg = extractConfig({ body: {}, headers: {} }).config as { accepts: Array<{ amount: string | null }> };
+      expect(cfg.accepts[0].amount).toBeNull();
     });
   });
 });

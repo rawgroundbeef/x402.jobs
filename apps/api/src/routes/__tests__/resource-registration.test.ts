@@ -14,7 +14,7 @@ describe("Resource Registration - Payment Info Extraction", () => {
   });
 
   it("should extract v2 payment info from accepts[0]", async () => {
-    extractConfig.mockReturnValue({
+    vi.mocked(extractConfig).mockReturnValue({
       config: {
         accepts: [{
           amount: "100000",
@@ -22,10 +22,10 @@ describe("Resource Registration - Payment Info Extraction", () => {
           payTo: "0xDEF",
         }],
       },
-    });
+    } as never);
 
     const extraction = extractConfig({ body: {}, headers: {} });
-    const accepts = extraction.config?.accepts?.[0];
+    const accepts = (extraction.config as { accepts?: Array<{ amount: string; asset: string; payTo: string }> })?.accepts?.[0];
 
     expect(accepts?.amount).toBe("100000");
     expect(accepts?.asset).toBe("0xABC");
@@ -33,23 +33,23 @@ describe("Resource Registration - Payment Info Extraction", () => {
   });
 
   it("should extract v1 payment info from root", async () => {
-    extractConfig.mockReturnValue({
+    vi.mocked(extractConfig).mockReturnValue({
       config: {
         maxAmountRequired: "50000",
         asset: "EPj...",
         payTo: "ABC123",
       },
-    });
+    } as never);
 
     const extraction = extractConfig({ body: {}, headers: {} });
-    const cfg = extraction.config;
+    const cfg = extraction.config as { maxAmountRequired?: string; asset?: string };
 
     expect(cfg?.maxAmountRequired).toBe("50000");
     expect(cfg?.asset).toBe("EPj...");
   });
 
   it("should handle extraction errors", () => {
-    extractConfig.mockReturnValue({ error: "Invalid x402 config" });
+    vi.mocked(extractConfig).mockReturnValue({ error: "Invalid x402 config" } as never);
 
     const extraction = extractConfig({ body: null, headers: {} });
     expect(extraction.error).toBe("Invalid x402 config");
