@@ -8,33 +8,32 @@ source: locked decisions captured before /gsd-plan-phase 31 ran
 
 These decisions are LOCKED before the planner runs. The planner should treat them as constraints, not options to revisit.
 
-## Decision 1: Phase 28 Highs handling
+## Decision 1: Phase 28 Highs handling — SUPERSEDED 2026-05-15
 
-**Locked:** Fold **Batch H (Twitter OAuth hardening)** into Phase 31 as a prerequisite sub-plan. Everything else (Batches A, B, C, D, E, F, G, I) deferred to a `SECURITY.md` "Known unfixed findings" section + filed GitHub issues.
+**Original framing (2026-05-15 09:30):** Fold Batch H (Twitter OAuth hardening) into Phase 31 as a prerequisite sub-plan; defer everything else to a `SECURITY.md` "Known unfixed findings" section.
 
-**Why Batch H specifically:** missing `state` nonce + unbounded in-memory `oauthRequests` Map (DoS vector readable in code) + unencrypted Twitter tokens at rest. These are the only Highs that read as embarrassing for a public launch. The unbounded Map is the worst — a researcher finds it in five minutes of reading.
+**Updated reality (2026-05-15 10:30, after Phase 31 research):** ALL 12 outstanding HIGHs were shipped together in **x402jobs-api PR #32 (commit `c751857`) on 2026-05-14** — before Phase 30 even merged. Verified via direct file reads: migration 009 (`x402_oauth_pending` table + `access_token_ciphertext` columns), rewritten `src/routes/integrations.ts:230-411` (state nonce + DB-backed pending + dual-write encryption), `scripts/migrate-encrypt-x-tokens.ts` (idempotent backfill). The PR also touches every file mentioned across batches A–I (`routes/upload.ts`, `routes/escrow.ts`, `routes/webhooks.ts`, `routes/user.ts`, `routes/wallet.ts`, `routes/runs.ts`, new `src/lib/run-status-signing.ts`, deletion of `src/lib/safe-fetch.ts`).
 
-**Batch H source-of-truth:** `.planning/phases/28-security-review/HIGHS-TRIAGE.md` → "Batch H" section. Touches `routes/integrations.ts:225-342`, the `oauthRequests` Map, and `x402_user_x_tokens` schema (token columns need encryption migration).
-
-**Sub-fixes in Batch H (all four required):**
-1. Add `state` nonce on init; verify on callback
-2. Move `oauthRequests` from in-memory `Map` → Redis OR new `x402_oauth_pending` table with TTL
-3. Encrypt `access_token` + `access_secret` at rest using existing `encryptSecret` from `lib/instant/encrypt`
-4. Migration path for already-connected accounts (either one-shot re-encrypt script or force re-auth)
-
-**Other Highs path:**
-- `SECURITY.md` ships with Phase 31 listing the deferred findings, severity, and tracking issue links
-- Each deferred High becomes a GitHub Issue at launch time
-- This is the standard public-project pattern: acknowledge + track, don't pretend they don't exist
+**Locked replacement (2026-05-15):**
+- Phase 31 has NO pre-merge OAuth hardening sub-plan. The work is already in the api repo; it rides along in the squashed import as already-done code.
+- `SECURITY.md` "Known unfixed findings" section is **empty** at launch. Document only: (a) the Phase 30 release-age policy externally, (b) the private security-disclosure contact, (c) the link to historical security review artifacts in `.planning/phases/28-security-review/` for transparency.
+- `STATE.md` and `.planning/phases/28-security-review/HIGHS-TRIAGE.md` were stale on this point; updated as part of the Phase 31 planning cleanup commit.
 
 ## Decision 2: License
 
 **Locked:** BSL 1.1 with **Sentry-style Additional Use Grant**.
 
-**Additional Use Grant text (draft for planner — refine in plan):**
-> "You may make use of the Licensed Work, provided that you do not use the Licensed Work for a Commercial Service. A 'Commercial Service' is a service that competes with the commercial product or service offered by Licensor (or its successor) that is materially similar to x402.jobs, including but not limited to a hosted service that allows third parties to create or execute paid HTTP workflow endpoints with x402 payments."
+**Licensor entity (locked 2026-05-15):** **Memeputer LLC** — use verbatim in the BSL 1.1 Licensor field, copyright notice header, and grant attribution. NOT "Ben Tatum" personally; NOT "x402.jobs" (the project) — the legal owner is the LLC.
 
-**Change date:** 4 years from initial public commit. Falls back to Apache-2.0.
+**Copyright notice (verbatim for LICENSE header):**
+> `Copyright © 2026 Memeputer LLC. All rights reserved.`
+
+**Additional Use Grant text (locked verbatim from CONTEXT, user confirmed 2026-05-15):**
+> "You may make use of the Licensed Work, provided that you do not use the Licensed Work for a Commercial Service. A 'Commercial Service' is a service that competes with the commercial product or service offered by Licensor (Memeputer LLC, or its successor) that is materially similar to x402.jobs, including but not limited to a hosted service that allows third parties to create or execute paid HTTP workflow endpoints with x402 payments."
+
+(Difference from initial draft: licensor named explicitly as Memeputer LLC inside the parenthetical, replacing the bare "Licensor (or its successor)".)
+
+**Change date:** 4 years from initial public commit (target: 2030-05-19 if open-source flip lands 2026-05-19; planner picks the exact date at LICENSE-creation time). Falls back to Apache-2.0.
 
 **Internal commercial use is allowed.** Self-hosting for internal company use is allowed. The grant only forbids re-offering x402.jobs (or a substantially similar workflow-with-x402-payments hosted product) as a commercial service to third parties.
 

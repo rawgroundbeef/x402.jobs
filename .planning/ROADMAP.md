@@ -480,25 +480,20 @@ Plans:
 
 **Goal:** Unite the open frontend (`x402jobs`) and the closed backend (`x402jobs-api`) under one license, one repo, and one CI — so the project can ship as a public open-source codebase without leaving the api repo dark.
 
-**Dependencies:** Phase 30 (Supply Chain Hardening) shipped — both repos on `pnpm@10.6.5`, root `.npmrc` release-age policy in place. Phase 28 HIGH-Batch H (Twitter OAuth hardening) folded into this phase as a prerequisite sub-plan so we don't go public with an unbounded in-memory OAuth Map + unencrypted tokens at rest. Other Phase 28 Highs deferred to `SECURITY.md` "Known unfixed findings" + tracked as GitHub Issues.
+**Dependencies:** Phase 30 (Supply Chain Hardening) shipped — both repos on `pnpm@10.6.5`, root `.npmrc` release-age policy in place. All 12 Phase 28 HIGHs ALREADY shipped via x402jobs-api PR #32 (commit `c751857`) on 2026-05-14 — confirmed by Phase 31 research; no pre-merge security work is required.
 
 **Scope:**
 
-- **Pre-merge OAuth hardening (Phase 28 Batch H):**
-  - Add `state` nonce on Twitter OAuth init; verify on callback
-  - Move `oauthRequests` from in-memory `Map` → new `x402_oauth_pending` table with TTL
-  - Encrypt `access_token` + `access_secret` at rest in `x402_user_x_tokens` using existing `encryptSecret` from `lib/instant/encrypt`
-  - Migration path for already-connected Twitter accounts (one-shot re-encrypt script preferred over force re-auth)
 - **Monorepo merge:**
   - Squashed import of `x402jobs-api` working tree → `apps/api/` (single squash commit; closed-repo history preserved in archived private remote)
   - Reconcile workspace tooling: ESLint, Prettier, TypeScript base config aligned across `apps/web` and `apps/api`
   - Migration folder consolidation (canonical: `supabase/migrations/`; deprecate the flat `migrations/` folder)
   - Preserve the `pnpm-workspace.yaml#ignoredBuiltDependencies: [isolated-vm]` invariant from the api repo
 - **License + public-facing docs:**
-  - Root `LICENSE`: BSL 1.1, 4-year change date → Apache-2.0
-  - Additional Use Grant: **Sentry-style** — forbids offering x402.jobs (or a substantially similar hosted paid-workflow + x402-payments service) as a commercial service to third parties; internal commercial use and self-hosting are allowed
+  - Root `LICENSE`: BSL 1.1 with **Memeputer LLC** as licensor; 4-year change date → Apache-2.0
+  - Additional Use Grant: Sentry-style — forbids offering x402.jobs (or a substantially similar hosted paid-workflow + x402-payments service) as a commercial service to third parties; internal commercial use and self-hosting are allowed
   - `README.md` rewrite explaining: what x402.jobs is, what the license allows/forbids, how to self-host, where commercial use is prohibited
-  - `SECURITY.md` finalized — documents Phase 30 release-age policy, the Phase 28 Highs deferred + tracking issue links
+  - `SECURITY.md` finalized — documents Phase 30 release-age policy + private security-disclosure contact; "Known unfixed findings" section is **empty** (all 12 Phase 28 HIGHs already shipped per PR #32)
 - **Unified CI:**
   - GitHub Actions workflow: lint + typecheck + test both apps on PR
   - Path-filtered triggers so the right job set fires on a given PR
@@ -519,8 +514,8 @@ Plans:
 2. Both apps deploy cleanly to their respective platforms (Vercel + Railway) post-merge
 3. A new clone-and-run developer can `pnpm install && pnpm dev` and have a working local environment without manual env-file plumbing beyond `.env.local.example` copy
 4. Community can read the code: `LICENSE`, `README.md`, `SECURITY.md`, `CONTRIBUTING.md` all present and accurate
-5. Phase 28 HIGH Batch H (Twitter OAuth) shipped: `state` nonce verified, OAuth pending state in DB with TTL, tokens encrypted at rest, existing connected accounts migrated cleanly
-6. Phase 28 other Highs (A, B, C, D, E, F, G, I) acknowledged in `SECURITY.md` with severity, brief description, and tracking-issue links
+5. `LICENSE` correctly names **Memeputer LLC** as licensor (verbatim) with the Sentry-style Additional Use Grant text from `31-CONTEXT.md` Decision 2
+6. `SECURITY.md` documents the Phase 30 release-age policy externally + a private security-disclosure contact; "Known unfixed findings" section is empty (Phase 28 HIGHs all shipped via api repo PR #32 on 2026-05-14)
 7. `SECURITY.md` documents the Phase 30 release-age policy externally so it can't be silently removed
 8. Vercel + Railway main-branch deploys post-merge satisfy the Phase 30 `30-CONVERGENCE.md` "Expected build-log assertions" (validates SC4/SC5 retroactively)
 
