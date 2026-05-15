@@ -9,8 +9,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "pnpm --filter @x402jobs/web dev",
+    "dev:api": "pnpm --filter x402-jobs-api dev:api",
+    "dev:inngest": "pnpm --filter x402-jobs-api dev:inngest",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
