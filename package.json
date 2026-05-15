@@ -19,11 +19,13 @@
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp",
-      "protobufjs",
-      "fsevents",
+      "bigint-buffer",
       "bufferutil",
+      "esbuild",
+      "fsevents",
+      "isolated-vm",
+      "protobufjs",
+      "sharp",
       "utf-8-validate"
     ]
   },

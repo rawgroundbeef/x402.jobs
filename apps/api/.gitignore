@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.sync
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Testing
+coverage/
+
+# Wallet backups (created by scripts/backup-legacy-wallet-keys.ts)
+# These files contain plaintext private keys — NEVER commit.
+wallet-backup-*.json
