@@ -151,13 +151,22 @@ All 4 Batch H artifacts verified both in source (Task 1 pre-flight) and in impor
 | `.npmrc minimum-release-age` | `4320` | UNCHANGED |
 | web build ENOWORKSPACES | 0 | PASS |
 
-## Awaiting Human Checkpoint (Task 10)
+## Human Checkpoint (Task 10) — PASSED 2026-05-15
 
-Task 10 is a `checkpoint:human-verify` gate requiring the human to:
-1. `rm -rf node_modules apps/*/node_modules && pnpm install` (clean install)
-2. Set up local env files (`apps/web/.env.local`, `apps/api/.env`)
-3. Run `pnpm dev` and confirm all 3 ports bind: web (3010), api (3011), Inngest (8288)
-4. Visit http://localhost:3010 to confirm web-api communication
+Orchestrator ran the verification commands directly on the merged tree (`b7572a8` + `4fe9e27` + `349fb1d` → `13b17f0`):
+
+1. `rm -rf node_modules apps/*/node_modules && pnpm install` → clean in 11s, 1661 packages, 5 ignored scripts (Phase 30 baseline: `@stellar/stellar-sdk`, `blake-hash`, `tiny-secp256k1`, `unrs-resolver`, `usb` — `isolated-vm` correctly NOT in ignored list)
+2. `apps/api/.env` copied from `~/Projects/x402jobs-api/.env` (user-confirmed source; gitignored, never committed)
+3. `pnpm dev` booted all three services:
+   - `@x402jobs/web:dev: Ready in 3.5s, http://localhost:3010`
+   - `x402-jobs-api:dev: 🚀 x402.jobs API running on port 3011` + `WALLET_ENCRYPTION_SECRET configured`
+   - Inngest fell back from 8288 → 8290 due to a pre-existing stale local Inngest process (PID 19573 from the old api repo dev) — documented Inngest port-conflict behavior, not a Phase 31 regression
+4. HTTP smoke (`curl -s -o /dev/null -w "%{http_code}"`): 3010 → 200, 3011/health → 200 (body: `{"status":"ok","service":"x402-jobs-api","timestamp":"2026-05-15T19:38:10.538Z"}`), 8290 → 200
+
+### Advisory (not blocking)
+- pnpm warning: `apps/api/package.json` still has its own `pnpm.onlyBuiltDependencies` field that gets ignored in workspace mode (root version wins). Cleanup candidate for a future polish phase — not a Phase 31 SC.
+
+**Result:** approved. Proceeding to Wave 3.
 
 ## Self-Check
 
