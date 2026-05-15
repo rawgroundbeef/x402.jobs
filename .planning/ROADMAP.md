@@ -476,4 +476,71 @@ Plans:
 
 ---
 
-_Roadmap created: 2026-01-30; Phase 28 added 2026-05-13; Phase 30 added 2026-05-14_
+### Phase 31: Monorepo Merge + BSL 1.1
+
+**Goal:** Unite the open frontend (`x402jobs`) and the closed backend (`x402jobs-api`) under one license, one repo, and one CI — so the project can ship as a public open-source codebase without leaving the api repo dark.
+
+**Dependencies:** Phase 30 (Supply Chain Hardening) shipped — both repos on `pnpm@10.6.5`, root `.npmrc` release-age policy in place. Phase 28 HIGH-Batch H (Twitter OAuth hardening) folded into this phase as a prerequisite sub-plan so we don't go public with an unbounded in-memory OAuth Map + unencrypted tokens at rest. Other Phase 28 Highs deferred to `SECURITY.md` "Known unfixed findings" + tracked as GitHub Issues.
+
+**Scope:**
+
+- **Pre-merge OAuth hardening (Phase 28 Batch H):**
+  - Add `state` nonce on Twitter OAuth init; verify on callback
+  - Move `oauthRequests` from in-memory `Map` → new `x402_oauth_pending` table with TTL
+  - Encrypt `access_token` + `access_secret` at rest in `x402_user_x_tokens` using existing `encryptSecret` from `lib/instant/encrypt`
+  - Migration path for already-connected Twitter accounts (one-shot re-encrypt script preferred over force re-auth)
+- **Monorepo merge:**
+  - Squashed import of `x402jobs-api` working tree → `apps/api/` (single squash commit; closed-repo history preserved in archived private remote)
+  - Reconcile workspace tooling: ESLint, Prettier, TypeScript base config aligned across `apps/web` and `apps/api`
+  - Migration folder consolidation (canonical: `supabase/migrations/`; deprecate the flat `migrations/` folder)
+  - Preserve the `pnpm-workspace.yaml#ignoredBuiltDependencies: [isolated-vm]` invariant from the api repo
+- **License + public-facing docs:**
+  - Root `LICENSE`: BSL 1.1, 4-year change date → Apache-2.0
+  - Additional Use Grant: **Sentry-style** — forbids offering x402.jobs (or a substantially similar hosted paid-workflow + x402-payments service) as a commercial service to third parties; internal commercial use and self-hosting are allowed
+  - `README.md` rewrite explaining: what x402.jobs is, what the license allows/forbids, how to self-host, where commercial use is prohibited
+  - `SECURITY.md` finalized — documents Phase 30 release-age policy, the Phase 28 Highs deferred + tracking issue links
+- **Unified CI:**
+  - GitHub Actions workflow: lint + typecheck + test both apps on PR
+  - Path-filtered triggers so the right job set fires on a given PR
+  - Retroactively satisfies Phase 30 SC6 (the deferred "CI green on both repos")
+- **Local dev experience:**
+  - `pnpm dev` spins up web (3010) + api (3011) + Inngest dev server end-to-end (single command)
+  - A new clone-and-run developer can `pnpm install && pnpm dev` and have a working local environment
+- **Deploy posture:**
+  - Deploys stay split: Vercel for `apps/web`, Railway for `apps/api`. Path filters trigger the appropriate deploy
+  - Both apps already on `pnpm@10.6.5` per Phase 30 — no deploy-config changes expected from the merge itself
+- **Closure:**
+  - Archive the closed `x402jobs-api` remote (don't delete — keep as historical reference, private)
+  - Public announcement coordinated with milestone completion
+
+**Success criteria:**
+
+1. Single repo, single license, single CI
+2. Both apps deploy cleanly to their respective platforms (Vercel + Railway) post-merge
+3. A new clone-and-run developer can `pnpm install && pnpm dev` and have a working local environment without manual env-file plumbing beyond `.env.local.example` copy
+4. Community can read the code: `LICENSE`, `README.md`, `SECURITY.md`, `CONTRIBUTING.md` all present and accurate
+5. Phase 28 HIGH Batch H (Twitter OAuth) shipped: `state` nonce verified, OAuth pending state in DB with TTL, tokens encrypted at rest, existing connected accounts migrated cleanly
+6. Phase 28 other Highs (A, B, C, D, E, F, G, I) acknowledged in `SECURITY.md` with severity, brief description, and tracking-issue links
+7. `SECURITY.md` documents the Phase 30 release-age policy externally so it can't be silently removed
+8. Vercel + Railway main-branch deploys post-merge satisfy the Phase 30 `30-CONVERGENCE.md` "Expected build-log assertions" (validates SC4/SC5 retroactively)
+
+**Source documents (read first):**
+
+- `.planning/v3.0-MILESTONE-SCOPE.md` — Phase 31 section (authoritative scope source)
+- `.planning/phases/31-monorepo-merge-bsl/31-CONTEXT.md` — LOCKED decisions (license, history strategy, Batch H scope, OAuth migration path, deploy split)
+- `.planning/phases/28-security-review/HIGHS-TRIAGE.md` — Batch H source-of-truth, plus the deferred-Highs list for `SECURITY.md`
+- `.planning/phases/28-security-review/REVIEW.md` — per-finding line numbers + remediation guidance
+- `.planning/phases/30-supply-chain-hardening/30-CONVERGENCE.md` — pnpm@10.6.5 baseline + post-merge assertions to verify
+- `/Users/rawgroundbeef/Projects/x402jobs-api/` — source tree being merged in
+
+**Risks:**
+
+- Twitter OAuth migration path could lock out existing connected accounts (Medium likelihood, High blast). Mitigation: one-shot re-encrypt script run pre-merge; fallback is forced re-auth with prominent in-app banner.
+- Unified CI workflow could break in non-obvious ways on the first cross-app PR (Medium, Medium). Mitigation: smoke the workflow locally via `act` before merging.
+- `pnpm dev` orchestration (web + api + Inngest in one command) introduces a new dev-experience surface that wasn't tested under Phase 30 (Medium, Low). Mitigation: standalone `pnpm dev:web`, `pnpm dev:api`, `pnpm dev:inngest` scripts as fallbacks so devs can run them individually if the unified command misbehaves.
+- BSL Additional Use Grant text could need legal review before public flip (Low, High if misdrafted). Mitigation: use Sentry's published BSL grant as a base (well-known + battle-tested); flag for legal review in `LICENSE` PR description.
+- Public open-source flip surfaces a security finding within 24h of launch (Low, High). Mitigation: `SECURITY.md` "Known unfixed findings" pre-discloses Phase 28 Highs; private security disclosure address published.
+
+---
+
+_Roadmap created: 2026-01-30; Phase 28 added 2026-05-13; Phase 30 added 2026-05-14; Phase 31 added 2026-05-15_
