@@ -430,4 +430,50 @@ Plans:
 
 ---
 
-_Roadmap created: 2026-01-30; Phase 28 added 2026-05-13_
+### Phase 30: Supply Chain Hardening
+
+**Goal:** Reduce supply-chain attack surface ahead of the public open-source release by upgrading to pnpm 10 and applying an `.npmrc` release-age policy that neutralizes most npm zero-days before they reach our installs.
+
+**Dependencies:** Phase 28 HIGH remediation in flight (no hard blocker — can run in parallel). Must land before Phase 31 (Monorepo Merge + BSL) since the merged repo's CI must already be on pnpm 10.
+
+**Plans:** 5 plans
+
+Plans:
+- [ ] 30-01-PLAN.md -- Bump root packageManager to pnpm@10.6.5 + declare pnpm.onlyBuiltDependencies; regenerate root pnpm-lock.yaml; verify local web build/dev (no .npmrc yet)
+- [ ] 30-02-PLAN.md -- Flip apps/web/vercel.json pnpm pin to 10.6.5; verify Vercel deploy preview
+- [ ] 30-03-PLAN.md -- Sibling api repo: Dockerfile + vercel.json + package.json pnpm@10.6.5 + add esbuild to onlyBuiltDependencies; verify Railway deploy
+- [ ] 30-04-PLAN.md -- Add root .npmrc with minimum-release-age=4320 + minimum-release-age-exclude=@x402jobs/* (no frozen-lockfile per RESEARCH override); re-verify Vercel preview
+- [ ] 30-05-PLAN.md -- Convergence verification: cross-repo pin audit + end-to-end smoke + 30-CONVERGENCE.md + 30-ROLLBACK.md + STATE.md update
+
+**Scope:**
+
+- Bump `packageManager` field in root `package.json` and the api Dockerfile to `pnpm@10.x`
+- First install will surface lifecycle-script approvals; vet each and add the safe set to `pnpm.onlyBuiltDependencies` (likely `sharp`, `esbuild`, `better-sqlite3` if present)
+- Add root `.npmrc` with:
+  - `minimum-release-age=4320` (72-hour delay window — neutralizes most npm zero-days before they hit our installs)
+  - `minimum-release-age-exclude=@x402jobs/*` (internal packages bypass the delay)
+  - `frozen-lockfile=true` (CI safety)
+- Verify Railway Dockerfile builds cleanly with the new pnpm version
+- Document the policy in `SECURITY.md` (deferred to Phase 31 if SECURITY.md doesn't yet exist)
+
+**Success Criteria:**
+
+1. Both apps (`apps/web` once merged, and `x402jobs-api`) build cleanly under pnpm 10 locally and in CI
+2. Root `.npmrc` is in place with the documented release-age policy and `frozen-lockfile=true`
+3. `pnpm.onlyBuiltDependencies` allow-list contains only vetted entries; install completes without unapproved lifecycle scripts
+4. Railway deploy of `x402jobs-api` succeeds on pnpm 10
+5. Vercel deploy of `x402jobs` web app succeeds on pnpm 10
+6. CI green on both repos (or unified repo if Phase 31 has landed first)
+
+**Source documents (read first):**
+
+- `.planning/v3.0-MILESTONE-SCOPE.md` — Phase 30 section, plus context on why this lands before Phase 31
+
+**Risks:**
+
+- pnpm 10 may break the Railway Dockerfile build (Low likelihood, Medium blast). Test locally first; have a revert commit ready.
+- A required lifecycle script gets blocked by the new allow-list, breaking a build. Mitigation: vet each on first install and add to `onlyBuiltDependencies` deliberately.
+
+---
+
+_Roadmap created: 2026-01-30; Phase 28 added 2026-05-13; Phase 30 added 2026-05-14_

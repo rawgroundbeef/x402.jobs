@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: milestone
 status: completed
-stopped_at: Phase 29 (bulk resource registration) plans generated and passed plan-check; ready to execute
-last_updated: "2026-05-13T17:50:13.593Z"
-last_activity: 2026-05-13
+stopped_at: Phase 30 (supply chain hardening) shipped; pnpm@10.6.5 + root .npmrc release-age policy across both repos
+last_updated: "2026-05-14T00:00:00.000Z"
+last_activity: 2026-05-14
 progress:
-  total_phases: 8
-  completed_phases: 7
-  total_plans: 11
-  completed_plans: 10
-  percent: 91
+  total_phases: 9
+  completed_phases: 8
+  total_plans: 16
+  completed_plans: 15
+  percent: 94
 ---
 
 # State: x402jobs
@@ -28,13 +28,13 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 ## Current Position
 
-**Phase:** 29
+**Phase:** 31
 **Plan:** Not started
-**Status:** Milestone complete
-**Last activity:** 2026-05-13
+**Status:** Phase 30 complete; ready to plan Phase 31 (Monorepo Merge + BSL)
+**Last activity:** 2026-05-14
 
 ```
-v3.0 Progress: [██░░░░░░░░] 1/7 phases (Phase 27 ✓, Phase 28 Criticals ✓, Phase 29 planned)
+v3.0 Progress: [████░░░░░░] 2/7 phases (Phase 27 ✓, Phase 28 Criticals ✓, Phase 29 ✓, Phase 30 ✓)
 ```
 
 See `.planning/v3.0-MILESTONE-SCOPE.md` for full milestone breakdown.
@@ -123,20 +123,21 @@ See `.planning/v3.0-MILESTONE-SCOPE.md` for full milestone breakdown.
 
 ## Session Continuity
 
-**Last session:** 2026-05-13
-**Stopped at:** Phase 29 (bulk resource registration) plans generated and passed plan-check; ready to execute
-**Resume with:** Execute Phase 29 — start with `29-01-PLAN.md` (API refactor + bulk endpoint in `~/Projects/x402jobs-api`), then `29-02-PLAN.md` (docs + marketing in `~/Projects/x402jobs`). After Phase 29 ships, resume Phase 28 Highs triage (`.planning/phases/28-security-review/HIGHS-TRIAGE.md`).
+**Last session:** 2026-05-14
+**Stopped at:** Phase 30 (supply chain hardening) shipped; both repos on pnpm@10.6.5; root `.npmrc` with 72h release-age policy in place; deploy lanes (Vercel + Railway) validation deferred to post-merge per project convention (Railway has no PR previews).
+**Resume with:** Plan Phase 31 (Monorepo Merge + BSL) — `/gsd-plan-phase 31`. Phase 31 folds `~/Projects/x402jobs-api` into `apps/api/` of this repo; the existing root `.npmrc` then covers the merged tree.
 
 **Active context for next session:**
 
 - v3.0 scope doc: `.planning/v3.0-MILESTONE-SCOPE.md` (renumbered 2026-05-13: bulk-register → 29, supply chain → 30, monorepo → 31, agent SDK → 32, agent SDK impl → 33)
-- Phase 29 plans: `.planning/phases/29-bulk-resource-registration/29-01-PLAN.md`, `29-02-PLAN.md`, plan-check PASS in `29-PLAN-CHECK.md`
-- Phase 29 PRD: `.planning/PRD-bulk-resource-registration.md` (status: approved)
-- Phase 29 bootstrap: `.planning/BOOTSTRAP-bulk-register.md` (handoff doc from prior session)
-- Phase 28 work-in-progress: `.planning/phases/28-security-review/HIGHS-TRIAGE.md` (deferred until Phase 29 ships)
-- **Critical finding from planning:** PR #29 SSRF protection did NOT cover `public-api.ts`/`fetchX402Metadata` — still uses raw `fetch` today. Phase 29 includes migrating it to `safeFetch` as part of the refactor.
+- **Phase 30 PRs (open as of 2026-05-14):**
+  - `x402jobs` PR #20: https://github.com/rawgroundbeef/x402.jobs/pull/20 (5 commits + 5 doc commits on `plan/30-supply-chain-hardening`)
+  - `x402jobs-api` PR #33: https://github.com/rawgroundbeef/x402-jobs-api/pull/33 (1 commit on `chore/phase-30-03-pnpm-10-api`)
+- Phase 30 artifacts: `.planning/phases/30-supply-chain-hardening/30-CONVERGENCE.md` (SC evidence map), `30-ROLLBACK.md` (commit shas + revert sequences for 5 failure symptoms)
+- Phase 28 work-in-progress: `.planning/phases/28-security-review/HIGHS-TRIAGE.md` (still deferred — Phase 31 is next per ROADMAP)
 - Temporary api copy at `apps/api-audit-tmp/` (gitignored) — delete after Phase 28 Highs wrap
 - Local wallet backup file at `~/Projects/x402jobs-api/wallet-backup-*.json` — delete once 1Password copy is confirmed
+- **Post-merge validation:** After PR #20 and PR #33 merge to main, watch Vercel + Railway build logs for `pnpm@10.6.5` and zero `Ignored build scripts`/`ENOWORKSPACES`/`ERR_PNPM_NO_MATCHING_VERSION` — see `30-CONVERGENCE.md` "Expected build-log assertions" for the full checklist. Use `30-ROLLBACK.md` if anything regresses.
 
 ---
 
@@ -163,3 +164,5 @@ _v3.0 started: 2026-05-12_
 _v3.0 Phase 27 (wallet encryption) complete: 2026-05-12_
 _v3.0 Phase 28 (security review) started: 2026-05-12, Criticals shipped 2026-05-13, Highs deferred_
 _v3.0 Phase 29 (bulk resource registration) planned: 2026-05-13_
+_v3.0 Phase 30 (supply chain hardening) added to roadmap: 2026-05-14_
+_v3.0 Phase 30 (supply chain hardening) complete: 2026-05-14 (PRs #20 + #33 ready to merge; pre-merge deploy validation skipped per project convention)_
