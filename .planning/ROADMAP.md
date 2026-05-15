@@ -482,10 +482,10 @@ Plans:
 
 **Dependencies:** Phase 30 (Supply Chain Hardening) shipped — both repos on `pnpm@10.6.5`, root `.npmrc` release-age policy in place. All 12 Phase 28 HIGHs ALREADY shipped via x402jobs-api PR #32 (commit `c751857`) on 2026-05-14 — confirmed by Phase 31 research; no pre-merge security work is required.
 
-**Plans:** 5 plans
+**Plans:** 1/5 plans executed
 
 Plans:
-- [ ] 31-01-PLAN.md -- BSL 1.1 LICENSE + README + SECURITY.md + CONTRIBUTING.md + CLAUDE.md (drafted while still private)
+- [x] 31-01-PLAN.md -- BSL 1.1 LICENSE + README + SECURITY.md + CONTRIBUTING.md + CLAUDE.md (drafted while still private)
 - [ ] 31-02-PLAN.md -- Squash-import x402-jobs-api → apps/api/ + workspace reconciliation + cleanup deletions
 - [ ] 31-03-PLAN.md -- Unified GitHub Actions CI workflow with dorny/paths-filter@v3
 - [ ] 31-04-PLAN.md -- Local-dev orchestration polish (dev:web / dev:api / dev:inngest + test alias)
