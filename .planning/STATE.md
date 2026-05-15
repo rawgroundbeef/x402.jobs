@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
 milestone: v2.0
-milestone_name: milestone
-status: completed
-stopped_at: Phase 30 (supply chain hardening) shipped; pnpm@10.6.5 + root .npmrc release-age policy across both repos
-last_updated: "2026-05-14T00:00:00.000Z"
-last_activity: 2026-05-14
+milestone_name: Milestone Phases
+status: executing
+stopped_at: Phase 30 (supply chain hardening) shipped; both repos on pnpm@10.6.5; root `.npmrc` with 72h release-age policy in place; deploy lanes (Vercel + Railway) validation deferred to post-merge per project convention (Railway has no PR previews).
+last_updated: "2026-05-15T16:24:40.143Z"
+last_activity: 2026-05-15
 progress:
-  total_phases: 9
+  total_phases: 11
   completed_phases: 8
-  total_plans: 16
+  total_plans: 30
   completed_plans: 15
-  percent: 94
+  percent: 50
 ---
 
 # State: x402jobs
@@ -24,14 +24,16 @@ See: .planning/PROJECT.md (updated 2026-01-30)
 
 **Core value:** Anyone can monetize an API endpoint or AI prompt through x402 payments with zero infrastructure.
 
-**Current focus:** v3.0 Open Source + Agent-Native
+**Current focus:** Phase 31 — monorepo-merge-bsl
 
 ## Current Position
 
+Phase: 31 (monorepo-merge-bsl) — EXECUTING
+Plan: 1 of 5
 **Phase:** 31
 **Plan:** Not started
-**Status:** Phase 30 complete; ready to plan Phase 31 (Monorepo Merge + BSL)
-**Last activity:** 2026-05-14
+**Status:** Executing Phase 31
+**Last activity:** 2026-05-15
 
 ```
 v3.0 Progress: [████░░░░░░] 2/7 phases (Phase 27 ✓, Phase 28 Criticals ✓, Phase 29 ✓, Phase 30 ✓)
