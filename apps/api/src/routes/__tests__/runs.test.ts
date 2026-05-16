@@ -25,7 +25,7 @@ type Row = Record<string, unknown>;
 const rowStore: Record<string, Row[]> = {};
 
 function makeBuilder(table: string) {
-  let rows: Row[] = rowStore[table] || [];
+  const rows: Row[] = rowStore[table] || [];
   const builder: any = {
     select: vi.fn(() => builder),
     eq: vi.fn(() => builder),

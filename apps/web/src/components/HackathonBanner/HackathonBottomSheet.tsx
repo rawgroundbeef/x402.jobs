@@ -90,8 +90,8 @@ export function HackathonBottomSheet({
 
   // Determine status display
   let statusIcon = <Clock className="h-4 w-4" />;
-  let statusColor = "text-muted-foreground";
-  let statusBg = "bg-muted/50";
+  let statusColor: string;
+  let statusBg: string;
 
   if (isComplete) {
     statusIcon = <CheckCircle2 className="h-4 w-4" />;

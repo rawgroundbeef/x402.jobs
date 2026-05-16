@@ -50,6 +50,7 @@ jobs:
           node-version: 22
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @x402jobs/web lint
       - run: pnpm --filter @x402jobs/web typecheck
       - run: pnpm --filter @x402jobs/web build
 
@@ -67,6 +68,7 @@ jobs:
           node-version: 22
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter x402-jobs-api lint
       - run: pnpm --filter x402-jobs-api typecheck
       - run: pnpm --filter x402-jobs-api test
       - run: pnpm --filter x402-jobs-api build

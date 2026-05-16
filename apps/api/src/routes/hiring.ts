@@ -27,18 +27,12 @@ import { Router, type Router as RouterType } from "express";
 import * as hiringService from "../services/hiring.service";
 import { chargeEscrowDeposit } from "../inngest/utils/charge-escrow";
 import { executeX402Request } from "../inngest/utils/execute-x402";
-import { createClient } from "@supabase/supabase-js";
-import { config } from "../config";
 import { loadDecryptedUserWallet } from "../lib/wallet-keys";
 
 // Jobputer post_job_request endpoint
 const JOBPUTER_POST_JOB_REQUEST_URL =
   process.env.JOBPUTER_POST_JOB_REQUEST_URL ||
   "https://agents.memeputer.com/x402/solana/jobputer/post_job_request";
-
-// Supabase client for wallet lookup
-const getSupabase = () =>
-  createClient(config.supabase.url, config.supabase.serviceRoleKey);
 
 // Public routes (no auth required for reading)
 export const hiringPublicRouter: RouterType = Router();

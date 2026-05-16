@@ -418,7 +418,7 @@ function ServersTable({
           </thead>
           <tbody className="divide-y divide-border">
             {servers.map((server, index) => {
-              let hostname = "";
+              let hostname: string;
               try {
                 hostname = new URL(server.origin_url).hostname;
               } catch {

@@ -630,7 +630,7 @@ export function JobPanel({
         (p) => p.cron === newScheduleConfig.cron,
       );
       const parsedInterval = cronToInterval(newScheduleConfig.cron);
-      let scheduleInputMode: ScheduleInputMode = "interval";
+      let scheduleInputMode: ScheduleInputMode;
       let intervalValue = 1;
       let intervalUnit: IntervalUnit = "hours";
       let selectedPreset = "";

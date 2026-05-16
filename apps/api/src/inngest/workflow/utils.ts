@@ -196,7 +196,7 @@ export async function executeCode(
     });
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    throw new Error(`Code execution failed: ${msg}`);
+    throw new Error(`Code execution failed: ${msg}`, { cause: error });
   } finally {
     isolate.dispose();
   }

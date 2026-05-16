@@ -651,10 +651,8 @@ export function TriggerConfigPanel({
                         onChange={(v) => {
                           const newUnit = v as IntervalUnit;
                           const availableValues = INTERVAL_VALUES[newUnit];
-                          let newValue = intervalValue;
                           if (!availableValues.includes(intervalValue)) {
-                            newValue = availableValues[0] || 1;
-                            setIntervalValue(newValue);
+                            setIntervalValue(availableValues[0] || 1);
                           }
                           setIntervalUnit(newUnit);
                           setSelectedPreset("");

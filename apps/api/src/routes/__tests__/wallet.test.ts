@@ -156,7 +156,7 @@ function createTestApp(opts: {
       email: opts.email ?? USER_EMAIL,
       // iat is the new field the auth middleware will surface.
       // Cast to any to avoid the Request type ceremony in tests.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       ...({ iat: opts.iat ?? Math.floor(Date.now() / 1000) } as any),
     };
     next();

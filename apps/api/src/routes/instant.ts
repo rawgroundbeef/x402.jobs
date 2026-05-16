@@ -253,7 +253,7 @@ function build402Response(
   const priceAtomic = dollarsToAtomicString(priceUsdc);
 
   // Build input schema based on resource type
-  let bodyFields: Record<string, any> = {};
+  const bodyFields: Record<string, any> = {};
 
   if (resource.resource_type === "prompt" && resource.prompt_parameters) {
     for (const param of resource.prompt_parameters) {
@@ -859,14 +859,14 @@ async function executeProxy(
     if (isBlockedRequestError(error)) {
       const msg = (error as Error).message;
       console.warn(`[Proxy] SSRF blocked: ${msg}`);
-      throw new Error("Proxy origin URL not allowed");
+      throw new Error("Proxy origin URL not allowed", { cause: error });
     }
     if (
       error?.code === "ECONNABORTED" ||
       error?.name === "AbortError" ||
       /timeout/i.test(error?.message || "")
     ) {
-      throw new Error(`Proxy timeout after ${timeout}ms`);
+      throw new Error(`Proxy timeout after ${timeout}ms`, { cause: error });
     }
     throw error;
   }
@@ -895,7 +895,7 @@ async function executePrompt(
   }
 
   // Build user message from parameters
-  let userMessage = "";
+  let userMessage: string;
   if (resource.prompt_parameters) {
     // Interpolate parameters into a message
     const parts: string[] = [];
@@ -1435,7 +1435,7 @@ async function executePromptTemplate(
  */
 function extractMediaFromResponse(
   response: OpenAI.Chat.Completions.ChatCompletion,
-  modelModality: string,
+  _modelModality: string,
 ): {
   type: "text" | "image";
   content: string;
@@ -1566,7 +1566,7 @@ async function executeOpenRouterInstant(
 
   // Get model ID - need to look up from ai_models table
   let modelId: string;
-  let modelModality: string | null = null;
+  let modelModality: string | null;
   if (resource.openrouter_model_id) {
     // Look up the actual model name from ai_models table
     const { data: model } = await getSupabase()

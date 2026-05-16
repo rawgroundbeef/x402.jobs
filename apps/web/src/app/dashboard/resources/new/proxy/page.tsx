@@ -71,7 +71,7 @@ export default function ProxyConfigPage() {
 
   const handleContinue = (data: ProxyFormData) => {
     // Derive default name from URL
-    let defaultName = "";
+    let defaultName: string;
     try {
       const parsed = new URL(data.originUrl);
       const segments = parsed.pathname.split("/").filter(Boolean);

@@ -222,8 +222,8 @@ export function getNextRunTime(cron: string, timezone: string): Date | null {
       const targetMinute = parseInt(minuteStr, 10);
       let nextHour = tzNow.hour;
       let nextDay = tzNow.day;
-      let nextMonth = tzNow.month;
-      let nextYear = tzNow.year;
+      const nextMonth = tzNow.month;
+      const nextYear = tzNow.year;
 
       if (tzNow.minute >= targetMinute) {
         nextHour += 1;
