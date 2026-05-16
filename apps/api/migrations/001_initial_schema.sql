@@ -4678,8 +4678,6 @@ ALTER TABLE public.x402_user_x_tokens ENABLE ROW LEVEL SECURITY;
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1OPp49Vqksb7Wm7m0qrdP2TSDsnwBf89X6SgnY88biI9lTTZzVWwUbBAukgDgm0
-
 
 --
 -- Name: public_x402_resources; Type: VIEW; Schema: public; Owner: -

@@ -1,4 +1,0 @@
-# Supabase CLI local cache — never commit
-.branches
-.temp
-*.log

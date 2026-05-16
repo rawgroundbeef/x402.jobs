@@ -38,11 +38,10 @@ from prior phases that are NOT obvious from the code alone.
 - **`pnpm dev`** orchestrates web + api + Inngest via Turbo
   persistent tasks. Per-app fallbacks: `pnpm dev:web`,
   `pnpm dev:api`, `pnpm dev:inngest`.
-- **Migrations:** BOTH `apps/api/migrations/` (flat, 001-010,
-  legacy api-runner format) and `apps/api/supabase/migrations/`
-  (Supabase-CLI timestamped format) coexist by design. Do NOT
-  propose consolidation without consulting Phase 31 Pitfall 6 in
-  `.planning/phases/31-monorepo-merge-bsl/31-RESEARCH.md`.
+- **Migrations:** `apps/api/migrations/` (flat numbered 001-010
+  with UP + `_DOWN` variants) is the single source of truth — it
+  reflects what's applied to production. Apply via Supabase Dashboard
+  SQL Editor or `psql`; see `apps/api/migrations/README.md`.
 - **Encryption:** wallet keys use `WALLET_ENCRYPTION_SECRET`
   (AES-256-GCM), OAuth tokens use `INTEGRATION_ENCRYPTION_SECRET`
   (AES-256-CBC). Both env vars are load-bearing — losing either
