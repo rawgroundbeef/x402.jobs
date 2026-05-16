@@ -5,8 +5,10 @@ import { notifyRefundRequested } from "../services/notifications.service";
 
 export const refundsRouter: RouterType = Router();
 
-// Admin user ID for notifications
-const ADMIN_USER_ID = "4e4efff6-3736-4c28-994d-e28163614638";
+// Admin user ID for notifications — set ADMIN_NOTIFICATIONS_USER_ID env var to a
+// real auth.users.id (UUID) to receive admin notifications on new refund requests.
+// If unset, notifyRefundRequested is skipped silently.
+const ADMIN_USER_ID = process.env.ADMIN_NOTIFICATIONS_USER_ID || "";
 
 // POST /refunds - Request a refund for a failed job run
 refundsRouter.post("/", async (req, res) => {
@@ -119,7 +121,7 @@ refundsRouter.post("/", async (req, res) => {
     const jobName = jobData?.name || "Unknown Job";
 
     try {
-      await notifyRefundRequested(
+      if (ADMIN_USER_ID) await notifyRefundRequested(
         ADMIN_USER_ID,
         refund.id,
         refund.refund_number,

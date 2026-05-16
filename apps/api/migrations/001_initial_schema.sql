@@ -1804,7 +1804,7 @@ COMMENT ON TABLE public.x402_servers IS 'Servers/providers that host X402 resour
 -- Name: COLUMN x402_servers.origin_url; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.x402_servers.origin_url IS 'The root URL (protocol + host) e.g., https://api.memeputer.com';
+COMMENT ON COLUMN public.x402_servers.origin_url IS 'The root URL (protocol + host) e.g., https://api.example.com';
 
 
 --
