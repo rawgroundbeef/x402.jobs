@@ -12,9 +12,7 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:no-payment-logs": "bash scripts/check-no-payment-logs.sh",
-    "migrate:encrypt-x-tokens": "ts-node -r tsconfig-paths/register scripts/migrate-encrypt-x-tokens.ts"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",

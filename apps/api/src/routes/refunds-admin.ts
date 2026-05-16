@@ -9,8 +9,11 @@ import { createNotification } from "../services/notifications.service";
 
 export const refundsAdminRouter: RouterType = Router();
 
-// Admin email whitelist
-const ADMIN_EMAILS = ["ben@memeputer.com"];
+// Admin email whitelist — comma-separated env var, e.g. ADMIN_EMAILS=a@b.com,c@d.com
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 // Middleware to check if user is admin
 async function requireAdmin(req: Request, res: Response, next: NextFunction) {
