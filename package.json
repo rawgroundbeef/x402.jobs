@@ -9,8 +9,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:web": "pnpm --filter @x402jobs/web dev",
+    "dev:api": "pnpm --filter x402-jobs-api dev:api",
+    "dev:inngest": "pnpm --filter x402-jobs-api dev:inngest",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
@@ -19,13 +23,18 @@
   "packageManager": "pnpm@10.6.5",
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp",
-      "protobufjs",
-      "fsevents",
+      "bigint-buffer",
       "bufferutil",
+      "esbuild",
+      "fsevents",
+      "isolated-vm",
+      "protobufjs",
+      "sharp",
       "utf-8-validate"
-    ]
+    ],
+    "overrides": {
+      "zod": "3.25.76"
+    }
   },
   "engines": {
     "node": ">=18"

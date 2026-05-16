@@ -1,3 +1,14 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+# Preserved from x402jobs-api/pnpm-workspace.yaml (was untracked there;
+# merged into root here per Phase 31 squash-import / 31-PATTERNS section 9).
+#
+# `ignoredBuiltDependencies` was deprecated in pnpm 11; we are on pnpm 10.6.5.
+# If pnpm is ever upgraded past 10.x, migrate this to:
+#   allowBuilds:
+#     isolated-vm: false
+# See: https://pnpm.io/settings (allowBuilds, v10.26.0+)
+ignoredBuiltDependencies:
+  - isolated-vm

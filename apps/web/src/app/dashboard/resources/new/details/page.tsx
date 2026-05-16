@@ -98,7 +98,7 @@ export default function DetailsPage() {
     reset,
     formState: { errors, isValid },
   } = useForm<DetailsFormData>({
-    resolver: zodResolver(detailsSchema),
+    resolver: zodResolver(detailsSchema as never),
     mode: "onBlur",
     reValidateMode: "onChange",
     defaultValues: {

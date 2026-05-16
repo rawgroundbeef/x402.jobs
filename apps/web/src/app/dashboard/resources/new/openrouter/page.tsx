@@ -59,7 +59,7 @@ export default function OpenRouterConfigPage() {
     watch,
     formState: { errors, isValid },
   } = useForm<OpenRouterFormData>({
-    resolver: zodResolver(openrouterSchema),
+    resolver: zodResolver(openrouterSchema as never),
     mode: "onChange",
     defaultValues: {
       systemPrompt: "",
