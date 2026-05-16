@@ -28,7 +28,7 @@ const claudeSchema = z.object({
   maxTokens: z.number().int().min(1).max(64000).default(4096),
 });
 
-type ClaudeFormData = z.infer<typeof claudeSchema>;
+type ClaudeFormData = z.input<typeof claudeSchema>;
 
 export default function ClaudeConfigPage() {
   const router = useRouter();
@@ -49,7 +49,7 @@ export default function ClaudeConfigPage() {
     formState: { errors, isValid },
     reset,
   } = useForm<ClaudeFormData>({
-    resolver: zodResolver(claudeSchema as never),
+    resolver: zodResolver(claudeSchema),
     mode: "onChange",
     defaultValues: {
       systemPrompt: "",

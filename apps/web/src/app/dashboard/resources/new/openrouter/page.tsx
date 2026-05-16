@@ -32,7 +32,7 @@ const openrouterSchema = z.object({
   maxTokens: z.number().int().min(1).max(128000).default(4096),
 });
 
-type OpenRouterFormData = z.infer<typeof openrouterSchema>;
+type OpenRouterFormData = z.input<typeof openrouterSchema>;
 
 export default function OpenRouterConfigPage() {
   const router = useRouter();
@@ -59,7 +59,7 @@ export default function OpenRouterConfigPage() {
     watch,
     formState: { errors, isValid },
   } = useForm<OpenRouterFormData>({
-    resolver: zodResolver(openrouterSchema as never),
+    resolver: zodResolver(openrouterSchema),
     mode: "onChange",
     defaultValues: {
       systemPrompt: "",

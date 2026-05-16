@@ -13,7 +13,7 @@
     "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {
-    "@hookform/resolvers": "3.3.4",
+    "@hookform/resolvers": "5.2.2",
     "@monaco-editor/react": "^4.7.0",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
