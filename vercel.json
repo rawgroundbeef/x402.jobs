@@ -5,5 +5,5 @@
   "buildCommand": "pnpm turbo run build --filter=@x402jobs/web",
   "outputDirectory": ".next",
   "installCommand": "npm install -g pnpm@10.6.5 && pnpm install --frozen-lockfile",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web packages package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json"
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- apps/web packages package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json vercel.json .npmrc"
 }
