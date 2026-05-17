@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Decouple from Memeputer / Jobputer infrastructure
 status: planning
-last_updated: "2026-05-17T12:55:06.361Z"
+last_updated: "2026-05-17T13:30:00.000Z"
 last_activity: 2026-05-17
 progress:
-  total_phases: 0
+  total_phases: 3
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -27,10 +27,12 @@ See: .planning/PROJECT.md (updated 2026-05-17)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 32 — Platform Fee Replacement + Announcement (ready to plan)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-17 — Milestone v3.1 started
+Status: Roadmap created (3 phases mapped, 39/39 requirements covered). Phase 32 is the next phase to discuss + plan.
+Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to `.planning/milestones/v3.0-ROADMAP.md`.
+
+**Resume with:** `/gsd-discuss-phase 32` (the discuss step must lock the final fee % per FEE-05 before plan generation begins; see PROJECT.md D-1 / Key Decisions for context).
 
 ## Milestone History
 
@@ -40,8 +42,8 @@ Last activity: 2026-05-17 — Milestone v3.1 started
 - **v1.3 x402.storage Output Destination** -- Shipped 2026-01-25 (2 phases, 3 plans)
 - **v1.4 OpenRouter Instant Resources** -- Code complete 2026-01-28, shipped via repo migration 2026-02 (8 phases, Phases 11-18)
 - **v2.0 Resource Registration Redesign** -- Shipped 2026-02-01 (8 phases, Phases 19-26)
-- **v3.0 Open Source + Agent-Native** -- Phases 27-31 shipped 2026-05-12 → 2026-05-16 (wallet encryption, security review, bulk register, supply chain, monorepo merge + BSL). Phases 32-33 (Agent SDK + skill.md) deferred to a later milestone.
-- **v3.1 Decouple from Memeputer / Jobputer** -- Started 2026-05-17 (Phases 32-34 planned)
+- **v3.0 Open Source + Agent-Native** -- Phases 27-31 shipped 2026-05-12 → 2026-05-16 (wallet encryption, security review, bulk register, supply chain, monorepo merge + BSL). Phases 32-33 (Agent SDK + skill.md) deferred to a later milestone (v3.2+).
+- **v3.1 Decouple from Memeputer / Jobputer** -- Started 2026-05-17; roadmap created with 3 phases (32-34) covering 39 requirements.
 
 ## v1.4 Deployment Blocker — RESOLVED
 
@@ -97,6 +99,21 @@ Last activity: 2026-05-17 — Milestone v3.1 started
 | Save verification data to linkConfig | Avoid re-calling verify API during publish                | 2026-02-01 |
 | Link redirects use API-generated slug | POST /resources generates slug from name+network          | 2026-02-01 |
 | Instant types continue using /instant | Proxy/Claude/OpenRouter work correctly, avoid regression  | 2026-02-01 |
+| Self-host fee endpoint (OpenFacilitator SDK) | Eliminate Memeputer dependency, keep x402-call-chain symmetry | 2026-05-17 |
+| x402lint validates fee 402 response  | Catch malformed accepts[] / CAIP-2 mistakes early         | 2026-05-17 |
+| Same-network fee charging preserved  | Match current behavior; avoid cross-chain settlement      | 2026-05-17 |
+| Docs replace Jobputer (no mascot)    | Public OSS project needs dev docs more than a help character | 2026-05-17 |
+| memeputer_name decision deferred to Phase 34 | Live writer in sync-openrouter-models.ts; audit before deciding | 2026-05-17 |
+| In-flight jobs grandfathered at cut-over | Fee config snapshotted at job-creation; clean cut-over | 2026-05-17 |
+| Announcement: independence + price cut combined | Single narrative beats either alone | 2026-05-17 |
+
+## v3.1 Roadmap (3 phases, 39 requirements)
+
+| Phase | Name | Goal | Requirements | Status |
+|-------|------|------|--------------|--------|
+| 32 | Platform Fee Replacement + Announcement | Self-hosted fee endpoint live, rate lowered, announcement shipped | FEE-01..10, OPS-01/02/04, ANNOUNCE-01..05 (18) | Not started |
+| 33 | Jobputer Removal + Docs Investment | Persona stripped from prod; `/docs` fills the help-vacuum | UI-01..07, DOCS-01..08, OPS-03 (16) | Not started |
+| 34 | Schema Cleanup | `memeputer_name` audited and resolved via migration | SCHEMA-01..05 (5) | Not started |
 
 ## Remaining Manual Tasks
 
@@ -115,23 +132,26 @@ Last activity: 2026-05-17 — Milestone v3.1 started
 - [ ] Apply migration 006_add_ai_models_curation.sql (adds modality/is_curated to x402_openrouter_models)
 - [ ] Run model sync to populate `x402_openrouter_models`
 
+**v3.1 manual tasks (pending phase work):**
+
+- [ ] Lock final platform fee percentage (Phase 32 discuss step) — target 1%, $0.01 minimum preserved
+- [ ] Provision new fee-collection wallet (cold storage or multisig) before Phase 32 implementation lands
+- [ ] Confirm `/blog` surface availability (ANNOUNCE-03 deferred if no blog exists)
+
 ## Session Continuity
 
-**Last session:** 2026-05-14
-**Stopped at:** Phase 30 (supply chain hardening) shipped; both repos on pnpm@10.6.5; root `.npmrc` with 72h release-age policy in place; deploy lanes (Vercel + Railway) validation deferred to post-merge per project convention (Railway has no PR previews).
-**Resume with:** Plan Phase 31 (Monorepo Merge + BSL) — `/gsd-plan-phase 31`. Phase 31 folds `~/Projects/x402jobs-api` into `apps/api/` of this repo; the existing root `.npmrc` then covers the merged tree.
+**Last session:** 2026-05-17
+**Stopped at:** v3.1 roadmap created. 3 phases (32-34) mapped to all 39 requirements. Previous v3.0 ROADMAP.md archived to `.planning/milestones/v3.0-ROADMAP.md` via `git mv`.
+**Resume with:** `/gsd-discuss-phase 32` — Platform Fee Replacement + Announcement. The discuss step must lock FEE-05's final fee percentage (target 1%) before plan generation. Source of truth: `.planning/ROADMAP.md` Phase 32 section + `.planning/todos/pending/decouple-x402jobs-from-memeputer.md`.
 
 **Active context for next session:**
 
-- v3.0 scope doc: `.planning/v3.0-MILESTONE-SCOPE.md` (renumbered 2026-05-13: bulk-register → 29, supply chain → 30, monorepo → 31, agent SDK → 32, agent SDK impl → 33)
-- **Phase 30 PRs (open as of 2026-05-14):**
-  - `x402jobs` PR #20: https://github.com/rawgroundbeef/x402.jobs/pull/20 (5 commits + 5 doc commits on `plan/30-supply-chain-hardening`)
-  - `x402jobs-api` PR #33: https://github.com/rawgroundbeef/x402-jobs-api/pull/33 (1 commit on `chore/phase-30-03-pnpm-10-api`)
-- Phase 30 artifacts: `.planning/phases/30-supply-chain-hardening/30-CONVERGENCE.md` (SC evidence map), `30-ROLLBACK.md` (commit shas + revert sequences for 5 failure symptoms)
-- Phase 28 work-in-progress: `.planning/phases/28-security-review/HIGHS-TRIAGE.md` (still deferred — Phase 31 is next per ROADMAP)
-- Temporary api copy at `apps/api-audit-tmp/` (gitignored) — delete after Phase 28 Highs wrap
-- Local wallet backup file at `~/Projects/x402jobs-api/wallet-backup-*.json` — delete once 1Password copy is confirmed
-- **Post-merge validation:** After PR #20 and PR #33 merge to main, watch Vercel + Railway build logs for `pnpm@10.6.5` and zero `Ignored build scripts`/`ENOWORKSPACES`/`ERR_PNPM_NO_MATCHING_VERSION` — see `30-CONVERGENCE.md` "Expected build-log assertions" for the full checklist. Use `30-ROLLBACK.md` if anything regresses.
+- v3.1 roadmap: `.planning/ROADMAP.md` (just created)
+- v3.0 archived: `.planning/milestones/v3.0-ROADMAP.md`
+- Milestone scoping doc / "why this matters" context: `.planning/todos/pending/decouple-x402jobs-from-memeputer.md` (D-1/D-2/D-3 decision context, files-to-read list, suggested sequencing)
+- Locked decisions (do not re-litigate): PROJECT.md "Key Decisions" v3.1 table
+- Hard locks: CLAUDE.md (pnpm@10.6.5 exact, .npmrc release-age=4320, BSL 1.1 with Memeputer LLC as Licensor — unchanged for v3.1)
+- Files to read first for Phase 32: `apps/api/src/config.ts`, `apps/api/src/inngest/utils/charge-platform-fee.ts`, `apps/api/src/routes/refunds.ts`, `apps/api/env.example`
 
 ---
 
@@ -160,3 +180,6 @@ _v3.0 Phase 28 (security review) started: 2026-05-12, Criticals shipped 2026-05-
 _v3.0 Phase 29 (bulk resource registration) planned: 2026-05-13_
 _v3.0 Phase 30 (supply chain hardening) added to roadmap: 2026-05-14_
 _v3.0 Phase 30 (supply chain hardening) complete: 2026-05-14 (PRs #20 + #33 ready to merge; pre-merge deploy validation skipped per project convention)_
+_v3.0 Phase 31 (monorepo merge + BSL) complete: 2026-05-16_
+_v3.1 started: 2026-05-17_
+_v3.1 roadmap created: 2026-05-17 (3 phases 32-34, 39/39 requirements mapped)_

@@ -107,52 +107,57 @@ Which phases cover which requirements. Updated by `gsd-roadmapper`.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FEE-01 | TBD | Pending |
-| FEE-02 | TBD | Pending |
-| FEE-03 | TBD | Pending |
-| FEE-04 | TBD | Pending |
-| FEE-05 | TBD | Pending |
-| FEE-06 | TBD | Pending |
-| FEE-07 | TBD | Pending |
-| FEE-08 | TBD | Pending |
-| FEE-09 | TBD | Pending |
-| FEE-10 | TBD | Pending |
-| UI-01 | TBD | Pending |
-| UI-02 | TBD | Pending |
-| UI-03 | TBD | Pending |
-| UI-04 | TBD | Pending |
-| UI-05 | TBD | Pending |
-| UI-06 | TBD | Pending |
-| UI-07 | TBD | Pending |
-| DOCS-01 | TBD | Pending |
-| DOCS-02 | TBD | Pending |
-| DOCS-03 | TBD | Pending |
-| DOCS-04 | TBD | Pending |
-| DOCS-05 | TBD | Pending |
-| DOCS-06 | TBD | Pending |
-| DOCS-07 | TBD | Pending |
-| DOCS-08 | TBD | Pending |
-| SCHEMA-01 | TBD | Pending |
-| SCHEMA-02 | TBD | Pending |
-| SCHEMA-03 | TBD | Pending |
-| SCHEMA-04 | TBD | Pending |
-| SCHEMA-05 | TBD | Pending |
-| OPS-01 | TBD | Pending |
-| OPS-02 | TBD | Pending |
-| OPS-03 | TBD | Pending |
-| OPS-04 | TBD | Pending |
-| ANNOUNCE-01 | TBD | Pending |
-| ANNOUNCE-02 | TBD | Pending |
-| ANNOUNCE-03 | TBD | Pending |
-| ANNOUNCE-04 | TBD | Pending |
-| ANNOUNCE-05 | TBD | Pending |
+| FEE-01 | 32 | Pending |
+| FEE-02 | 32 | Pending |
+| FEE-03 | 32 | Pending |
+| FEE-04 | 32 | Pending |
+| FEE-05 | 32 | Pending |
+| FEE-06 | 32 | Pending |
+| FEE-07 | 32 | Pending |
+| FEE-08 | 32 | Pending |
+| FEE-09 | 32 | Pending |
+| FEE-10 | 32 | Pending |
+| UI-01 | 33 | Pending |
+| UI-02 | 33 | Pending |
+| UI-03 | 33 | Pending |
+| UI-04 | 33 | Pending |
+| UI-05 | 33 | Pending |
+| UI-06 | 33 | Pending |
+| UI-07 | 33 | Pending |
+| DOCS-01 | 33 | Pending |
+| DOCS-02 | 33 | Pending |
+| DOCS-03 | 33 | Pending |
+| DOCS-04 | 33 | Pending |
+| DOCS-05 | 33 | Pending |
+| DOCS-06 | 33 | Pending |
+| DOCS-07 | 33 | Pending |
+| DOCS-08 | 33 | Pending |
+| SCHEMA-01 | 34 | Pending |
+| SCHEMA-02 | 34 | Pending |
+| SCHEMA-03 | 34 | Pending |
+| SCHEMA-04 | 34 | Pending |
+| SCHEMA-05 | 34 | Pending |
+| OPS-01 | 32 | Pending |
+| OPS-02 | 32 | Pending |
+| OPS-03 | 33 | Pending |
+| OPS-04 | 32 | Pending |
+| ANNOUNCE-01 | 32 | Pending |
+| ANNOUNCE-02 | 32 | Pending |
+| ANNOUNCE-03 | 32 | Pending |
+| ANNOUNCE-04 | 32 | Pending |
+| ANNOUNCE-05 | 32 | Pending |
 
 **Coverage:**
 - v3.1 requirements: 39 total
-- Mapped to phases: 0 (roadmapper pending)
-- Unmapped: 39 ⚠️
+- Mapped to phases: 39 ✓
+- Unmapped: 0
+
+**Phase distribution:**
+- Phase 32 (Platform Fee Replacement + Announcement): 18 requirements (FEE-01..10, OPS-01, OPS-02, OPS-04, ANNOUNCE-01..05)
+- Phase 33 (Jobputer Removal + Docs Investment): 16 requirements (UI-01..07, DOCS-01..08, OPS-03)
+- Phase 34 (Schema Cleanup): 5 requirements (SCHEMA-01..05)
 
 ---
 
 *Requirements defined: 2026-05-17*
-*Last updated: 2026-05-17 after v3.1 milestone start*
+*Last updated: 2026-05-17 after roadmap creation (39/39 mapped)*

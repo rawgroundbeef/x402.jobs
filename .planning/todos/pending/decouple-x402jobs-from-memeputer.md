@@ -2,10 +2,12 @@
 title: Decouple x402.jobs from Memeputer / Jobputer infrastructure
 created: 2026-05-16
 expanded: 2026-05-17 (post-Phase-31 milestone scoping session)
-status: pending — phase-sized work, ready for /gsd-new-milestone or /gsd-discuss-phase
+status: scoped 2026-05-17 — turned into milestone v3.1 (Phases 32-34); see .planning/ROADMAP.md
 source_phase: 31-monorepo-merge-bsl (post-public realization)
 priority: HIGH — strategic move, precursor to v3.x vision (agent skill files + cross-chain)
 estimated_effort: 1 architecture phase + 1-2 implementation phases
+resolves_milestone: v3.1
+resolves_phases: [32, 33, 34]
 ---
 
 # Decouple x402.jobs from Memeputer / Jobputer infrastructure
