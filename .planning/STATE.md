@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Decouple from Memeputer / Jobputer infrastructure
-status: Roadmap created (3 phases mapped, 39/39 requirements covered). Phase 32 is the next phase to discuss + plan.
-stopped_at: Phase 32 context gathered (scope reduced — see CONTEXT.md Required ROADMAP/REQUIREMENTS updates section)
+status: Roadmap created (3 phases mapped, 34/34 requirements covered after ANNOUNCE-* removal 2026-05-17). Phase 32 is the next phase to plan.
+stopped_at: Phase 32 context gathered, ROADMAP + REQUIREMENTS amended to remove ANNOUNCE-* (2026-05-17). Ready for /gsd-plan-phase 32.
 last_updated: "2026-05-17T14:38:37.955Z"
 last_activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to `.planning/milestones/v3.0-ROADMAP.md`.
 progress:
@@ -28,12 +28,12 @@ See: .planning/PROJECT.md (updated 2026-05-17)
 
 ## Current Position
 
-Phase: 32 — Platform Fee Replacement + Announcement (ready to plan)
+Phase: 32 — Platform Fee Replacement (ready to plan; context captured, ANNOUNCE-* removed from milestone)
 Plan: —
-Status: Roadmap created (3 phases mapped, 39/39 requirements covered). Phase 32 is the next phase to discuss + plan.
-Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to `.planning/milestones/v3.0-ROADMAP.md`.
+Status: Roadmap created (3 phases mapped, 34/34 requirements covered). Phase 32 context gathered; ROADMAP + REQUIREMENTS amended for ANNOUNCE-* removal. Ready for /gsd-plan-phase 32.
+Last activity: 2026-05-17 — v3.1 ROADMAP.md created and amended (ANNOUNCE-01..05 removed from milestone during Phase 32 discuss-phase); v3.0 ROADMAP archived to `.planning/milestones/v3.0-ROADMAP.md`.
 
-**Resume with:** `/gsd-discuss-phase 32` (the discuss step must lock the final fee % per FEE-05 before plan generation begins; see PROJECT.md D-1 / Key Decisions for context).
+**Resume with:** `/gsd-plan-phase 32` (fee % already locked at 1% in CONTEXT.md D-00a; no further discuss needed).
 
 ## Milestone History
 
@@ -44,7 +44,7 @@ Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to 
 - **v1.4 OpenRouter Instant Resources** -- Code complete 2026-01-28, shipped via repo migration 2026-02 (8 phases, Phases 11-18)
 - **v2.0 Resource Registration Redesign** -- Shipped 2026-02-01 (8 phases, Phases 19-26)
 - **v3.0 Open Source + Agent-Native** -- Phases 27-31 shipped 2026-05-12 → 2026-05-16 (wallet encryption, security review, bulk register, supply chain, monorepo merge + BSL). Phases 32-33 (Agent SDK + skill.md) deferred to a later milestone (v3.2+).
-- **v3.1 Decouple from Memeputer / Jobputer** -- Started 2026-05-17; roadmap created with 3 phases (32-34) covering 39 requirements.
+- **v3.1 Decouple from Memeputer / Jobputer** -- Started 2026-05-17; roadmap created with 3 phases (32-34) covering 34 requirements (ANNOUNCE-* removed from milestone 2026-05-17 during Phase 32 discuss-phase).
 
 ## v1.4 Deployment Blocker — RESOLVED
 
@@ -108,11 +108,11 @@ Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to 
 | In-flight jobs grandfathered at cut-over | Fee config snapshotted at job-creation; clean cut-over | 2026-05-17 |
 | Announcement: independence + price cut combined | Single narrative beats either alone | 2026-05-17 |
 
-## v3.1 Roadmap (3 phases, 39 requirements)
+## v3.1 Roadmap (3 phases, 34 requirements after ANNOUNCE-* removal 2026-05-17)
 
 | Phase | Name | Goal | Requirements | Status |
 |-------|------|------|--------------|--------|
-| 32 | Platform Fee Replacement + Announcement | Self-hosted fee endpoint live, rate lowered, announcement shipped | FEE-01..10, OPS-01/02/04, ANNOUNCE-01..05 (18) | Not started |
+| 32 | Platform Fee Replacement | Self-hosted fee endpoint live, rate lowered to 1%, fee wallets in CHANGELOG.md | FEE-01..10, OPS-01/02/04 (13) | Context captured; ready to plan |
 | 33 | Jobputer Removal + Docs Investment | Persona stripped from prod; `/docs` fills the help-vacuum | UI-01..07, DOCS-01..08, OPS-03 (16) | Not started |
 | 34 | Schema Cleanup | `memeputer_name` audited and resolved via migration | SCHEMA-01..05 (5) | Not started |
 
@@ -135,15 +135,14 @@ Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to 
 
 **v3.1 manual tasks (pending phase work):**
 
-- [ ] Lock final platform fee percentage (Phase 32 discuss step) — target 1%, $0.01 minimum preserved
-- [ ] Provision new fee-collection wallet (cold storage or multisig) before Phase 32 implementation lands
-- [ ] Confirm `/blog` surface availability (ANNOUNCE-03 deferred if no blog exists)
+- [x] Lock final platform fee percentage (Phase 32 discuss-phase 2026-05-17 → 1%, $0.01 minimum preserved — CONTEXT.md D-00a)
+- [ ] Provision new fee-collection wallets (cold storage or multisig) for Solana + Base before Phase 32 implementation lands; resulting addresses populate `FEE_COLLECTION_SOLANA_ADDRESS` / `FEE_COLLECTION_BASE_ADDRESS` and CHANGELOG.md (OPS-01 / D-00c / D-19)
 
 ## Session Continuity
 
 **Last session:** 2026-05-17T14:38:37.949Z
-**Stopped at:** Phase 32 context gathered (scope reduced — see CONTEXT.md Required ROADMAP/REQUIREMENTS updates section)
-**Resume with:** `/gsd-discuss-phase 32` — Platform Fee Replacement + Announcement. The discuss step must lock FEE-05's final fee percentage (target 1%) before plan generation. Source of truth: `.planning/ROADMAP.md` Phase 32 section + `.planning/todos/pending/decouple-x402jobs-from-memeputer.md`.
+**Stopped at:** Phase 32 context gathered; ROADMAP + REQUIREMENTS amended to remove ANNOUNCE-01..05 from milestone (2026-05-17). Ready to plan.
+**Resume with:** `/gsd-plan-phase 32` — Platform Fee Replacement. Fee % is locked at 1% in CONTEXT.md D-00a; no further discuss needed. Source of truth: `.planning/phases/32-platform-fee-replacement-announcement/32-CONTEXT.md` + `.planning/ROADMAP.md` Phase 32 section.
 
 **Active context for next session:**
 

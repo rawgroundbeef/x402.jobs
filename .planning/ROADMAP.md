@@ -3,7 +3,7 @@
 **Created:** 2026-05-17
 **Milestone:** v3.1
 **Phases:** 3 (Phases 32-34, continuing numbering from v3.0 Phase 31)
-**Coverage:** 39/39 requirements mapped
+**Coverage:** 34/34 requirements mapped (5 ANNOUNCE-* reqs removed from milestone 2026-05-17 during Phase 32 discuss)
 **Granularity:** fine
 
 ## Overview
@@ -12,7 +12,7 @@ Remove every operational + UI dependency on Memeputer-owned services so a fork o
 
 Three phases, sequenced by leverage and risk:
 
-1. **Phase 32 — Platform Fee Replacement + Announcement.** Highest leverage, gets the announcement narrative out the door. Replaces `agents.memeputer.com` with a self-hosted x402 fee endpoint, lowers the rate, ships the combined "independence + price cut" announcement.
+1. **Phase 32 — Platform Fee Replacement.** Replaces `agents.memeputer.com` with a self-hosted x402 fee endpoint and lowers the rate to 1%. (Public announcement was removed from milestone 2026-05-17 — v3.1 ships without a marketing push; wallet addresses are documented in CHANGELOG.md instead.)
 2. **Phase 33 — Jobputer Removal + Docs Investment.** Largest surface area. Strips the persona from ~14 production files and fills the help-vacuum with new docs. Includes the self-hoster migration guide (which references Phase 32's new fee endpoint).
 3. **Phase 34 — Schema Cleanup.** Smallest scope, ships last. Audits the `memeputer_name` column, decides rename-vs-drop, applies the migration.
 
@@ -20,20 +20,20 @@ Three phases, sequenced by leverage and risk:
 
 ## Phases
 
-- [ ] **Phase 32: Platform Fee Replacement + Announcement** — Self-hosted x402 fee endpoint live, rate lowered, announcement shipped.
+- [ ] **Phase 32: Platform Fee Replacement** — Self-hosted x402 fee endpoint live, rate lowered to 1%, fee wallet addresses documented in CHANGELOG.md.
 - [ ] **Phase 33: Jobputer Removal + Docs Investment** — Persona stripped from production code; `/docs` expanded to fill the help-vacuum.
 - [ ] **Phase 34: Schema Cleanup** — `x402_servers.memeputer_name` audited and resolved (rename or drop) via migration.
 
 ## Phase Details
 
-### Phase 32: Platform Fee Replacement + Announcement
+### Phase 32: Platform Fee Replacement
 
 **Directory:** `32-platform-fee-replacement`
-**Goal:** x402.jobs operates its own self-hosted x402 fee endpoint at a lower rate, with the "independence + price cut" announcement live and the new fee wallet address on-chain-verifiable.
+**Goal:** x402.jobs operates its own self-hosted x402 fee endpoint at a 1% rate, with the new fee wallet addresses on-chain-verifiable via CHANGELOG.md. (Announcement removed from milestone 2026-05-17 — see "Notes" below.)
 
 **Dependencies:** None (first phase of v3.1; Phase 31 monorepo merge already shipped)
 
-**Requirements (18):**
+**Requirements (13):**
 
 - FEE-01: Self-hosted fee endpoint under `api.x402.jobs/x402/fees/{solana,base}/...`
 - FEE-02: Implemented with the OpenFacilitator SDK (verify + settle)
@@ -45,14 +45,9 @@ Three phases, sequenced by leverage and risk:
 - FEE-08: All `agents.memeputer.com` URLs removed from production paths; `charge-platform-fee.ts` and call sites updated
 - FEE-09: Refund flow (`apps/api/src/routes/refunds.ts`) audited end-to-end with the new endpoint
 - FEE-10: In-flight jobs at cut-over grandfathered (fee config snapshotted at job-creation; verified by test)
-- OPS-01: `CHANGELOG.md` v3.1 entry documents env var changes + removed Memeputer URLs
+- OPS-01: `CHANGELOG.md` v3.1 entry documents env var changes + removed Memeputer URLs + both fee wallet addresses with Solscan/Basescan explorer links (on-chain-verifiable)
 - OPS-02: `apps/api/env.example` reflects new defaults; old `PLATFORM_FEE_URL` commented as deprecated for one release
-- OPS-04: No backward-compatibility shim added (clean cut-over per project convention; documented in announcement)
-- ANNOUNCE-01: X / Twitter thread drafted (independence + price-cut combined narrative)
-- ANNOUNCE-02: LinkedIn long-form post drafted (story-driven, links to docs + CHANGELOG)
-- ANNOUNCE-03: Blog post drafted if `/blog` surface exists; otherwise deferred
-- ANNOUNCE-04: Fee wallet address published in the announcement, on-chain-verifiably
-- ANNOUNCE-05: Announcement posts published only after the fee endpoint is live in prod
+- OPS-04: No backward-compatibility shim added (clean cut-over per project convention; documented in CHANGELOG.md)
 
 **Success Criteria** (what must be TRUE):
 
@@ -60,14 +55,15 @@ Three phases, sequenced by leverage and risk:
 2. The platform fee rate charged on a new job is the new locked rate (target 1%, $0.01 minimum preserved), verifiable by inspecting the 402 response with `x402lint`.
 3. A job that partially fails returns the correct fee-aware refund through `routes/refunds.ts` with the new endpoint (no double-charge, no missed refund).
 4. A job in flight at cut-over completes against its snapshotted fee config — verified by automated test, not just manual observation.
-5. The fee-collection wallet address is published in the X thread + LinkedIn post + CHANGELOG, and the on-chain balance is verifiable by anyone reading the announcement.
+5. The fee-collection wallet addresses (Solana + Base) are published in `CHANGELOG.md` v3.1 entry with Solscan and Basescan explorer links; on-chain balances verifiable by anyone reading the CHANGELOG.
 
 **Plans:** TBD
 
 **Notes:**
-- Per PROJECT.md Key Decisions: D-1 is settled as **option (b)** — self-hosted x402 fee endpoint (not direct USDC transfer, not fee-in-pricing). OpenFacilitator SDK + x402lint validation. Final fee % locked in the Phase 32 discuss step before implementation begins.
-- Announcement copy lives in Phase 32 artifacts (drafts) and only goes live once SC1-4 are green in prod (gated by ANNOUNCE-05).
+- Per PROJECT.md Key Decisions: D-1 is settled as **option (b)** — self-hosted x402 fee endpoint (not direct USDC transfer, not fee-in-pricing). OpenFacilitator SDK + x402lint validation. Final fee % locked at 1% in the Phase 32 discuss-phase (2026-05-17).
+- **Announcement removed from milestone 2026-05-17:** during Phase 32 discuss-phase the user decided v3.1 ships without a public announcement (no X thread, no LinkedIn post, no blog). The 5 ANNOUNCE-* requirements were removed (not deferred) from milestone scope. Wallet-address documentation responsibility moved to CHANGELOG.md via OPS-01 (see CONTEXT.md D-18/D-19).
 - This phase does **not** include the self-hoster migration guide (`/docs/self-hosting/v3.1-upgrade`) — that's OPS-03 and lives in Phase 33 alongside the docs investment. The CHANGELOG.md entry (OPS-01) and env.example update (OPS-02) are here because they ride with the code changes.
+- Phase 32 is backend-only (zero `apps/web` changes) after the announcement removal — pure `apps/api/src`, `apps/api/migrations`, `apps/api/env.example`, and `CHANGELOG.md`.
 
 ---
 
@@ -144,7 +140,7 @@ Three phases, sequenced by leverage and risk:
 **Notes:**
 - Per PROJECT.md Key Decisions: D-3 is **explicitly deferred to this phase**. The discuss step must produce the SCHEMA-01 audit before SCHEMA-02 (the rename-vs-drop decision) is made.
 - Migration follows the project convention: flat numbered with UP + `_DOWN` variants in `apps/api/migrations/`. Apply via Supabase Dashboard SQL Editor or `psql` per `apps/api/migrations/README.md`.
-- No announcement narrative here — this is internal cleanup. Phase 32's announcement is already out by the time this ships.
+- No announcement narrative anywhere in v3.1 — the original "combined fee + independence" announcement was removed from milestone scope during the Phase 32 discuss-phase (2026-05-17). This is purely internal cleanup.
 
 ---
 
@@ -152,7 +148,7 @@ Three phases, sequenced by leverage and risk:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 32 - Platform Fee Replacement + Announcement | 0/TBD | Not started | — |
+| 32 - Platform Fee Replacement | 0/TBD | Not started | — |
 | 33 - Jobputer Removal + Docs Investment | 0/TBD | Not started | — |
 | 34 - Schema Cleanup | 0/TBD | Not started | — |
 
@@ -161,10 +157,10 @@ Three phases, sequenced by leverage and risk:
 ## Dependency Graph
 
 ```
-Phase 32 (Platform Fee Replacement + Announcement)
+Phase 32 (Platform Fee Replacement)
     |
-    | (new fee endpoint live → self-hoster migration guide references it;
-    |  announcement narrative sets up docs-as-help-replacement)
+    | (new fee endpoint live → self-hoster migration guide
+    |  references it in Phase 33)
     v
 Phase 33 (Jobputer Removal + Docs Investment)
 
@@ -173,7 +169,7 @@ Phase 34 (Schema Cleanup) — independent; can ship in parallel with Phase 33
                             small-scope finish.
 ```
 
-Phase 32 ships first because it carries the announcement narrative — the headline is the price cut, which can't go out until the new endpoint is live (ANNOUNCE-05 gates this). Phase 33 follows because the self-hoster migration guide (OPS-03) references Phase 32's new fee env vars, and the "where the help bubble used to be → docs link" wiring requires the new docs pages to exist. Phase 34 is independent; ordering it last keeps the schema migration risk decoupled from the announcement.
+Phase 32 ships first because it unblocks Phase 33's self-hoster migration guide (OPS-03), which references Phase 32's new fee env vars. Phase 33 follows because its "where the help bubble used to be → docs link" wiring requires the new docs pages to exist. Phase 34 is independent; ordering it last keeps the schema migration risk decoupled from the rest of the milestone.
 
 ---
 
@@ -215,16 +211,13 @@ Phase 32 ships first because it carries the announcement narrative — the headl
 | OPS-02 | 32 | Pending |
 | OPS-03 | 33 | Pending |
 | OPS-04 | 32 | Pending |
-| ANNOUNCE-01 | 32 | Pending |
-| ANNOUNCE-02 | 32 | Pending |
-| ANNOUNCE-03 | 32 | Pending |
-| ANNOUNCE-04 | 32 | Pending |
-| ANNOUNCE-05 | 32 | Pending |
 
-**Mapped: 39/39** — all v3.1 requirements covered, no orphans, no duplicates.
+**Mapped: 34/34** — all v3.1 requirements covered, no orphans, no duplicates.
+
+**Removed from milestone (2026-05-17):** ANNOUNCE-01..05 (X thread, LinkedIn, blog, wallet publication in announcement, announce-trigger gate) — removed during Phase 32 discuss-phase per user decision. v3.1 ships without a public announcement; fee wallet addresses are documented in CHANGELOG.md (OPS-01) instead. See `REQUIREMENTS.md` → "Removed during milestone" for the original text.
 
 By phase:
-- **Phase 32:** 18 requirements (FEE-01..10, OPS-01, OPS-02, OPS-04, ANNOUNCE-01..05)
+- **Phase 32:** 13 requirements (FEE-01..10, OPS-01, OPS-02, OPS-04)
 - **Phase 33:** 16 requirements (UI-01..07, DOCS-01..08, OPS-03)
 - **Phase 34:** 5 requirements (SCHEMA-01..05)
 
@@ -232,7 +225,7 @@ By phase:
 
 ## Design Notes
 
-**Why three phases (not splitting fee from announcement):** The user's stated marketing angle requires the price cut and the going-independent story to ship as one combined announcement. Splitting the announcement into a separate phase would either (a) ship code without the narrative landing, leaving the headline orphaned, or (b) gate code merge behind narrative polish, slowing the engineering work. Keeping them together with ANNOUNCE-05 as the gate ("publish only after fee endpoint is live") preserves both the engineering velocity and the narrative integrity.
+**Why three phases (originally framed around an announcement):** The original roadmap bundled a combined "fee reduction + going independent" announcement with the Phase 32 code change. During the Phase 32 discuss-phase (2026-05-17) the user decided to drop the announcement entirely — v3.1 ships without a marketing push. Phase 32 now stands on its own as backend code + CHANGELOG documentation; the three-phase split survives because each phase still has a distinct surface area (fee endpoint / Jobputer-and-docs / schema cleanup).
 
 **Why OPS-03 (self-hoster migration guide) is in Phase 33, not 32:** The migration guide is a docs page. The docs surface is being built out in Phase 33. Splitting OPS-03 across phases would mean a half-built docs nav after Phase 32. Keeping it with the docs investment means the docs surface ships as a coherent whole.
 
