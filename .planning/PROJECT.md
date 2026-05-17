@@ -129,8 +129,10 @@ Anyone can monetize an API endpoint or AI prompt through x402 payments with zero
 | Self-host fee endpoint via OpenFacilitator SDK | Keep x402-call-chain symmetry, eliminate Memeputer dependency, reuse existing tooling           | — Pending |
 | Validate fee 402 responses with x402lint       | Catch malformed accepts[] / CAIP-2 mistakes early; both skills already in the user's toolbelt   | — Pending |
 | Same-network fee charging (Solana + Base)      | Match current behavior; avoid cross-chain settlement complexity                                 | — Pending |
-| Lean toward 1% fee rate (confirm pre-Phase-32) | Strong announcement, preserves more revenue than 0.5%; final number locked before plan-phase    | — Pending |
-| Keep `$0.01` minimum                           | Tiny jobs still pay something; matches current `Math.max(pct, min)` semantics                   | — Pending |
+| Fee rate locked at 1% (with $0.01 minimum)     | Confirmed 2026-05-17 — strong announcement headline, preserves more revenue than 0.5%, simple math | ✓ Locked |
+| Reuse existing `FACILITATOR_URL` env var       | x402.jobs already runs an OpenFacilitator instance (used by `apps/api/src/routes/instant.ts`); no new facilitator to provision | ✓ Locked |
+| Two env vars for recipient addresses           | `FEE_COLLECTION_SOLANA_ADDRESS` + `FEE_COLLECTION_BASE_ADDRESS` — simple, no shared key, custody handled out-of-band | ✓ Locked |
+| Ship Solana + Base fee endpoints together     | Matches current same-network behavior; no staged rollout                                        | ✓ Locked |
 | Memeputer LLC remains BSL Licensor             | Decouple is operational/UI, not legal. CLAUDE.md hard-lock.                                     | ✓ Locked  |
 | Docs replace Jobputer, no new mascot           | Public OSS project needs proper dev docs more than a help character                             | — Pending |
 | `memeputer_name` decision deferred to phase    | Live writer in `sync-openrouter-models.ts`; pick rename vs drop after auditing inside Phase 34  | — Pending |
