@@ -2,9 +2,10 @@
 gsd_state_version: 1.0
 milestone: v3.1
 milestone_name: Decouple from Memeputer / Jobputer infrastructure
-status: planning
-last_updated: "2026-05-17T13:30:00.000Z"
-last_activity: 2026-05-17
+status: Roadmap created (3 phases mapped, 39/39 requirements covered). Phase 32 is the next phase to discuss + plan.
+stopped_at: Phase 32 context gathered (scope reduced — see CONTEXT.md Required ROADMAP/REQUIREMENTS updates section)
+last_updated: "2026-05-17T14:38:37.955Z"
+last_activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to `.planning/milestones/v3.0-ROADMAP.md`.
 progress:
   total_phases: 3
   completed_phases: 0
@@ -140,8 +141,8 @@ Last activity: 2026-05-17 — v3.1 ROADMAP.md created; v3.0 ROADMAP archived to 
 
 ## Session Continuity
 
-**Last session:** 2026-05-17
-**Stopped at:** v3.1 roadmap created. 3 phases (32-34) mapped to all 39 requirements. Previous v3.0 ROADMAP.md archived to `.planning/milestones/v3.0-ROADMAP.md` via `git mv`.
+**Last session:** 2026-05-17T14:38:37.949Z
+**Stopped at:** Phase 32 context gathered (scope reduced — see CONTEXT.md Required ROADMAP/REQUIREMENTS updates section)
 **Resume with:** `/gsd-discuss-phase 32` — Platform Fee Replacement + Announcement. The discuss step must lock FEE-05's final fee percentage (target 1%) before plan generation. Source of truth: `.planning/ROADMAP.md` Phase 32 section + `.planning/todos/pending/decouple-x402jobs-from-memeputer.md`.
 
 **Active context for next session:**
