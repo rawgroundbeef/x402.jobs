@@ -47,38 +47,51 @@ Anyone can monetize an API endpoint or AI prompt through x402 payments with zero
 - ✓ Resource detail pages with usage stats — existing
 - ✓ Create Resource modal flow — existing
 
+- ✓ Full-page wizard at `/resources/new` replaces all creation modals — v2.0
+- ✓ 4-step flow: Choose Type → Configure Source → Resource Details → Review & Publish — v2.0
+- ✓ Link Existing path with x402check validation and full-width results — v2.0
+- ✓ Proxy path wraps non-x402 URL with x402 payments — v2.0
+- ✓ Claude Prompt path (system prompt, parameters, API key check) — v2.0
+- ✓ OpenRouter path (model browser, prompt template, parameter config) — v2.0
+- ✓ Shared resource details step (name, slug, description, image, category, price, network) — v2.0
+- ✓ Review & publish step with edit links back to relevant steps — v2.0
+- ✓ URL-based routing with session storage state persistence — v2.0
+- ✓ x402check components imported for validation UI — v2.0
+- ✓ Old CreateResourceModal removed — v2.0
+- ✓ Mobile-responsive layout (full-page stacks naturally) — v2.0
+- ✓ Wallet encryption at rest (AES-256-GCM) — v3.0 Phase 27
+- ✓ Structured security review (criticals + highs shipped) — v3.0 Phase 28
+- ✓ Bulk resource registration UI — v3.0 Phase 29
+- ✓ pnpm 10 pin + supply-chain `.npmrc` (4320min release-age) — v3.0 Phase 30
+- ✓ Monorepo merge (apps/api + apps/web) + BSL 1.1 license — v3.0 Phase 31
+
 ### Active
 
-- [ ] Full-page wizard at `/resources/new` replaces all creation modals
-- [ ] 4-step flow: Choose Type → Configure Source → Resource Details → Review & Publish
-- [ ] Link Existing path: x402check validation with full-width results
-- [ ] Proxy path: Wrap non-x402 URL with x402 payments
-- [ ] Claude Prompt path: System prompt, parameters, API key check
-- [ ] OpenRouter path: Model browser, prompt template, parameter config
-- [ ] Shared details step: name, slug, description, image, category, price, network
-- [ ] Review & publish step with edit links back to relevant steps
-- [ ] URL-based routing with session storage state persistence
-- [ ] x402check components imported for validation UI
-- [ ] Old CreateResourceModal removed after wizard ships
-- [ ] Mobile-responsive layout (full-page stacks naturally)
+<!-- v3.1 milestone — see Current Milestone block below for details. -->
 
-## Current Milestone: v2.0 Resource Registration Redesign
+- [ ] Self-hosted x402.jobs fee endpoint (replaces `agents.memeputer.com/x402/.../jobputer/job_fee`)
+- [ ] Platform fee rate reduced (1.5% → ~1%, exact rate confirmed pre-Phase 32)
+- [ ] Jobputer character + help-bubble removed from all 14 production touchpoints
+- [ ] `/docs` expansion (SDK quickstart, x402 primer, common recipes, troubleshooting) fills the help-vacuum
+- [ ] `x402_servers.memeputer_name` column investigation + resolution (rename vs drop)
+- [ ] Decouple + fee-reduction announcement (X thread, LinkedIn, blog if surface exists)
+- [ ] Operator-decouple checklist documented for self-hosters (env-var migration, fee-wallet address)
 
-**Goal:** Redesign the resource registration/creation flow from cramped modals to a full-page wizard at `/resources/new`. Consolidate 4 separate creation flows into one unified wizard with shared steps for resource details and review.
+## Current Milestone: v3.1 Decouple from Memeputer / Jobputer infrastructure
+
+**Goal:** Remove all operational + UI dependencies on Memeputer-owned services so a fork of x402.jobs is fully self-runnable. Ship a price-drop announcement at the same time. The BSL 1.1 Licensor (Memeputer LLC) is unchanged — this is operational/UI decoupling, not legal.
 
 **Target features:**
 
-- Full-page wizard at `/resources/new` with URL-based routing per step
-- Type selector: Link Existing, Proxy, Claude Prompt, OpenRouter
-- Link Existing: x402check validation with full-width results, parsed config display
-- Proxy: Origin URL, HTTP method, optional headers for non-x402 URL wrapping
-- Claude Prompt: System prompt editor, model selection, max tokens config
-- OpenRouter: Model browser with search/filters, prompt template, parameters
-- Shared resource details: name, URL slug, description, image, category, price, network
-- Review & publish with inline edit links and validation summary
-- Session storage + URL params hybrid for state management
-- Import x402check validation components directly from package
-- Remove old CreateResourceModal entirely
+- New x402.jobs-native fee endpoint under `api.x402.jobs/x402/fees/...` built with the OpenFacilitator SDK; 402 responses validated with x402lint. Same-network charging (Solana for Solana jobs, Base for Base jobs) preserved.
+- Platform fee rate reduction (current: `max(1.5%, $0.01 min)`; target: leaning 1%, exact number confirmed before Phase 32 lands). Becomes the announcement headline.
+- New fee-collection wallet address — defensibly long-term (cold storage or multisig, not an operational hot wallet).
+- Refund flow audited: in-flight fee semantics + `apps/api/src/routes/refunds.ts` still work with the new endpoint.
+- Jobputer persona removed from all surfaces: `JobputerChatButton.tsx`, `AskJobputerModal.tsx`, `BaseLayout.tsx`, modal contexts, JobCanvas, transform modals/panels, hire/workflow-chat/resources/ask-jobputer API routes. No replacement mascot.
+- Help-bubble vacuum filled by `/docs` improvements — `getting-started`, `developer`, `resources`, `examples`, `errors`, `long-running-resources`, plus new SDK quickstart, x402 primer, common recipes, troubleshooting, and a `/docs/agents` section (sets up future agent-readable skill files).
+- `x402_servers.memeputer_name` column investigated (live writer in `apps/api/src/inngest/functions/sync-openrouter-models.ts`) and resolved: rename to neutral (e.g., `external_id`) or drop after refactoring the writer. Decision made inside the schema-cleanup phase.
+- Self-hosters get a migration path: env-var deltas (`PLATFORM_FEE_URL` etc.), CHANGELOG.md entry, announcement post copy.
+- Combined "fee reduction + going independent" announcement.
 
 ### Out of Scope
 
@@ -88,6 +101,9 @@ Anyone can monetize an API endpoint or AI prompt through x402 payments with zero
 - Template versioning — new resource = new version
 - Response analytics for creators — privacy concerns
 - Try-before-buy / free tier — x402 model is pay-per-use
+- Changing the BSL 1.1 Licensor entity — Memeputer LLC remains Licensor (CLAUDE.md hard-lock)
+- Replacing Jobputer with a new x402.jobs-native persona — explicitly chosen "docs only"
+- Backfilling in-flight jobs to the new fee mechanism — fee config is snapshotted at job-creation; only new jobs use the new endpoint
 
 ## Key Decisions
 
@@ -102,12 +118,42 @@ Anyone can monetize an API endpoint or AI prompt through x402 payments with zero
 
 | Decision                     | Rationale                                         | Outcome   |
 | ---------------------------- | ------------------------------------------------- | --------- |
-| Full-page wizard over modals | Room for validation, mobile-friendly, URL routing | — Pending |
-| 4-step wizard flow           | Progressive disclosure reduces overwhelm          | — Pending |
-| Session storage + URL hybrid | Clean URLs, survives refresh, not shareable       | — Pending |
-| Import x402check components  | Reuse validated components, don't rebuild         | — Pending |
-| Remove old modal immediately | No migration period, clean break                  | — Pending |
+| Full-page wizard over modals | Room for validation, mobile-friendly, URL routing | ✓ Good    |
+| 4-step wizard flow           | Progressive disclosure reduces overwhelm          | ✓ Good    |
+| Session storage + URL hybrid | Clean URLs, survives refresh, not shareable       | ✓ Good    |
+| Import x402check components  | Reuse validated components, don't rebuild         | ✓ Good    |
+| Remove old modal immediately | No migration period, clean break                  | ✓ Good    |
+
+| Decision (v3.1)                                | Rationale                                                                                       | Outcome   |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------- |
+| Self-host fee endpoint via OpenFacilitator SDK | Keep x402-call-chain symmetry, eliminate Memeputer dependency, reuse existing tooling           | — Pending |
+| Validate fee 402 responses with x402lint       | Catch malformed accepts[] / CAIP-2 mistakes early; both skills already in the user's toolbelt   | — Pending |
+| Same-network fee charging (Solana + Base)      | Match current behavior; avoid cross-chain settlement complexity                                 | — Pending |
+| Lean toward 1% fee rate (confirm pre-Phase-32) | Strong announcement, preserves more revenue than 0.5%; final number locked before plan-phase    | — Pending |
+| Keep `$0.01` minimum                           | Tiny jobs still pay something; matches current `Math.max(pct, min)` semantics                   | — Pending |
+| Memeputer LLC remains BSL Licensor             | Decouple is operational/UI, not legal. CLAUDE.md hard-lock.                                     | ✓ Locked  |
+| Docs replace Jobputer, no new mascot           | Public OSS project needs proper dev docs more than a help character                             | — Pending |
+| `memeputer_name` decision deferred to phase    | Live writer in `sync-openrouter-models.ts`; pick rename vs drop after auditing inside Phase 34  | — Pending |
+| In-flight jobs grandfathered                   | Fee config snapshotted at job-creation; don't backfill, just cut over for new jobs              | — Pending |
+| Announcement framing: independence + price cut | Combined narrative beats either alone; sets up future "agent runtime" positioning               | — Pending |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
 
 ---
 
-_Last updated: 2026-01-30 after v2.0 milestone start_
+_Last updated: 2026-05-17 after v3.1 milestone start (decouple from Memeputer / Jobputer)_

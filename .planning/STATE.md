@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v2.0
-milestone_name: Milestone Phases
-status: milestone_complete
-stopped_at: Milestone complete (Phase 31 was final phase)
-last_updated: 2026-05-16T15:59:20.018Z
-last_activity: 2026-05-15
+milestone: v3.1
+milestone_name: Decouple from Memeputer / Jobputer infrastructure
+status: planning
+last_updated: "2026-05-17T12:55:06.361Z"
+last_activity: 2026-05-17
 progress:
-  total_phases: 11
-  completed_phases: 8
-  total_plans: 30
-  completed_plans: 53
-  percent: 73
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # State: x402jobs
@@ -20,26 +19,18 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-01-30)
+See: .planning/PROJECT.md (updated 2026-05-17)
 
 **Core value:** Anyone can monetize an API endpoint or AI prompt through x402 payments with zero infrastructure.
 
-**Current focus:** Milestone complete
+**Current focus:** v3.1 — decouple operational + UI dependencies from Memeputer / Jobputer infrastructure
 
 ## Current Position
 
-Phase: 31 (monorepo-merge-bsl) — EXECUTING
-Plan: 1 of 5
-**Phase:** 31
-**Plan:** Not started
-**Status:** Milestone complete
-**Last activity:** 2026-05-16
-
-```
-v3.0 Progress: [████░░░░░░] 2/7 phases (Phase 27 ✓, Phase 28 Criticals ✓, Phase 29 ✓, Phase 30 ✓)
-```
-
-See `.planning/v3.0-MILESTONE-SCOPE.md` for full milestone breakdown.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-17 — Milestone v3.1 started
 
 ## Milestone History
 
@@ -49,7 +40,8 @@ See `.planning/v3.0-MILESTONE-SCOPE.md` for full milestone breakdown.
 - **v1.3 x402.storage Output Destination** -- Shipped 2026-01-25 (2 phases, 3 plans)
 - **v1.4 OpenRouter Instant Resources** -- Code complete 2026-01-28, shipped via repo migration 2026-02 (8 phases, Phases 11-18)
 - **v2.0 Resource Registration Redesign** -- Shipped 2026-02-01 (8 phases, Phases 19-26)
-- **v3.0 Open Source + Agent-Native** -- In progress 2026-05-12 (Phases 27-33, ~2.5 week target after Phase 29 side quest insert)
+- **v3.0 Open Source + Agent-Native** -- Phases 27-31 shipped 2026-05-12 → 2026-05-16 (wallet encryption, security review, bulk register, supply chain, monorepo merge + BSL). Phases 32-33 (Agent SDK + skill.md) deferred to a later milestone.
+- **v3.1 Decouple from Memeputer / Jobputer** -- Started 2026-05-17 (Phases 32-34 planned)
 
 ## v1.4 Deployment Blocker — RESOLVED
 
